@@ -1,0 +1,71 @@
+{
+  "scope": "Windows native Edit: 100 mocked-AI corrections; SDK: 100 mock HTTP calls; optional live grammar: 3",
+  "clipboard": "Not used by this native Edit path; measured separately with guarded clipboard fixture",
+  "timings": {
+    "capture": {
+      "n": 100,
+      "median_ms": 1.2121,
+      "p90_ms": 1.9615,
+      "p95_ms": 2.1038
+    },
+    "target_verification": {
+      "n": 100,
+      "median_ms": 0.7012,
+      "p90_ms": 1.334,
+      "p95_ms": 1.7301
+    },
+    "replacement": {
+      "n": 100,
+      "median_ms": 1.2147,
+      "p90_ms": 2.273,
+      "p95_ms": 2.7062
+    },
+    "native_pipeline_mock_ai": {
+      "n": 100,
+      "median_ms": 4.4183,
+      "p90_ms": 6.8578,
+      "p95_ms": 7.7944
+    },
+    "output_validation": {
+      "n": 100,
+      "median_ms": 0.1951,
+      "p90_ms": 0.3666,
+      "p95_ms": 0.5361
+    },
+    "engine_mock_http": {
+      "n": 100,
+      "median_ms": 6.9917,
+      "p90_ms": 8.6405,
+      "p95_ms": 9.685
+    },
+    "live_api": {
+      "n": 3,
+      "median_ms": 3597.711,
+      "p90_ms": 5154.7164,
+      "p95_ms": 5349.3421
+    },
+    "live_engine": {
+      "n": 3,
+      "median_ms": 3597.8741,
+      "p90_ms": 5155.2488,
+      "p95_ms": 5349.9207
+    }
+  },
+  "live_usage": [
+    {
+      "input_tokens": 283,
+      "output_tokens": 14,
+      "cached_tokens": 0
+    },
+    {
+      "input_tokens": 282,
+      "output_tokens": 12,
+      "cached_tokens": 0
+    },
+    {
+      "input_tokens": 285,
+      "output_tokens": 12,
+      "cached_tokens": 0
+    }
+  ]
+}

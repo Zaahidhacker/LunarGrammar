@@ -1,0 +1,16 @@
+[
+  {
+    "cycle": 1,
+    "startup_ready_ms": 17777.3,
+    "idle_cpu_one_core_percent": 0.0,
+    "working_set_mib": 90.41,
+    "process_count": 2
+  },
+  {
+    "cycle": 2,
+    "startup_ready_ms": 9827.86,
+    "idle_cpu_one_core_percent": 0.0,
+    "working_set_mib": 90.73,
+    "process_count": 2
+  }
+]

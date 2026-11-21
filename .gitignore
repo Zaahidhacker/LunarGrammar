@@ -1,0 +1,8 @@
+.venv/
+.test-deps/
+__pycache__/
+*.pyc
+.env
+.env.*
+build/
+dist/

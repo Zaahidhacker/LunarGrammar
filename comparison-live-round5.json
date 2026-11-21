@@ -1,0 +1,143 @@
+{
+  "scope": "12 interleaved live requests: same three non-sensitive grammar examples, each twice per version; n=6 each, not a robust tail estimate.",
+  "summary": {
+    "baseline": {
+      "engine_ms": {
+        "n": 6,
+        "median_ms": 1395.0769,
+        "p90_ms": 2714.8668,
+        "p95_ms": 2979.0923
+      },
+      "api_ms": {
+        "n": 6,
+        "median_ms": 1394.8901,
+        "p90_ms": 2714.431,
+        "p95_ms": 2978.6395
+      }
+    },
+    "round5": {
+      "engine_ms": {
+        "n": 6,
+        "median_ms": 1066.1899,
+        "p90_ms": 1470.916,
+        "p95_ms": 1624.6354
+      },
+      "api_ms": {
+        "n": 6,
+        "median_ms": 1065.822,
+        "p90_ms": 1470.5586,
+        "p95_ms": 1624.2158
+      }
+    }
+  },
+  "records": [
+    {
+      "version": "baseline",
+      "sample": 0,
+      "engine_ms": 3243.3179,
+      "api_ms": 3242.8481,
+      "input_tokens": 460,
+      "output_tokens": 14,
+      "cached_tokens": 0
+    },
+    {
+      "version": "round5",
+      "sample": 0,
+      "engine_ms": 1778.3547,
+      "api_ms": 1777.8729,
+      "input_tokens": 283,
+      "output_tokens": 14,
+      "cached_tokens": 0
+    },
+    {
+      "version": "round5",
+      "sample": 1,
+      "engine_ms": 1163.4773,
+      "api_ms": 1163.2444,
+      "input_tokens": 282,
+      "output_tokens": 12,
+      "cached_tokens": 0
+    },
+    {
+      "version": "baseline",
+      "sample": 1,
+      "engine_ms": 1137.2213,
+      "api_ms": 1137.0581,
+      "input_tokens": 459,
+      "output_tokens": 12,
+      "cached_tokens": 0
+    },
+    {
+      "version": "baseline",
+      "sample": 2,
+      "engine_ms": 1233.1079,
+      "api_ms": 1232.9795,
+      "input_tokens": 462,
+      "output_tokens": 12,
+      "cached_tokens": 0
+    },
+    {
+      "version": "round5",
+      "sample": 2,
+      "engine_ms": 892.8405,
+      "api_ms": 892.6381,
+      "input_tokens": 285,
+      "output_tokens": 12,
+      "cached_tokens": 0
+    },
+    {
+      "version": "round5",
+      "sample": 0,
+      "engine_ms": 1132.0732,
+      "api_ms": 1131.5888,
+      "input_tokens": 283,
+      "output_tokens": 14,
+      "cached_tokens": 0
+    },
+    {
+      "version": "baseline",
+      "sample": 0,
+      "engine_ms": 1501.5641,
+      "api_ms": 1501.3578,
+      "input_tokens": 460,
+      "output_tokens": 14,
+      "cached_tokens": 0
+    },
+    {
+      "version": "baseline",
+      "sample": 1,
+      "engine_ms": 1288.5897,
+      "api_ms": 1288.4224,
+      "input_tokens": 459,
+      "output_tokens": 12,
+      "cached_tokens": 0
+    },
+    {
+      "version": "round5",
+      "sample": 1,
+      "engine_ms": 1000.3066,
+      "api_ms": 1000.0552,
+      "input_tokens": 282,
+      "output_tokens": 12,
+      "cached_tokens": 0
+    },
+    {
+      "version": "round5",
+      "sample": 2,
+      "engine_ms": 909.9037,
+      "api_ms": 909.3952,
+      "input_tokens": 285,
+      "output_tokens": 12,
+      "cached_tokens": 0
+    },
+    {
+      "version": "baseline",
+      "sample": 2,
+      "engine_ms": 2186.4156,
+      "api_ms": 2186.0139,
+      "input_tokens": 462,
+      "output_tokens": 12,
+      "cached_tokens": 0
+    }
+  ]
+}

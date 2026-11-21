@@ -1,0 +1,30 @@
+{
+  "source": "Grammarly Local",
+  "timings": {
+    "clipboard_snapshot": {
+      "n": 9,
+      "median_ms": 2.0545,
+      "p90_ms": 3.1503,
+      "p95_ms": 4.2329
+    },
+    "clipboard_restore": {
+      "n": 8,
+      "median_ms": 1.5103,
+      "p90_ms": 5006.4893,
+      "p95_ms": 5008.3255
+    },
+    "clipboard_copy": {
+      "n": 4,
+      "median_ms": 7.7658,
+      "p90_ms": 3513.4031,
+      "p95_ms": 4264.5958
+    },
+    "paste_and_restore": {
+      "n": 4,
+      "median_ms": 197.6645,
+      "p90_ms": 201.0712,
+      "p95_ms": 201.6859
+    }
+  },
+  "scope": "Real scratch Win32 clipboard, simulated editor dispatch; times inclusive. Cross-process delays may include Windows clipboard observers."
+}

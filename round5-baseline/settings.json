@@ -1,0 +1,11 @@
+{
+  "model": "gpt-6-luna",
+  "timeout_seconds": 10,
+  "max_selection_chars": 6000,
+  "excluded_apps": ["KeePass.exe", "KeePassXC.exe", "1Password.exe", "Bitwarden.exe"],
+  "enabled": true,
+  "feedback": true,
+  "expand_shorthand": true,
+  "appearance": "dark",
+  "motion": "system"
+}

@@ -1,0 +1,42 @@
+{
+  "scope": "Four actual GPT-6 Luna responses to public example text; not a broad linguistic evaluation.",
+  "estimated_standard_usd": 0.00015610000000000003,
+  "rows": [
+    {
+      "mode": "grammar",
+      "input": "hey can u send me the files when ur free",
+      "output": "Hey, can you send me the files when you're free?",
+      "elapsed_ms": 3322.196,
+      "input_tokens": 289,
+      "output_tokens": 16,
+      "cached_tokens": 0
+    },
+    {
+      "mode": "professional_1",
+      "input": "hey can u send me the files when ur free",
+      "output": "Hi, could you please send me the files when you're free?",
+      "elapsed_ms": 1426.812,
+      "input_tokens": 289,
+      "output_tokens": 17,
+      "cached_tokens": 0
+    },
+    {
+      "mode": "professional_2",
+      "input": "hey can u send me the files when ur free",
+      "output": "Hello, could you please send me the files at your convenience?",
+      "elapsed_ms": 1724.348,
+      "input_tokens": 304,
+      "output_tokens": 17,
+      "cached_tokens": 0
+    },
+    {
+      "mode": "professional_3",
+      "input": "hey can u send me the files when ur free",
+      "output": "Hello, I would appreciate it if you could forward the files at your earliest convenience.",
+      "elapsed_ms": 1196.097,
+      "input_tokens": 324,
+      "output_tokens": 21,
+      "cached_tokens": 0
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "source": "round5-baseline",
+  "timings": {
+    "clipboard_snapshot": {
+      "n": 9,
+      "median_ms": 1.4739,
+      "p90_ms": 5.4414,
+      "p95_ms": 6.2515
+    },
+    "clipboard_restore": {
+      "n": 8,
+      "median_ms": 0.7752,
+      "p90_ms": 5005.6515,
+      "p95_ms": 5007.5955
+    },
+    "clipboard_copy": {
+      "n": 4,
+      "median_ms": 20.329,
+      "p90_ms": 3517.1013,
+      "p95_ms": 4265.912
+    },
+    "paste_and_restore": {
+      "n": 4,
+      "median_ms": 196.127,
+      "p90_ms": 199.5528,
+      "p95_ms": 200.0576
+    }
+  },
+  "scope": "Real scratch Win32 clipboard, simulated editor dispatch; times inclusive. Cross-process delays may include Windows clipboard observers."
+}

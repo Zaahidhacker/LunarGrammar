@@ -1,0 +1,9 @@
+# Luna Grammar design concepts
+
+The built-in image generation tool produced [the concept board](luna-grammar-concepts.png) from the user’s reference screenshot. It covers the idle tray icon, processing capsule, successful and failed corrections, settings, and tray menu.
+
+The live capsule and icon use a separate code-rendered trace of the supplied mark. The reference’s dominant lime pixel is `#BFF549`. Poppins Regular and Medium are included under the SIL Open Font License in `assets/fonts`.
+
+## Generation prompt
+
+> Use case: ui-mockup. Create one professional product design board for Luna Grammar, a lightweight Windows 11 proofreading utility. The exact attached screenshot is the primary visual reference. Preserve the recognizable angular lime-green chat/G mark at left, compact green waveform bars, discreet gray ×, and dark pill silhouette. Use near-black neutral surfaces, neon-lime #B4F044, subtle gray keylines, and Poppins Regular/Medium. Present six clearly separated, realistic 1:1 product concepts on a single dark graphite board with generous negative space: (1) idle/minimized status with only a discreet Windows tray mark; (2) processing capsule with compact waveform and ‘Refining…’; (3) same capsule with a restrained lime check and ‘Refined’; (4) same capsule with a restrained amber error mark and ‘Connection issue’; (5) a compact functional Windows settings panel with General, AI, Appearance, Shortcut sections, fields for GPT-6 Luna and Ctrl + Win + Z, and simple real toggles; (6) a compact Windows tray menu with Pause, Settings, and Quit. Settings and tray larger than capsule details, consistent type hierarchy. No desktop screenshots, busy backdrops, invented logo, glass gradients, glow, or sales copy. This is design exploration; the runtime UI is implemented separately.

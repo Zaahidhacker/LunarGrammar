@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Luna Grammar · Browser test fields</title>
+<style>
+  body { background: #151817; color: #f4f6f0; font: 16px "Segoe UI", sans-serif; max-width: 650px; margin: 40px auto; padding: 0 16px; }
+  h1 { font-size: 1.65rem; }
+  strong { color: #bff549; }
+  label, p { display: block; margin: 12px 0 6px; }
+  input, textarea, [contenteditable] { box-sizing: border-box; width: 100%; background: #232724; color: inherit; font: inherit; border: 1px solid #656e63; padding: 10px; border-radius: 7px; }
+  :focus { outline: 2px solid #bff549; outline-offset: 2px; }
+  [contenteditable] { min-height: 65px; }
+</style>
+<h1>Luna Grammar · Browser test fields</h1>
+<p>Select a sample and press <strong>Ctrl + Win + Z</strong>. The samples are synthetic.</p>
+<label for="one">Standard input</label>
+<input id="one" value="Before [idk if im going tmrw] After">
+<button type="button" data-fixture="one">Select input sample</button>
+<label for="multi">Multiline textarea</label>
+<textarea id="multi" rows="4">Before [its gong fine for me hby
+
+i met Zoë at 3pm 😀] After</textarea>
+<button type="button" data-fixture="multi">Select textarea sample</button>
+<p id="compose-label">Contenteditable composer</p>
+<div id="compose" role="textbox" aria-labelledby="compose-label" contenteditable="true">Before [i was gonna msg u but idk if ur free] After</div>
+<button type="button" data-fixture="compose">Select composer sample</button>
+<label for="secret">Password field · should be skipped</label>
+<input id="secret" type="password" value="synthetic test password">
+<script>
+  for (const button of document.querySelectorAll("[data-fixture]")) {
+    button.addEventListener("click", () => {
+      const field = document.getElementById(button.dataset.fixture);
+      const contents = field.value ?? field.textContent;
+      const start = contents.indexOf("[") + 1;
+      const end = contents.lastIndexOf("]");
+      field.focus();
+      if (field.isContentEditable) {
+        const selection = window.getSelection();
+        selection.setBaseAndExtent(field.firstChild, start, field.lastChild,
+                                   field.lastChild.length - (contents.length - end));
+      } else {
+        field.setSelectionRange(start, end);
+      }
+    });
+  }
+</script>
+</html>
