@@ -6,6 +6,11 @@ import time
 from ctypes import wintypes as w
 from threading import Timer
 
+try:
+    import winsound
+except ImportError:  # non-Windows (tests/CI): no system sounds available
+    winsound = None
+
 import win32 as win
 from diagnostics import error_frames
 from pill_art import Motion, pill_position, render
@@ -14,6 +19,7 @@ HDC = w.HDC
 P = c.POINTER
 NAME = "LunaGrammar.StatusPill.v2"
 WM_TIMER = 0x0113
+WM_SETCURSOR = 0x0020
 WM_DPICHANGED = 0x02E0
 WM_MOUSEACTIVATE = 0x0021
 WM_NCHITTEST = 0x0084
@@ -60,7 +66,10 @@ delete_dc = win.bind(win.gdi, "DeleteDC", w.BOOL, HDC)
 create_dib = win.bind(win.gdi, "CreateDIBSection", w.HANDLE, HDC, P(BitmapInfo), w.UINT, P(w.LPVOID), w.HANDLE, w.DWORD)
 select_object = win.bind(win.gdi, "SelectObject", w.HANDLE, HDC, w.HANDLE)
 delete_object = win.bind(win.gdi, "DeleteObject", w.BOOL, w.HANDLE)
-client_to_screen = win.bind(win.user, "ClientToScreen", w.BOOL, w.HWND, P(w.POINT))
+client_to_screen = win.bind(win.user, "ClientToScreen", w.BOOL, w.HWND, w.POINT)
+get_cursor_pos = win.bind(win.user, "GetCursorPos", w.BOOL, P(w.POINT))
+load_cursor = win.bind(win.user, "LoadCursorW", w.HANDLE, w.HINSTANCE, w.LPCWSTR)
+set_cursor = win.bind(win.user, "SetCursor", w.HANDLE, w.HANDLE)
 
 
 def reduced_motion(setting):
@@ -154,6 +163,9 @@ class Overlay:
         self.visible = False
         self.surface = None
         self.window = None
+        # Called with True (Apply) / False (Discard) when the user clicks a
+        # review button on the pill. Set by the listener; None in --check.
+        self.on_review_decision = None
         definition = win.WindowClass(proc=self.proc, instance=self.instance, name=NAME)
         if not win.register_class(c.byref(definition)):
             raise OSError("Could not register the status overlay.")
@@ -246,6 +258,49 @@ class Overlay:
             self.present()
         self.schedule()
 
+    def _chime(self, state, settings):
+        """Play a short system sound on completion, when enabled.
+
+        The Settings toggle used to promise sound but nothing ever played.
+        MessageBeep is async (returns immediately) and uses the user's
+        Windows sound scheme; failures are ignored silently.
+        """
+        if winsound is None or settings is None or not getattr(settings, "sound_enabled", False):
+            return
+        try:
+            if state == "error":
+                winsound.MessageBeep(winsound.MB_ICONHAND)
+            elif state in ("success", "undo", "unchanged"):
+                winsound.MessageBeep(winsound.MB_ICONASTERISK)
+        except Exception:
+            pass
+
+    def _close_zone(self, window):
+        """Close-button hit zone: at least 44x44 px at 96 DPI (Windows touch
+        target), even though the drawn × glyph stays small."""
+        rect = w.RECT()
+        if not get_window_rect(window, c.byref(rect)):
+            return None
+        s = self.dpi / 96
+        return (rect.right - 48 * s, rect.top + 5 * s,
+                rect.right - 4 * s, rect.bottom - 5 * s)
+
+    def _review_zones(self, window):
+        """(apply, discard) click zones for the review pill, mirroring the
+        button rectangles drawn by pill_art.render()."""
+        rect = w.RECT()
+        if not get_window_rect(window, c.byref(rect)):
+            return None
+        s = self.dpi / 96
+        top, bottom = rect.top + 16 * s, rect.bottom - 16 * s
+        apply_zone = (rect.right - 48 * s - 76 * s, top, rect.right - 48 * s - 4 * s, bottom)
+        discard_zone = (rect.right - 48 * s - 152 * s, top, rect.right - 48 * s - 80 * s, bottom)
+        return apply_zone, discard_zone
+
+    @staticmethod
+    def _in_zone(zone, x, y):
+        return zone is not None and zone[0] <= x <= zone[2] and zone[1] <= y <= zone[3]
+
     def show_state(self, state, label, target=None, settings=None, diff_summary=None, cached=False, mode_name=None):
         if not self.configure(target, settings):
             return
@@ -257,6 +312,12 @@ class Overlay:
             if not self.motion.dismissed:
                 self.motion.finish("undo", label or "Reverted", now,
                                    diff_badge=diff_summary or "", mode_badge=mode_name or "Undo")
+        elif state == "review":
+            # Held for the worker's decision window (30s in pill_art); the
+            # label is the corrected text, truncated to fit the capsule.
+            if not self.motion.dismissed:
+                self.motion.finish("review", label or "", now,
+                                   diff_badge=diff_summary or "", mode_badge=mode_name or "Review")
         elif not self.motion.dismissed:
             self.motion.finish(state, label, now, diff_badge=diff_summary or "",
                                cached=cached, mode_badge=mode_name)
@@ -265,6 +326,8 @@ class Overlay:
         if self.motion.state != "hidden":
             self.present()
         self.schedule()
+        if state in ("success", "error", "undo", "unchanged"):
+            self._chime(state, settings)
 
     def schedule(self):
         if self.motion.state != "hidden":
@@ -366,15 +429,41 @@ class Overlay:
         if message == WM_MOUSEACTIVATE:
             return 3  # MA_NOACTIVATE
         if message == WM_NCHITTEST:
-            rect = w.RECT()
-            if get_window_rect(window, c.byref(rect)):
+            zone = self._close_zone(window)
+            if zone:
                 x = c.c_short(lparam & 0xFFFF).value
                 y = c.c_short((lparam >> 16) & 0xFFFF).value
-                s = self.dpi / 96
-                if rect.right - 37 * s <= x <= rect.right - 9 * s and rect.top + 9 * s <= y <= rect.bottom - 12 * s:
+                if zone[0] <= x <= zone[2] and zone[1] <= y <= zone[3]:
                     return 1  # HTCLIENT
             return -1  # HTTRANSPARENT
+        if message == WM_SETCURSOR:
+            zone = self._close_zone(window)
+            point = w.POINT()
+            if zone and get_cursor_pos(c.byref(point)) and zone[0] <= point.x <= zone[2] \
+                    and zone[1] <= point.y <= zone[3]:
+                set_cursor(load_cursor(None, 32513))  # IDC_HAND
+                return 1
+            if self.motion.state == "review" and get_cursor_pos(c.byref(point)):
+                zones = self._review_zones(window)
+                if zones and (self._in_zone(zones[0], point.x, point.y)
+                              or self._in_zone(zones[1], point.x, point.y)):
+                    set_cursor(load_cursor(None, 32513))  # IDC_HAND
+                    return 1
+            return win.default_proc(window, message, wparam, lparam)
         if message == WM_LBUTTONUP:
+            if self.motion.state == "review":
+                x = c.c_short(lparam & 0xFFFF).value
+                y = c.c_short((lparam >> 16) & 0xFFFF).value
+                zones = self._review_zones(window)
+                if zones and self._in_zone(zones[0], x, y):
+                    self._decide_review(True)
+                elif zones and self._in_zone(zones[1], x, y):
+                    self._decide_review(False)
+                elif self._in_zone(self._close_zone(window), x, y):
+                    self._decide_review(False)  # × on a review pill = Discard
+                # Clicks elsewhere on a review pill are ignored: it must not
+                # be dismissed by accident while a decision is pending.
+                return 0
             self.motion.dismiss()
             self.hide()
             return 0
@@ -395,6 +484,19 @@ class Overlay:
             return 0
         return win.default_proc(window, message, wparam, lparam)
 
+    def _decide_review(self, apply):
+        """Deliver the user's review decision to the waiting worker, then
+        hide the pill. A missing callback means the pill is running standalone
+        (e.g. --check): just hide."""
+        callback = self.on_review_decision
+        self.motion.dismiss()
+        self.hide()
+        if callback is not None:
+            try:
+                callback(apply)
+            except Exception:
+                pass
+
     def close(self):
         if self.window:
             self.hide()
@@ -409,7 +511,7 @@ def check_overlay():
 
     Uses only a public status label and never reads document or clipboard data.
     """
-    from correction_modes import MODES
+    from correction_modes import list_modes
     from config import Settings
 
     set_dpi_context(-4)
@@ -439,7 +541,10 @@ def check_overlay():
                                   area[0], area[1], 1, 1, None, None, win.get_module(None), None)
         if not cover:
             raise c.WinError(c.get_last_error())
-        for mode in MODES.values():
+        # Iterate the 6 canonical modes only: MODES also holds ~30 aliases,
+        # so iterating MODES.values() used to verify each mode ~5 times and
+        # inflate the reported count.
+        for mode in list_modes():
             pill.reset()
             before = win.foreground()
             pill.show_state('working', mode.label, target, Settings())

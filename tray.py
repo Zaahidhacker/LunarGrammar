@@ -2,6 +2,7 @@
 
 import ctypes as c
 import logging
+import sys
 from ctypes import wintypes as w
 from pathlib import Path
 
@@ -22,7 +23,7 @@ class NotifyIconData(c.Structure):
     ]
 
 
-shell = c.WinDLL("shell32", use_last_error=True)
+shell = win.user if sys.platform != "win32" else c.WinDLL("shell32", use_last_error=True)
 notify = win.bind(shell, "Shell_NotifyIconW", w.BOOL, w.DWORD, c.POINTER(NotifyIconData))
 load_image = win.bind(
     win.user, "LoadImageW", w.HANDLE, w.HINSTANCE, w.LPCWSTR, w.UINT, c.c_int, c.c_int, w.UINT,
@@ -46,14 +47,28 @@ class Tray:
         self.created_message = register_message("TaskbarCreated")
         self.icon = load_image(None, str(ICON), 1, 0, 0, 0x0050)  # icon, default size, from file
         if not self.icon:
+            # Fall back to the tray mark drawn by pill_art (same mark the
+            # overlay uses) so a missing/broken .ico is not fatal.
+            try:
+                from pill_art import tray_image
+                self._fallback_icon = tray_image()
+                from PIL import Image
+                import tempfile
+                tmp = Path(tempfile.gettempdir()) / "luna-tray.ico"
+                self._fallback_icon.save(tmp)
+                self.icon = load_image(None, str(tmp), 1, 0, 0, 0x0050)
+            except Exception:
+                self.icon = None
+        if not self.icon:
             raise OSError("Could not load the Luna tray icon.")
         self.data = NotifyIconData(size=c.sizeof(NotifyIconData), window=window, id=ID,
                                    flags=0x0087, callback=WM_TRAY, icon=self.icon)
         self.enabled = enabled
+        self.status = ""
         self.add()
 
     def add(self):
-        self.data.tip = "Luna Grammar · Ctrl + Win + Z" if self.enabled else "Luna Grammar · Paused"
+        self.data.tip = self._tooltip()
         if notify(0, c.byref(self.data)):  # NIM_ADD
             self.data.version = 4
             notify(4, c.byref(self.data))  # NIM_SETVERSION
@@ -61,9 +76,20 @@ class Tray:
         else:
             logging.debug("The Windows notification area is not available.")
 
+    def _tooltip(self):
+        base = "Luna Grammar · Ctrl + Win + Z" if self.enabled else "Luna Grammar · Paused"
+        return f"{base} · {self.status}"[:127] if self.status else base
+
+    def set_status(self, text):
+        """Live tooltip state, e.g. 'Refining… · Level 2' or 'Refined · +3 words'.
+        Kept short: NOTIFYICONDATA tips are capped at 128 chars."""
+        self.status = (text or "").strip()
+        self.data.tip = self._tooltip()
+        notify(1, c.byref(self.data))  # NIM_MODIFY
+
     def update(self, enabled):
         self.enabled = enabled
-        self.data.tip = "Luna Grammar · Ctrl + Win + Z" if enabled else "Luna Grammar · Paused"
+        self.data.tip = self._tooltip()
         notify(1, c.byref(self.data))
 
     def menu(self, point=None):

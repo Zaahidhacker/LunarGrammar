@@ -8,7 +8,7 @@ import win32 as win
 from config import AppError
 from shortcut_state import ShortcutState
 
-HOOKPROC = c.WINFUNCTYPE(win.LRESULT, c.c_int, w.WPARAM, w.LPARAM)
+HOOKPROC = getattr(c, "WINFUNCTYPE", c.CFUNCTYPE)(win.LRESULT, c.c_int, w.WPARAM, w.LPARAM)
 KEY_DOWN = {0x0100, 0x0104}
 MOUSE_ACTIONS = {0x0201, 0x0202, 0x0204, 0x0205, 0x0207, 0x0208, 0x020A,
                  0x020B, 0x020C, 0x020E}

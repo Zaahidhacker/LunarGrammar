@@ -68,8 +68,10 @@ class ShortcutState:
                 self.canceled = False
                 consume = True if key == Z else consume
                 self.suppressed.add(Z)
-                emit_level = 0 if self.level is None else self.level
-                self.emit('start', emit_level, perf_counter_ns(), timestamp)
+                # A bare chord carries NO digit (None): the listener applies
+                # Settings' default_mode at commit time. Emitting 0 here used
+                # to hard-wire Grammar & Spelling and ignore the setting.
+                self.emit('start', self.level, perf_counter_ns(), timestamp)
             elif not self.active and modifiers and (key in UNDO_KEYS or bool(self.down & UNDO_KEYS)):
                 self.active = True
                 self.canceled = False
@@ -88,7 +90,9 @@ class ShortcutState:
         # Wait for modifier release as the existing capture path requires.
         if not self.down & CHORD_KEYS:
             if self.active:
-                emit_level = 'undo' if self.level == 'undo' else (0 if self.level is None else self.level)
+                # Bare chord (no digit) commits with level None so the
+                # listener substitutes the configured default_mode.
+                emit_level = 'undo' if self.level == 'undo' else self.level
                 self.emit('cancel' if self.canceled else 'commit', emit_level,
                           perf_counter_ns(), timestamp)
             self.active = False

@@ -13,6 +13,8 @@ if (-not $SkipInstall) {
     & $buildPython -m pip install -r requirements-build.txt
     if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed.' }
 }
+& $buildPython -m unittest discover -s tests
+if ($LASTEXITCODE -ne 0) { throw 'Tests failed. Fix them before packaging a release.' }
 & $buildPython -m PyInstaller --clean --noconfirm LunaGrammar.spec
 if ($LASTEXITCODE -ne 0) { throw 'PyInstaller failed.' }
 Write-Output (Join-Path $PSScriptRoot 'dist\LunaGrammar.exe')

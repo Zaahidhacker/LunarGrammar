@@ -5,22 +5,44 @@ from ctypes import wintypes as w
 from dataclasses import dataclass
 from pathlib import PureWindowsPath
 from secrets import randbits
+import os
+import sys
+import time
 
 from config import AppError
 
-user = c.WinDLL("user32", use_last_error=True)
-kernel = c.WinDLL("kernel32", use_last_error=True)
-ole = c.WinDLL("ole32", use_last_error=True)
-gdi = c.WinDLL("gdi32", use_last_error=True)
+if sys.platform == "win32":
+    user = c.WinDLL("user32", use_last_error=True)
+    kernel = c.WinDLL("kernel32", use_last_error=True)
+    ole = c.WinDLL("ole32", use_last_error=True)
+    gdi = c.WinDLL("gdi32", use_last_error=True)
+    advapi = c.WinDLL("advapi32", use_last_error=True)
+else:
+    # Non-Windows (Linux CI / this dev VM): importing the module must still
+    # work so pure-logic tests (shortcut arbitration, validation, cache)
+    # can run. Every Win32 call raises only when actually invoked.
+    class _UnavailableDLL:
+        """Stand-in for a Win32 DLL on non-Windows platforms."""
+
+        def __getattr__(self, name: str):
+            def _unavailable(*args, **kwargs):
+                raise AppError("Luna Grammar requires Windows.")
+            return _unavailable
+
+    user = kernel = ole = gdi = advapi = _UnavailableDLL()
 P = c.POINTER
 UINT_PTR = c.c_size_t
 LRESULT = c.c_ssize_t
-WNDPROC = c.WINFUNCTYPE(LRESULT, w.HWND, w.UINT, w.WPARAM, w.LPARAM)
-CONSOLE_HANDLER = c.WINFUNCTYPE(w.BOOL, w.DWORD)
-WIN_EVENT = c.WINFUNCTYPE(None, w.HANDLE, w.DWORD, w.HWND, w.LONG, w.LONG, w.DWORD, w.DWORD)
+# WINFUNCTYPE is stdcall on Windows and does not exist on other platforms;
+# CFUNCTYPE is the correct fallback there (callbacks are never invoked).
+_FUNCTYPE = getattr(c, "WINFUNCTYPE", c.CFUNCTYPE)
+WNDPROC = _FUNCTYPE(LRESULT, w.HWND, w.UINT, w.WPARAM, w.LPARAM)
+CONSOLE_HANDLER = _FUNCTYPE(w.BOOL, w.DWORD)
+WIN_EVENT = _FUNCTYPE(None, w.HANDLE, w.DWORD, w.HWND, w.LONG, w.LONG, w.DWORD, w.DWORD)
 INPUT_TAG = randbits(c.sizeof(UINT_PTR) * 8) or 1
 editing_input_stamp = None
 shortcut_key_state = None
+_EXE_CACHE: dict[int, tuple[float, str]] = {}
 
 
 class WindowClass(c.Structure):
@@ -133,6 +155,67 @@ query_process_name = bind(
     kernel, "QueryFullProcessImageNameW", w.BOOL, w.HANDLE, w.DWORD, w.LPWSTR, P(w.DWORD),
 )
 set_console_handler = bind(kernel, "SetConsoleCtrlHandler", w.BOOL, CONSOLE_HANDLER, w.BOOL)
+open_process_token = bind(advapi, "OpenProcessToken", w.BOOL, w.HANDLE, w.DWORD, P(w.HANDLE))
+get_token_info = bind(advapi, "GetTokenInformation", w.BOOL, w.HANDLE, w.DWORD, w.LPVOID, w.DWORD, P(w.DWORD))
+get_sid_sub_auth = bind(advapi, "GetSidSubAuthority", P(w.DWORD), w.LPVOID, w.DWORD)
+get_sid_sub_auth_count = bind(advapi, "GetSidSubAuthorityCount", P(w.BYTE), w.LPVOID)
+
+
+class SidAndAttributes(c.Structure):
+    _fields_ = [("sid", w.LPVOID), ("attributes", w.DWORD)]
+
+
+class TokenMandatoryLabel(c.Structure):
+    _fields_ = [("label", SidAndAttributes)]
+
+
+def process_integrity(pid: int) -> int | None:
+    """Mandatory integrity RID of a process (0x1000 low … 0x4000 system).
+
+    Returns None when it cannot be determined (non-Windows, or the token
+    cannot be opened) — callers must treat None as "unknown", never as proof
+    of either level.
+    """
+    if sys.platform != "win32":
+        return None
+    handle = open_process(0x0400, False, pid)  # PROCESS_QUERY_INFORMATION
+    if not handle:
+        return None
+    try:
+        token = w.HANDLE()
+        if not open_process_token(handle, 0x0008, c.byref(token)):  # TOKEN_QUERY
+            return None
+        try:
+            needed = w.DWORD()
+            get_token_info(token, 25, None, 0, c.byref(needed))  # TokenIntegrityLevel
+            if not needed.value:
+                return None
+            buffer = c.create_string_buffer(needed.value)
+            if not get_token_info(token, 25, buffer, needed, c.byref(needed)):
+                return None
+            label = TokenMandatoryLabel.from_buffer(buffer)
+            sid = label.label.sid
+            if not sid:
+                return None
+            count = get_sid_sub_auth_count(sid).contents.value
+            if not count:
+                return None
+            return get_sid_sub_auth(sid, count - 1).contents.value
+        finally:
+            close_handle(token)
+    finally:
+        close_handle(handle)
+
+
+def target_elevated(target: "Target") -> bool | None:
+    """True if the target runs at a higher integrity level than Luna Grammar
+    (UIPI will then silently drop our input/UIA), False if at or below ours,
+    None if either level could not be determined."""
+    own = process_integrity(os.getpid())
+    other = process_integrity(target.pid)
+    if own is None or other is None:
+        return None
+    return other > own
 
 WM_CLOSE = 0x0010
 WM_HOTKEY = 0x0312
@@ -315,6 +398,12 @@ def clipboard_window_matches(target: Target, window: int) -> bool:
 
 
 def executable(pid: int) -> str:
+    # Cache exe names briefly: capture/verify call this for the same pid
+    # several times per correction, and each call snapshots the process list.
+    now = time.monotonic()
+    cached = _EXE_CACHE.get(pid)
+    if cached is not None and now - cached[0] < 5.0:
+        return cached[1]
     process = open_process(0x1000, False, pid)  # PROCESS_QUERY_LIMITED_INFORMATION
     if not process:
         raise AppError("Could not identify the focused application.")
@@ -323,7 +412,9 @@ def executable(pid: int) -> str:
         length = w.DWORD(len(path))
         if not query_process_name(process, 0, path, c.byref(length)):
             raise AppError("Could not identify the focused application.")
-        return PureWindowsPath(path.value).name.casefold()
+        name = PureWindowsPath(path.value).name.casefold()
+        _EXE_CACHE[pid] = (now, name)
+        return name
     finally:
         close_handle(process)
 

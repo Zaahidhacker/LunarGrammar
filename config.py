@@ -6,7 +6,7 @@ import os
 import sys
 import tempfile
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path, PureWindowsPath
 
 
@@ -61,12 +61,31 @@ class Settings:
     show_diff_preview: bool = True
     sound_enabled: bool = True
     temperature: float = 0.0
+    # Per-app default mode for a bare Ctrl+Win+Z (explicit digits always win).
+    # Maps lowercase exe name -> mode level 0-5, e.g. {"outlook.exe": 2}.
+    per_app_modes: dict = field(default_factory=dict)
+    # When True, corrections are staged on the clipboard for manual Ctrl+V
+    # instead of being pasted automatically (safe mode for fragile fields).
+    copy_only: bool = False
+    # When True (default), a correction is refused rather than silently
+    # destroying clipboard formats Luna cannot back up (images/OLE data).
+    # Set False to keep the old behaviour: back up only the formats that
+    # can be duplicated and lose the rest.
+    clipboard_strict_preservation: bool = True
+    # When True, the correction is held for review (Apply / Discard in the
+    # overlay) instead of being pasted immediately. Default off: corrections
+    # apply automatically, as before.
+    review_before_apply: bool = False
 
     def __post_init__(self):
-        # Keep model and active_model in sync
+        # Keep model and active_model in sync. When exactly one is the
+        # default, the other wins; when both are set to different
+        # non-default values, active_model wins (it is what the engine reads).
         if self.model != "gpt-6-luna" and self.active_model == "gpt-6-luna":
             object.__setattr__(self, "active_model", self.model)
         elif self.active_model != "gpt-6-luna" and self.model == "gpt-6-luna":
+            object.__setattr__(self, "model", self.active_model)
+        elif self.model != self.active_model:
             object.__setattr__(self, "model", self.active_model)
 
     def to_dict(self) -> dict:
@@ -87,6 +106,10 @@ class Settings:
             "show_diff_preview": self.show_diff_preview,
             "sound_enabled": self.sound_enabled,
             "temperature": self.temperature,
+            "per_app_modes": dict(self.per_app_modes),
+            "copy_only": self.copy_only,
+            "clipboard_strict_preservation": self.clipboard_strict_preservation,
+            "review_before_apply": self.review_before_apply,
         }
 
 
@@ -200,11 +223,23 @@ def parse_settings(data: dict) -> Settings:
         raise AppError("excluded_apps must be a list of executable names such as notepad.exe.")
 
     toggles = {}
-    for name in ("enabled", "feedback", "expand_shorthand", "cache_enabled", "show_diff_preview", "sound_enabled"):
+    for name in ("enabled", "feedback", "expand_shorthand", "cache_enabled", "show_diff_preview", "sound_enabled",
+                 "copy_only", "clipboard_strict_preservation", "review_before_apply"):
         value = data.get(name, getattr(defaults, name))
         if type(value) is not bool:
             raise AppError(f"{name} must be true or false.")
         toggles[name] = value
+
+    per_app_modes = data.get("per_app_modes", {})
+    if not isinstance(per_app_modes, dict) or any(
+        not isinstance(name, str)
+        or PureWindowsPath(name).name != name
+        or not name.casefold().endswith(".exe")
+        or type(level) is not int or not (0 <= level <= 5)
+        for name, level in per_app_modes.items()
+    ):
+        raise AppError('per_app_modes must map executable names to a mode level 0-5, e.g. {"outlook.exe": 2}.')
+    per_app_modes = {name.casefold(): level for name, level in per_app_modes.items()}
 
     appearance = data.get("appearance", defaults.appearance)
     motion = data.get("motion", defaults.motion)
@@ -240,6 +275,10 @@ def parse_settings(data: dict) -> Settings:
         show_diff_preview=toggles["show_diff_preview"],
         sound_enabled=toggles["sound_enabled"],
         temperature=float(temperature),
+        per_app_modes=per_app_modes,
+        copy_only=toggles["copy_only"],
+        clipboard_strict_preservation=toggles["clipboard_strict_preservation"],
+        review_before_apply=toggles["review_before_apply"],
     )
 
 

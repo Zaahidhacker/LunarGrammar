@@ -33,7 +33,10 @@ class ShortcutTests(unittest.TestCase):
                                 consumed = state.key(key, False, enabled=True)
                                 self.assertFalse(consumed)
                         commits = [e for e in events if e[0] == 'commit']
-                        self.assertEqual([e[1] for e in commits], [digit % 16 if digit else 0] * 2)
+                        # A bare chord (no digit) commits with level None so
+                        # the listener applies Settings' default_mode; an
+                        # explicit 0 digit commits level 0.
+                        self.assertEqual([e[1] for e in commits], [(digit % 16 if digit else None)] * 2)
                         self.assertEqual(len([e for e in events if e[0] == 'start']), 2)
                         scenarios += 1
         self.assertEqual(scenarios, 588)
@@ -76,7 +79,9 @@ class ShortcutTests(unittest.TestCase):
             self.assertEqual([e[0] for e in events], ['start', 'cancel'])
 
     def test_unrelated_keys_pass_and_numpad_navigation_is_distinguished(self):
-        for extended, scan, expected in ((False, 0x4F, 1), (True, 0x4F, 0), (False, 0, 0)):
+        # expected is the committed digit, or None for a bare chord (the
+        # listener then applies the configured default_mode).
+        for extended, scan, expected in ((False, 0x4F, 1), (True, 0x4F, None), (False, 0, None)):
             events = []
             state = ShortcutState(lambda *event: events.append(event))
             for key in (0xA2, 0x5B):
@@ -105,6 +110,34 @@ class ShortcutTests(unittest.TestCase):
                 self.assertEqual((trigger.mode, trigger.epoch, trigger.target, trigger.input_stamp),
                                  (name, 0, target, 99))
                 self.assertTrue(listener.jobs.empty())
+
+    def test_bare_chord_uses_configured_default_mode(self):
+        # A bare Ctrl+Win+Z (level None) must resolve through Settings'
+        # default_mode, and an explicit 0 digit must still mean mode 0.
+        for default_mode, expected in ((0, "grammar"), (2, "executive"), (5, "translate")):
+            listener = Listener(Settings(default_mode=default_mode), 'test-key')
+            listener.registered = True
+            listener.ready.set()
+            target = win.Target(1, 2, 3, 4)
+            with patch.object(win, 'current_target', return_value=target):
+                listener.shortcut_events.put(('start', None, 1, 10, 1))
+                listener.dispatch_shortcut()
+                listener.shortcut_events.put(('commit', None, 2, 11, 99))
+                listener.dispatch_shortcut()
+                trigger = listener.jobs.get_nowait()
+                self.assertEqual(trigger.mode, expected)
+        # Explicit digit 0 is not the default: it always means Grammar.
+        listener = Listener(Settings(default_mode=4), 'test-key')
+        listener.registered = True
+        listener.ready.set()
+        target = win.Target(1, 2, 3, 4)
+        with patch.object(win, 'current_target', return_value=target):
+            listener.shortcut_events.put(('start', 0, 1, 10, 1))
+            listener.dispatch_shortcut()
+            listener.shortcut_events.put(('commit', 0, 2, 11, 99))
+            listener.dispatch_shortcut()
+            trigger = listener.jobs.get_nowait()
+            self.assertEqual(trigger.mode, "grammar")
 
     def test_hook_suppresses_reserved_events_but_ignores_own_injection(self):
         emit = Mock()

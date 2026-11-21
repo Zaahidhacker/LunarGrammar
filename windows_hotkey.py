@@ -9,7 +9,7 @@ from ctypes import wintypes as w
 from queue import Empty, Queue, SimpleQueue
 from threading import Event, Thread
 from uuid import uuid4
-from time import perf_counter_ns
+from time import monotonic, perf_counter_ns
 
 import win32 as win
 from clipboard_manager import Clipboard
@@ -19,8 +19,8 @@ from diagnostics import error_frames, operation, timing, measure
 from correction_modes import MODES, MODE_NAMES
 from input_monitor import InputMonitor
 from grammar_engine import GrammarEngine, RefinementCache
-from text_selection import Automation, Guard, Selection, Trigger, capture, correct_selection
-from undo_manager import get_last_undo, get_undo_manager
+from text_selection import Automation, Trigger, capture, correct_selection
+from undo_manager import get_last_undo, get_undo_manager, peek_last
 from tray import Tray, WM_TRAY
 
 
@@ -30,6 +30,7 @@ WM_STATUS = 0x8011
 WM_RELOAD = 0x8012
 WM_READY = 0x8013
 WM_SHORTCUT = 0x8014
+WM_CLEAR_CACHE = 0x8016
 
 
 def register(window=None):
@@ -82,6 +83,18 @@ def reload_listener():
     return bool(window and win.post_message(window, WM_RELOAD, 0, 0))
 
 
+def clear_listener_cache():
+    """Ask the running listener to clear its engine cache.
+
+    Settings runs in a separate process, so clearing its own cache object
+    never reached the listener. This posts WM_CLEAR_CACHE to the listener
+    window; the listener clears the live engine cache on its message thread
+    (RefinementCache is thread-safe). Returns True if a listener was found.
+    """
+    window = find_listener()
+    return bool(window and win.post_message(window, WM_CLEAR_CACHE, 0, 0))
+
+
 class Listener:
     def __init__(self, settings, key):
         self.settings = settings
@@ -95,8 +108,14 @@ class Listener:
         self.active_trigger = None
         self.pending_trigger = None
         self.shortcut_events = SimpleQueue()
+        # Review-before-apply handshake: the worker waits on review_event
+        # while the pill shows Apply / Discard; the overlay's click handler
+        # (main thread) sets review_decision and the event.
+        self.review_event = Event()
+        self.review_decision = None
         self.failed = False
         self.clipboard = None
+        self.engine = None
         self.window = None
         self.overlay = None
         self.tray = None
@@ -182,6 +201,20 @@ class Listener:
                 mode_badge = getattr(mode_obj, 'name', mode_name.capitalize()) if mode_obj else mode_name.capitalize()
                 mode_label = mode_obj.label if mode_obj else 'Refining…'
 
+            if level is None and mode_name != 'undo':
+                # Bare chord: a per-app default beats the global default
+                # (an explicit digit always wins over both).
+                try:
+                    exe = win.executable(pending.target.pid)
+                    app_mode = (getattr(self.settings, 'per_app_modes', None) or {}).get(exe)
+                    if isinstance(app_mode, int) and 0 <= app_mode < len(MODE_NAMES):
+                        mode_name = MODE_NAMES[app_mode]
+                        mode_obj = MODES.get(mode_name)
+                        mode_badge = getattr(mode_obj, 'name', mode_name.capitalize())
+                        mode_label = mode_obj.label if mode_obj else 'Refining…'
+                except Exception:
+                    pass
+
             trigger = replace(pending, mode=mode_name, input_stamp=input_stamp)
             self.active_trigger = trigger
             token = operation.set(trigger.operation_id)
@@ -217,6 +250,40 @@ class Listener:
             self.stop.set()
             self.jobs.put_nowait(None)
 
+    def _on_review_decision(self, apply):
+        """Called on the main thread when the user clicks Apply / Discard
+        (or ×) on a review pill; wakes the worker waiting in _review_correction."""
+        self.review_decision = bool(apply)
+        self.review_event.set()
+
+    def _review_correction(self, corrected, original, diff):
+        """Show the corrected text in the pill and wait up to 30s for the
+        user to Apply or Discard. Returns True (apply), False (discard) or
+        None — timeout, overlay unavailable, or focus moved — which the
+        caller treats as "apply", so a correction is never stranded. The
+        Guard in replace_with_keyboard still cancels the paste if the
+        target is no longer safe."""
+        if not self.overlay:
+            return None
+        self.review_event.clear()
+        self.review_decision = None
+        preview = " ".join(str(corrected).split())
+        if len(preview) > 60:
+            preview = preview[:57] + "…"
+        self.status(self.active_trigger, "review", preview,
+                    diff_summary=diff.summary if diff else None, mode_name="Review")
+        deadline = monotonic() + 30
+        while monotonic() < deadline:
+            if self.review_event.wait(0.25):
+                return self.review_decision
+            try:
+                target_window = self.active_trigger.target.window if self.active_trigger else None
+                if win.foreground() != target_window:
+                    return None
+            except Exception:
+                return None
+        return None
+
     def status(self, trigger, state, label="", diff_summary=None, cached=False, mode_name=None):
         if self.overlay and self.settings.feedback and not self.stop.is_set():
             self.ui_events.put((trigger, state, label, diff_summary, cached, mode_name))
@@ -231,6 +298,11 @@ class Listener:
         diff_summary = event[3] if len(event) > 3 else None
         cached = event[4] if len(event) > 4 else False
         mode_name = event[5] if len(event) > 5 else None
+        if self.tray and state == 'working':
+            try:
+                self.tray.set_status(f"Refining… · {mode_name}" if mode_name else "Refining…")
+            except Exception:
+                pass
         if self.overlay and trigger is self.active_trigger and not self.stop.is_set():
             try:
                 with measure('ui_feedback'):
@@ -244,6 +316,21 @@ class Listener:
                 logging.warning('event=overlay.feedback_failed type=%s frames=%s',
                                 type(error).__name__, error_frames(error))
                 self.overlay.reset()
+        if self.tray and state != 'working':
+            try:
+                if state == 'success':
+                    summary = diff_summary or label
+                    self.tray.set_status(f"Refined · {summary}" if summary else "Refined")
+                elif state == 'error':
+                    self.tray.set_status("Correction failed — see overlay")
+                elif state == 'undo':
+                    self.tray.set_status("Undone")
+                elif state == 'unchanged':
+                    self.tray.set_status("Already correct")
+                elif state == 'copied':
+                    self.tray.set_status("Copied — press Ctrl+V")
+            except Exception:
+                pass
 
     def reload(self):
         settings = load_settings(SETTINGS_PATH)
@@ -260,6 +347,9 @@ class Listener:
         if self.overlay and (not settings.feedback or not settings.enabled):
             self.overlay.reset()
             self.active_trigger = None
+        if self.clipboard is not None:
+            self.clipboard.strict_preservation = bool(
+                getattr(settings, "clipboard_strict_preservation", True))
         if self.tray:
             self.tray.update(self.registered)
 
@@ -290,6 +380,11 @@ class Listener:
                 self.request_stop()
 
     def handle_message(self, window, message, wparam, lparam):
+        if message == WM_CLEAR_CACHE:
+            if self.engine is not None:
+                self.engine.clear_cache()
+                logging.info("event=cache.cleared source=settings")
+            return 0
         if message == WM_SHORTCUT:
             self.dispatch_shortcut()
             return 0
@@ -364,6 +459,7 @@ class Listener:
                 logging.warning("event=startup.uia_unavailable type=%s",
                                 type(error).__name__)
             engine = GrammarEngine(self.settings, self.key)
+            self.engine = engine
             self.key = None
             if not win.post_message(self.window, WM_READY, 0, 0):
                 raise AppError("Could not signal that the correction worker is ready.")
@@ -378,9 +474,14 @@ class Listener:
 
                     if trigger.mode == "undo":
                         with measure('undo_pipeline'):
-                            record = get_last_undo(trigger.target.pid)
+                            # Peek first: only pop the record once the live
+                            # selection has been verified to be the rewrite
+                            # this undo would revert. Popping first (the old
+                            # behaviour) lost the record even when the
+                            # restore then landed on the wrong text.
+                            record = peek_last(trigger.target.pid)
                             if record is None:
-                                record = get_last_undo(None)
+                                record = peek_last(None)
                             if record is None:
                                 self.status(trigger, "error", "Nothing to undo")
                                 continue
@@ -390,11 +491,29 @@ class Listener:
                                     trigger, lambda: self.epoch, self.stop, settings,
                                     automation, self.clipboard,
                                 )
-                            except Exception:
-                                pass
-                            if selection is None:
-                                guard = Guard(trigger, lambda: self.epoch, self.stop, win.edit_input())
-                                selection = Selection(text=record.refined_text, guard=guard, keyboard_copy=False)
+                            except AppError:
+                                selection = None
+                            except Exception as error:
+                                logging.warning("event=undo.capture_failed type=%s",
+                                                type(error).__name__)
+                                selection = None
+                            if selection is None or selection.text != record.refined_text:
+                                # The corrected text is no longer selected
+                                # (user moved on, or selected something else).
+                                # Restoring the original here would overwrite
+                                # unrelated text, so skip and keep the record.
+                                self.status(trigger, "error",
+                                            "Couldn't verify the corrected text")
+                                logging.info("event=operation.failed category=undo.unverified "
+                                             "status='Couldn't verify the corrected text'")
+                                continue
+                            # Verified: now consume the record and restore.
+                            popped = get_last_undo(trigger.target.pid)
+                            if popped is None or popped is not record:
+                                popped = get_last_undo(None)
+                            if popped is None:
+                                self.status(trigger, "error", "Nothing to undo")
+                                continue
                             selection.replace_with_keyboard(
                                 record.original_text, self.clipboard, automation, settings.max_selection_chars,
                             )
@@ -412,14 +531,29 @@ class Listener:
                             trigger, lambda: self.epoch, self.stop, settings,
                             automation, self.clipboard, engine,
                             progress=lambda: self.status(trigger, "working", mode_label, mode_name=mode_badge),
+                            review_callback=self._review_correction
+                            if getattr(settings, "review_before_apply", False) else None,
                         )
                     diff_summary = getattr(result, "diff_summary", None) if getattr(settings, "show_diff_preview", True) else None
                     cached = getattr(result, "cached", False) or diagnostics.is_cache_hit()
-                    if result in ("success", "unchanged"):
+                    if result == 'discarded':
+                        diagnostics.clear_last_failure()
+                        self.status(trigger, 'unchanged', 'Discarded',
+                                    diff_summary=diff_summary, mode_name=mode_badge)
+                    elif result in ("success", "unchanged", "copied"):
+                        diagnostics.clear_last_failure()
+                        if getattr(result, "offline", False):
+                            label = "Fixed offline"
+                        elif result == "copied":
+                            label = "Copied — press Ctrl+V"
+                        elif result == "success":
+                            label = "Refined"
+                        else:
+                            label = "Already refined"
                         self.status(
                             trigger,
-                            result,
-                            "Refined" if result == "success" else "Already refined",
+                            result if result != "copied" else "success",
+                            label,
                             diff_summary=diff_summary,
                             cached=cached,
                             mode_name=mode_badge,
@@ -430,6 +564,15 @@ class Listener:
                 except AppError as error:
                     logging.info("event=operation.failed category=%s status=%r detail=%s",
                                  error.code or "correction.rejected", error.status, error)
+                    try:
+                        app = win.executable(trigger.target.pid)
+                    except Exception:
+                        app = None
+                    try:
+                        field = win.class_name(trigger.target.focus)
+                    except Exception:
+                        field = None
+                    diagnostics.record_failure(error.code, error.status, app=app, field=field)
                     self.status(trigger, "error", error.status)
                 except Exception as error:
                     logging.warning("event=operation.unexpected_failure type=%s", type(error).__name__)
@@ -448,6 +591,7 @@ class Listener:
             try:
                 if engine:
                     engine.close()
+                self.engine = None
             finally:
                 try:
                     automation = None
@@ -468,6 +612,7 @@ class Listener:
 
                 set_dpi_context(-4)  # DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
                 self.overlay = Overlay()
+                self.overlay.on_review_decision = self._on_review_decision
             except Exception as error:
                 logging.warning("Visual feedback unavailable (%s).", type(error).__name__)
             instance = win.get_module(None)
@@ -486,6 +631,8 @@ class Listener:
                 if not self.window:
                     raise AppError("Could not create the hidden Luna Grammar window.")
                 self.clipboard = Clipboard(self.window)
+                self.clipboard.strict_preservation = bool(
+                    getattr(self.settings, "clipboard_strict_preservation", True))
                 try:
                     self.tray = Tray(self.window, self.registered)
                 except OSError as error:

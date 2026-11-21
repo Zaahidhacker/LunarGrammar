@@ -142,9 +142,11 @@ def main():
             count = check_overlay()
             logging.info('Overlay check passed: %d visible modes, topmost placement, focus preservation, and success/error dismissal.', count)
             return 0
-        settings = load_settings(SETTINGS_PATH)
+        # --check must work even with a corrupt settings.json: it is the
+        # diagnostic for a broken install, so it runs before settings load.
         if args.check:
             return check()
+        settings = load_settings(SETTINGS_PATH)
         key = api_key()
         if args.check_api:
             from grammar_engine import GrammarEngine

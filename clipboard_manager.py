@@ -280,6 +280,11 @@ class Clipboard:
     def __init__(self, owner: int):
         self.owner = owner
         self.offer: PasteOffer | None = None
+        # Fail closed by default: refuse a correction rather than silently
+        # destroying clipboard formats Luna cannot back up. Set False (via
+        # settings.clipboard_strict_preservation) to keep the old
+        # best-effort behaviour.
+        self.strict_preservation = True
         self.private_format = register_format("ExcludeClipboardContentFromMonitorProcessing")
         if not self.private_format:
             raise AppError("Could not register the private Windows clipboard marker.")
@@ -324,7 +329,7 @@ class Clipboard:
             try:
                 backup = snapshot(self.owner)
             except AppError as err:
-                if err.code == "clipboard.preservation_limited":
+                if err.code == "clipboard.preservation_limited" and not self.strict_preservation:
                     backup = safe_snapshot(self.owner)
                 else:
                     raise
@@ -376,6 +381,24 @@ class Clipboard:
         finally:
             for item in backup:
                 item.free()
+
+    def stage_text(self, text: str) -> None:
+        """Place text on the clipboard for manual pasting (copy-only mode).
+
+        Unlike paste(), this deliberately does NOT back up or restore the
+        previous clipboard: the corrected text IS what the user wants there.
+        """
+        line_endings = text.replace("\r\n", "\n").replace("\r", "\n").replace("\n", "\r\n")
+        item = memory_item(CF_UNICODETEXT, (line_endings + "\0").encode("utf-16-le"))
+        try:
+            with self.locked():
+                if not empty_clipboard():
+                    raise AppError("Windows could not prepare the clipboard.",
+                                   "Clipboard unavailable", "clipboard.busy")
+                item.publish()
+        except BaseException:
+            item.free()
+            raise
 
     def render(self, format: int):
         """Runs on the clipboard owner's message thread, while the reader holds the lock."""
@@ -430,7 +453,7 @@ class Clipboard:
                 try:
                     backup = snapshot(self.owner)
                 except AppError as err:
-                    if err.code == "clipboard.preservation_limited":
+                    if err.code == "clipboard.preservation_limited" and not self.strict_preservation:
                         backup = safe_snapshot(self.owner)
                     else:
                         raise
@@ -465,16 +488,24 @@ class Clipboard:
                 # within 500ms (e.g. out-of-process broker or no WM_RENDERFORMAT pump),
                 # directly publish the Unicode text so paste succeeds in any text box!
                 guard.check_input()
+                second_paste = False
                 with self.locked():
                     if not self.matches_token(offer.token):
                         raise AppError("The clipboard changed during paste.",
                                        "Clipboard changed", "clipboard.changed")
-                    if not offer.rendered.is_set() and offer.item.handle:
+                    if offer.rendered.is_set():
+                        # A late read from the first Ctrl+V already got the
+                        # text. Sending a second Ctrl+V now would paste it
+                        # twice, so skip it.
+                        logging.debug("clipboard paste: late first read, skipping second Ctrl+V")
+                    elif offer.item.handle:
                         logging.debug("clipboard paste: falling back to direct rendering")
                         offer.item.publish()
                         offer.rendered.set()
-                input_tick = guard.begin_keyboard()
-                win.edit_shortcut("V", input_tick)
+                        second_paste = True
+                if second_paste:
+                    input_tick = guard.begin_keyboard()
+                    win.edit_shortcut("V", input_tick)
                 time.sleep(PASTE_SETTLE_SECONDS)
             else:
                 # Browser paste can make several asynchronous clipboard reads. Keep

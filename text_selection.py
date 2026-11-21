@@ -2,6 +2,7 @@
 
 import logging
 import os
+import re
 import time
 from dataclasses import dataclass
 from threading import Event
@@ -360,7 +361,7 @@ class Selection:
 
 
 class CorrectionResult(str):
-    """Result string ('success' | 'unchanged' | 'empty') with rich diff and cache metadata."""
+    """Result string ('success' | 'unchanged' | 'empty' | 'copied') with rich diff and cache metadata."""
 
     def __new__(
         cls,
@@ -371,6 +372,7 @@ class CorrectionResult(str):
         words_removed: int = 0,
         net_word_delta: int = 0,
         net_char_delta: int = 0,
+        offline: bool = False,
     ):
         obj = super().__new__(cls, status)
         obj.status = status
@@ -381,6 +383,7 @@ class CorrectionResult(str):
         obj.net_word_delta = net_word_delta
         obj.net_char_delta = net_char_delta
         obj.diff_summary = getattr(diff, "summary", None) if diff else None
+        obj.offline = offline
         return obj
 
 
@@ -412,6 +415,14 @@ def capture(trigger, epoch, stop, settings, automation, clipboard) -> Selection 
     if (executable in excluded or
             target.focus_pid and win.executable(target.focus_pid) in excluded):
         raise AppError("The focused application is excluded in settings.json.", "Excluded app")
+    if win.target_elevated(target):
+        # UIPI silently drops SendInput / SendMessage / UIA from a
+        # medium-integrity Luna into a high-integrity target, with no error
+        # to report — so detect it up front and explain it instead of
+        # failing later with a generic "Couldn't refine".
+        raise AppError("The focused app is running as administrator. Restart Luna Grammar as "
+                       "administrator, or restart the app normally.",
+                       "Elevated target", "capture.elevated_target")
     if not win.is_enabled(target.focus):
         raise AppError("The focused control is disabled.", "Protected field")
     deadline = time.monotonic() + 1.2
@@ -508,7 +519,52 @@ def capture(trigger, epoch, stop, settings, automation, clipboard) -> Selection 
     return result
 
 
-def correct_selection(trigger, epoch, stop, settings, automation, clipboard, engine, progress=lambda: None):
+def _correct_once(engine, text: str, mode: str) -> str:
+    # Preserve the original engine call for the default grammar mode and harnesses.
+    # Model fallback is enabled in the live path: if the primary model is
+    # unavailable or rejects the request, the engine tries the configured
+    # fallbacks (gpt-4o-mini, …) instead of failing outright.
+    if mode == "grammar":
+        return engine.correct(text, fallback_models=True)
+    return engine.correct(text, mode=mode, fallback_models=True)
+
+
+def _correct_long(engine, text: str, mode: str, limit: int) -> str:
+    """Correct text longer than the per-request limit, paragraph by paragraph.
+
+    Splits on blank lines (preserving the original separators), corrects each
+    paragraph in its own request, and rejoins. A single paragraph that still
+    exceeds the limit cannot be split safely, so it keeps the clear error
+    instead of silently truncating.
+    """
+    if len(text) <= limit:
+        return _correct_once(engine, text, mode)
+    parts = re.split(r"(\r\n[ \t]*\r\n|\n[ \t]*\n)", text)
+    corrected_parts: list[str] = []
+    for part in parts:
+        if not part or not part.strip():
+            corrected_parts.append(part)  # blank-line separator, unchanged
+        elif len(part) <= limit:
+            corrected_parts.append(_correct_once(engine, part, mode))
+        else:
+            raise AppError(
+                "A single paragraph exceeds the configured length limit "
+                f"({limit} characters). Select a shorter passage.",
+                "Selection too long", "capture.selection_too_long",
+            )
+    return "".join(corrected_parts)
+
+
+def correct_selection(trigger, epoch, stop, settings, automation, clipboard, engine, progress=lambda: None,
+                      review_callback=None):
+    """Capture, correct and replace the current selection.
+
+    review_callback, when given, is called with (corrected, original, diff)
+    after the correction is computed and before anything is replaced. It
+    returns True to apply, False to discard, or None (no decision in time)
+    which also applies — a correction is never stranded waiting for review.
+    It is only consulted for real replacements, never for copy-only mode.
+    """
     progress()
     with measure("capture"):
         selection = capture(trigger, epoch, stop, settings, automation, clipboard)
@@ -521,13 +577,9 @@ def correct_selection(trigger, epoch, stop, settings, automation, clipboard, eng
         logging.debug("No nonempty selection.")
         return "empty"
     limit = settings.max_selection_chars
-    if len(text) > limit:
-        raise AppError("The selection exceeds the configured length limit.")
     selection.guard.check()
     logging.debug("event=api.request_started")
-    # Preserve the original engine call for the default grammar mode and harnesses.
-    corrected = (engine.correct(text) if trigger.mode == "grammar"
-                 else engine.correct(text, mode=trigger.mode))
+    corrected = _correct_long(engine, text, trigger.mode, limit)
     logging.debug("event=api.request_completed")
     if corrected == text:
         logging.debug("No grammar changes needed.")
@@ -535,11 +587,44 @@ def correct_selection(trigger, epoch, stop, settings, automation, clipboard, eng
 
     # Compute word count and character delta metadata and record in undo manager
     diff = compute_text_diff(text, corrected)
+    offline = bool(getattr(corrected, "offline", False))
+    if getattr(settings, "copy_only", False):
+        # Safe mode: stage the correction on the clipboard for manual
+        # Ctrl+V instead of pasting automatically. No replacement happens,
+        # so nothing is recorded for undo.
+        clipboard.stage_text(corrected)
+        logging.debug("Correction staged on the clipboard (copy-only mode).")
+        return CorrectionResult(
+            "copied",
+            diff=diff,
+            cached=diagnostics.is_cache_hit(),
+            words_added=diff.words_added,
+            words_removed=diff.words_removed,
+            net_word_delta=diff.net_word_delta,
+            net_char_delta=diff.net_char_delta,
+            offline=offline,
+        )
     target_pid = trigger.target.pid if trigger.target else None
-    record_replacement(target_pid, text, corrected, trigger.mode)
-
+    if review_callback is not None:
+        decision = review_callback(corrected, text, diff)
+        if decision is False:
+            logging.debug("Correction discarded after review.")
+            return CorrectionResult(
+                "discarded",
+                diff=diff,
+                cached=diagnostics.is_cache_hit(),
+                words_added=diff.words_added,
+                words_removed=diff.words_removed,
+                net_word_delta=diff.net_word_delta,
+                net_char_delta=diff.net_char_delta,
+                offline=offline,
+            )
     selection.replace_with_keyboard(corrected, clipboard, automation, limit)
     logging.debug("Correction submitted to the verified text control.")
+    # Record the undo entry only AFTER the replacement succeeded. Recording
+    # it before (the old order) left a phantom undo record for a correction
+    # that never landed whenever replacement failed.
+    record_replacement(target_pid, text, corrected, trigger.mode)
     return CorrectionResult(
         "success",
         diff=diff,
@@ -548,4 +633,5 @@ def correct_selection(trigger, epoch, stop, settings, automation, clipboard, eng
         words_removed=diff.words_removed,
         net_word_delta=diff.net_word_delta,
         net_char_delta=diff.net_char_delta,
+        offline=offline,
     )

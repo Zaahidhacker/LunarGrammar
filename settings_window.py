@@ -213,6 +213,9 @@ class SettingsDialog:
         self.shorthand_var = tk.BooleanVar(value=s.expand_shorthand)
         self.diff_preview_var = tk.BooleanVar(value=s.show_diff_preview)
         self.cache_enabled_var = tk.BooleanVar(value=s.cache_enabled)
+        self.copy_only_var = tk.BooleanVar(value=s.copy_only)
+        self.strict_clipboard_var = tk.BooleanVar(value=s.clipboard_strict_preservation)
+        self.review_var = tk.BooleanVar(value=s.review_before_apply)
 
         # Mode selection (0-5)
         self.mode_labels = [
@@ -461,10 +464,23 @@ class SettingsDialog:
         general_box = self._section_box(parent, "Core Options & Windows Integration")
         self._toggle(general_box, "Enable Luna Grammar", self.enabled_var)
         self._toggle(general_box, "Run at Windows sign-in", self.startup_var)
-        self._toggle(general_box, "Sound & animated overlay waveform", self.waveform_var)
+        self._toggle(general_box, "Play a sound when a correction finishes", self.waveform_var)
         self._toggle(general_box, "Show word-level diff preview in overlay", self.diff_preview_var)
         self._toggle(general_box, "Show floating overlay feedback", self.feedback_var)
         self._toggle(general_box, "Expand chat shorthand (e.g. idk → I don't know)", self.shorthand_var)
+
+        # Section 2b: Safety & Review
+        safety_box = self._section_box(parent, "Safety & Review")
+        self._toggle(safety_box, "Copy correction to clipboard instead of pasting", self.copy_only_var)
+        self._toggle(safety_box, "Review each correction before applying (Apply / Discard)", self.review_var)
+        self._toggle(safety_box, "Refuse a correction rather than lose clipboard formats", self.strict_clipboard_var)
+        tk.Label(
+            safety_box,
+            text="Copy-only mode stages the correction for manual Ctrl+V — use it for fragile fields.",
+            bg=self.card,
+            fg=self.secondary,
+            font=(self.family, 8),
+        ).pack(anchor="w", pady=(4, 0))
 
         # Section 3: Appearance & Motion
         vis_box = self._section_box(parent, "Appearance & Motion")
@@ -816,6 +832,130 @@ class SettingsDialog:
             font=(self.family, 8),
         ).pack(anchor="w", pady=(4, 0))
 
+        # Per-app default mode: a bare Ctrl+Win+Z uses this mode in that app.
+        per_app_box = self._section_box(parent, "Per-App Default Mode (bare Ctrl+Win+Z)")
+        tk.Label(
+            per_app_box,
+            text="A bare Ctrl+Win+Z uses this mode in that app. An explicit digit (e.g. Ctrl+Win+2+Z) always wins.",
+            bg=self.card,
+            fg=self.secondary,
+            font=(self.family, 8),
+            wraplength=460,
+            justify="left",
+        ).pack(anchor="w", pady=(0, 6))
+        self.per_app_listbox = tk.Listbox(
+            per_app_box,
+            bg=self.bg,
+            fg=self.ink,
+            selectbackground=self.accent,
+            selectforeground=self.bg if self.dark else "#FFFFFF",
+            relief="flat",
+            highlightthickness=1,
+            highlightbackground=self.border,
+            font=(self.family, 9),
+            height=4,
+        )
+        self.per_app_listbox.pack(fill="both", expand=True, pady=(0, 6))
+        for exe, level in sorted(self.settings.per_app_modes.items()):
+            if 0 <= level < len(self.mode_labels):
+                self.per_app_listbox.insert("end", f"{exe} → {self.mode_labels[level]}")
+
+        per_app_row = tk.Frame(per_app_box, bg=self.card)
+        per_app_row.pack(fill="x", pady=(4, 0))
+        self.new_per_app_var = tk.StringVar(value="")
+        tk.Entry(
+            per_app_row,
+            textvariable=self.new_per_app_var,
+            width=16,
+            bg=self.bg,
+            fg=self.ink,
+            insertbackground=self.ink,
+            relief="flat",
+            highlightthickness=1,
+            highlightbackground=self.border,
+            font=(self.family, 9),
+        ).pack(side="left", padx=(0, 6), ipady=3)
+        self.per_app_mode_var = tk.StringVar(value=self.mode_labels[0])
+        ttk.Combobox(
+            per_app_row,
+            textvariable=self.per_app_mode_var,
+            values=self.mode_labels,
+            state="readonly",
+            width=30,
+        ).pack(side="left", padx=(0, 6))
+        tk.Button(
+            per_app_row,
+            text="+ Add",
+            command=self.add_per_app_mode,
+            bg=self.accent,
+            fg=self.bg if self.dark else "#FFFFFF",
+            relief="flat",
+            bd=0,
+            padx=10,
+            pady=4,
+            font=(self.family, 8, "bold"),
+            cursor="hand2",
+        ).pack(side="left", padx=(0, 6))
+        tk.Button(
+            per_app_row,
+            text="- Remove",
+            command=self.remove_per_app_mode,
+            bg=self.card_secondary,
+            fg=self.danger,
+            relief="flat",
+            bd=0,
+            padx=10,
+            pady=4,
+            font=(self.family, 8),
+            cursor="hand2",
+        ).pack(side="left")
+        self.per_app_msg_var = tk.StringVar(value="Enter an app, pick its mode, then Add.")
+        tk.Label(
+            per_app_box,
+            textvariable=self.per_app_msg_var,
+            bg=self.card,
+            fg=self.secondary,
+            font=(self.family, 8),
+        ).pack(anchor="w", pady=(4, 0))
+
+    def add_per_app_mode(self):
+        exe = self.new_per_app_var.get().strip().casefold()
+        if not exe:
+            self.per_app_msg_var.set("Please enter an executable name.")
+            return
+        if PureWindowsPath(exe).name != exe or not exe.endswith(".exe"):
+            self.per_app_msg_var.set("Executable name must be like 'outlook.exe'.")
+            return
+        label = self.per_app_mode_var.get()
+        row = f"{exe} → {label}"
+        for i in range(self.per_app_listbox.size()):
+            if self.per_app_listbox.get(i).split(" → ")[0] == exe:
+                self.per_app_listbox.delete(i)
+                self.per_app_listbox.insert(i, row)
+                self.per_app_msg_var.set(f"Updated {exe}.")
+                return
+        self.per_app_listbox.insert("end", row)
+        self.per_app_msg_var.set(f"Added {exe}.")
+
+    def remove_per_app_mode(self):
+        selected = self.per_app_listbox.curselection()
+        if not selected:
+            self.per_app_msg_var.set("Select a per-app mode to remove.")
+            return
+        self.per_app_listbox.delete(selected[0])
+        self.per_app_msg_var.set("Removed.")
+
+    def _per_app_modes_dict(self) -> dict:
+        modes = {}
+        for i in range(self.per_app_listbox.size()):
+            row = self.per_app_listbox.get(i)
+            exe, _, label = row.partition(" → ")
+            for level, mode_label in enumerate(self.mode_labels):
+                if label == mode_label:
+                    modes[exe] = level
+                    break
+        return modes
+
     def add_exclusion(self):
         val = self.new_app_var.get().strip()
         if not val:
@@ -995,13 +1135,32 @@ class SettingsDialog:
         self.diag_misses_var.set(str(misses))
         self.diag_ratio_var.set(f"{ratio:.1f}%")
         self.diag_size_var.set(f"{size} items")
-        self.diag_status_var.set("Stats updated")
+        # Last failure (written by the listener process, metadata only —
+        # never selected/corrected text): stage, app, field and reason.
+        try:
+            import diagnostics as _diagnostics
+            last = _diagnostics.read_last_failure_file()
+        except Exception:
+            last = None
+        if last:
+            self.diag_status_var.set(
+                f"Last failure: {last.get('stage', '-')}/{last.get('code', '-')} "
+                f"in {last.get('app', '-')} — {last.get('status', '-')}")
+        else:
+            self.diag_status_var.set("Stats updated — no failures recorded")
 
     def clear_cache(self):
         success = execute_clear_cache()
+        listener_cleared = False
+        try:
+            from windows_hotkey import clear_listener_cache
+            listener_cleared = clear_listener_cache()
+        except Exception:
+            pass
         self.refresh_diagnostics()
-        if success:
-            self.diag_status_var.set("✓ Cache cleared (0 items)")
+        if success or listener_cleared:
+            self.diag_status_var.set("✓ Cache cleared (listener cache cleared too)"
+                                     if listener_cleared else "✓ Cache cleared (listener not running)")
         else:
             self.diag_status_var.set("Cache reset (0 items)")
 
@@ -1033,6 +1192,9 @@ class SettingsDialog:
         # 4. Excluded apps
         excluded = [self.exclusions_listbox.get(i) for i in range(self.exclusions_listbox.size())]
 
+        # 4b. Per-app default modes
+        per_app_modes = self._per_app_modes_dict()
+
         # 5. Custom instructions
         custom_instructions = self.custom_prompt_text.get("1.0", "end-1c").strip()
 
@@ -1044,10 +1206,14 @@ class SettingsDialog:
             "expand_shorthand": self.shorthand_var.get(),
             "show_diff_preview": self.diff_preview_var.get(),
             "cache_enabled": self.cache_enabled_var.get(),
+            "copy_only": self.copy_only_var.get(),
+            "clipboard_strict_preservation": self.strict_clipboard_var.get(),
+            "review_before_apply": self.review_var.get(),
             "default_mode": default_mode,
             "temperature": temperature,
             "custom_prompt": custom_instructions,
             "excluded_apps": excluded,
+            "per_app_modes": per_app_modes,
             "appearance": self.appearance_var.get().lower(),
             "motion": "reduced" if self.motion_var.get() == "Reduced" else "system",
         }
@@ -1070,8 +1236,16 @@ class SettingsDialog:
         try:
             if self.startup_var.get() and not startup_link().exists() and not user_has_startup_key():
                 raise AppError("Save your key as a user environment variable before enabling startup.")
+            # Save the settings FIRST: the old order ran the startup gate
+            # before update_settings(), so a startup problem discarded every
+            # other change as well. Now a startup failure only affects startup.
             update_settings(changes, SETTINGS_PATH)
-            save_startup(self.startup_var.get())
+            try:
+                save_startup(self.startup_var.get())
+            except AppError as error:
+                self.status_var.set(f"Settings saved, but Windows startup could not be changed: {error}")
+                self._reload()
+                return
         except AppError as error:
             self.status_var.set(str(error))
             return
@@ -1092,6 +1266,8 @@ class SettingsDialog:
 
     def _init_shortcuts(self):
         self.root.bind("<Escape>", lambda _e: self.root.destroy())
+        self.root.bind("<Control-s>", lambda _e: self.save())
+        self.root.bind("<Control-S>", lambda _e: self.save())
 
 
 def show_settings() -> int:
@@ -1110,8 +1286,23 @@ def show_settings() -> int:
 
     root = tk.Tk()
     root.title("Luna Grammar · Configuration Center")
-    root.geometry("540x600")
-    root.minsize(500, 560)
+    # DPI-aware size + centred on the primary display: fixed 540x600 was
+    # relatively smaller (and its fixed wraplengths wrapped early) at
+    # 150-200% scaling, and Tk otherwise cascades onto the primary monitor.
+    try:
+        scale = max(1.0, root.winfo_fpixels("1i") / 96.0)
+    except Exception:
+        scale = 1.0
+    width, height = round(540 * scale), round(600 * scale)
+    root.geometry(f"{width}x{height}")
+    root.minsize(round(500 * scale), round(560 * scale))
+    try:
+        root.update_idletasks()
+        x = (root.winfo_screenwidth() - width) // 2
+        y = (root.winfo_screenheight() - height) // 2
+        root.geometry(f"{width}x{height}+{max(0, x)}+{max(0, y)}")
+    except Exception:
+        pass
     try:
         root.iconbitmap(str(ASSETS / "luna.ico"))
     except Exception:

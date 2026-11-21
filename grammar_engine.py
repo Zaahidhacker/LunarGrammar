@@ -49,23 +49,93 @@ def get_model_timeout(model: str, default: float = 10.0) -> float:
     return DEFAULT_MODEL_TIMEOUTS.get(model, default)
 
 
+# --- Offline fallback -------------------------------------------------
+# Used ONLY when the OpenAI API is unreachable (connection error / timeout)
+# and only for the Grammar & Spelling mode. These are deliberately
+# conservative, deterministic transforms: common typos, missing apostrophes
+# in unambiguous contractions, sentence-start capitalisation, and spacing
+# before punctuation. Anything it cannot fix safely it leaves alone, and
+# the caller is told the result came from the offline fixer so the UI can
+# label it honestly instead of pretending the AI corrected it.
+
+LOCAL_TYPOS: dict[str, str] = {
+    "teh": "the", "recieve": "receive", "seperate": "separate",
+    "adress": "address", "occured": "occurred", "untill": "until",
+    "wich": "which", "thier": "their", "freind": "friend",
+    "beleive": "believe", "definately": "definitely", "goverment": "government",
+    "enviroment": "environment", "accross": "across", "apparantly": "apparently",
+    "comming": "coming", "writting": "writing", "tommorow": "tomorrow",
+    "becuase": "because", "langage": "language", "existant": "existent",
+}
+
+LOCAL_CONTRACTIONS: dict[str, str] = {
+    "dont": "don't", "cant": "can't", "wont": "won't", "isnt": "isn't",
+    "arent": "aren't", "wasnt": "wasn't", "werent": "weren't",
+    "havent": "haven't", "hasnt": "hasn't", "didnt": "didn't",
+    "couldnt": "couldn't", "shouldnt": "shouldn't", "wouldnt": "wouldn't",
+    "im": "I'm", "ive": "I've", "id": "I'd", "ill": "I'll",
+}
+
+
+def local_fix(text: str) -> str | None:
+    """Apply safe offline typo fixes. Returns the fixed text, or None if
+    nothing could be fixed safely (caller should then surface the API error)."""
+    if not text or not text.strip():
+        return None
+    fixed = text
+    fixed = re.sub(r"[ \t]{2,}", " ", fixed)
+    fixed = re.sub(r"\s+([,.!?;:])", r"\1", fixed)
+
+    def _word(match: "re.Match[str]") -> str:
+        word = match.group(0)
+        lower = word.lower()
+        replacement = LOCAL_TYPOS.get(lower) or LOCAL_CONTRACTIONS.get(lower)
+        if replacement is None:
+            return word
+        if word[:1].isupper():
+            replacement = replacement[:1].upper() + replacement[1:]
+        return replacement
+
+    fixed = re.sub(r"[A-Za-z]+", _word, fixed)
+    # Capitalise the first letter of each sentence (and the text start).
+    fixed = re.sub(
+        r"(^|[.!?]\s+)([a-z])",
+        lambda m: m.group(1) + m.group(2).upper(),
+        fixed,
+    )
+    if fixed and fixed[0].islower():
+        fixed = fixed[0].upper() + fixed[1:]
+    return fixed if fixed != text else None
+
+
+class OfflineResult(str):
+    """A correction produced by the offline fixer, not the API."""
+
+    offline = True
+
+
 class RefinementCache:
     """Thread-safe in-memory LRU response cache for grammar refinement.
 
-    Keyed on (mode_id, normalized_text) where normalized_text strips leading/trailing
-    whitespace. Returns cached refinements instantly (<15ms) while preserving
-    requested boundary whitespace and maintaining hit/miss statistics.
+    Keyed on (mode_id, normalized_text, context) where normalized_text strips
+    leading/trailing whitespace and ``context`` distinguishes requests that
+    must not share a cached result (model, shorthand setting, temperature,
+    custom prompt). Callers that omit ``context`` keep the legacy
+    (mode_id, normalized_text) behaviour. Returns cached refinements instantly
+    (<15ms) while preserving requested boundary whitespace and maintaining
+    hit/miss statistics.
     """
 
     _instance: "RefinementCache | None" = None
+    _instance_lock = threading.Lock()
 
     def __init__(self, max_size: int = 1024) -> None:
         if max_size <= 0:
             raise ValueError("max_size must be positive")
         self._max_size = max_size
         self._lock = threading.RLock()
-        # Maps (mode_id, normalized_text) -> (core_refined, exact_original, exact_refined)
-        self._cache: OrderedDict[tuple[str, str], tuple[str, str, str]] = OrderedDict()
+        # Maps (mode_id, normalized_text, context) -> (core_refined, exact_original, exact_refined)
+        self._cache: OrderedDict[tuple[str, str, str], tuple[str, str, str]] = OrderedDict()
         self._hits = 0
         self._misses = 0
 
@@ -73,7 +143,9 @@ class RefinementCache:
     def get_instance(cls, max_size: int = 1024) -> "RefinementCache":
         """Return the process-wide default RefinementCache singleton."""
         if cls._instance is None:
-            cls._instance = cls(max_size=max_size)
+            with cls._instance_lock:
+                if cls._instance is None:
+                    cls._instance = cls(max_size=max_size)
         return cls._instance
 
     @staticmethod
@@ -81,7 +153,11 @@ class RefinementCache:
         """Normalize text by stripping leading and trailing whitespace."""
         return text.strip()
 
-    def get(self, mode_id: Any, text: str | None = None) -> str | None:
+    @staticmethod
+    def _key(mode_id: Any, text: str, context: str = "") -> tuple[str, str, str]:
+        return (str(mode_id), RefinementCache.normalize_key(text), str(context or ""))
+
+    def get(self, mode_id: Any, text: str | None = None, context: str = "") -> str | None:
         """Retrieve a cached refinement result.
 
         Supports both cache.get(mode_id, text) and cache.get((mode_id, text)).
@@ -94,7 +170,7 @@ class RefinementCache:
             return None
 
         normalized = self.normalize_key(text)
-        key = (str(mode_id), normalized)
+        key = self._key(mode_id, text, context)
 
         with self._lock:
             if key not in self._cache:
@@ -114,7 +190,8 @@ class RefinementCache:
         trailing_ws = text[len(text.rstrip()):] if len(text.rstrip()) < len(text) else ""
         return leading_ws + core_refined + trailing_ws
 
-    def set(self, mode_id: Any, text: str | None = None, result: str | None = None) -> None:
+    def set(self, mode_id: Any, text: str | None = None, result: str | None = None,
+            context: str = "") -> None:
         """Store a refinement result in the cache.
 
         Supports both cache.set(mode_id, text, result) and cache.set((mode_id, text), result).
@@ -126,7 +203,7 @@ class RefinementCache:
             return
 
         normalized = self.normalize_key(text)
-        key = (str(mode_id), normalized)
+        key = self._key(mode_id, text, context)
         core_refined = result.strip()
 
         with self._lock:
@@ -136,9 +213,10 @@ class RefinementCache:
             if len(self._cache) > self._max_size:
                 self._cache.popitem(last=False)
 
-    def put(self, mode_id: Any, text: str | None = None, result: str | None = None) -> None:
+    def put(self, mode_id: Any, text: str | None = None, result: str | None = None,
+            context: str = "") -> None:
         """Alias for set()."""
-        self.set(mode_id, text, result)
+        self.set(mode_id, text, result, context=context)
 
     def clear(self, reset_stats: bool = True) -> None:
         """Clear all entries from the cache."""
@@ -192,9 +270,9 @@ class RefinementCache:
             total = self._hits + self._misses
             return round((self._hits / total), 4) if total > 0 else 0.0
 
-    def contains(self, mode_id: Any, text: str) -> bool:
+    def contains(self, mode_id: Any, text: str, context: str = "") -> bool:
         """Check whether a (mode_id, text) pair exists in the cache."""
-        key = (str(mode_id), self.normalize_key(text))
+        key = self._key(mode_id, text, context)
         with self._lock:
             return key in self._cache
 
@@ -218,13 +296,16 @@ class RefinementCache:
 
 
 _default_cache: RefinementCache | None = None
+_default_cache_lock = threading.Lock()
 
 
 def get_default_cache(max_size: int = 1024) -> RefinementCache:
     """Return the shared default RefinementCache singleton."""
     global _default_cache
     if _default_cache is None:
-        _default_cache = RefinementCache(max_size=max_size)
+        with _default_cache_lock:
+            if _default_cache is None:
+                _default_cache = RefinementCache(max_size=max_size)
     return _default_cache
 
 
@@ -299,11 +380,11 @@ def validate(original: str, corrected: str, expand_shorthand: bool = False, mode
     if len(corrected) > max(len(original) + max(allowance, extra + 8), int(len(original) * ratio)):
         raise AppError("The correction was disproportionately long.")
 
-    if len(original.strip()) >= 40 and len(corrected.strip()) < len(original.strip()) * 0.65:
+    if mode != "bulletize" and len(original.strip()) >= 40 and len(corrected.strip()) < len(original.strip()) * 0.65:
         raise AppError("The correction appeared truncated.")
     if len(FENCE.findall(corrected)) > len(FENCE.findall(original)):
         raise AppError("The correction introduced a Markdown fence.")
-    if len(MARKUP.findall(corrected)) > len(MARKUP.findall(original)):
+    if mode != "bulletize" and len(MARKUP.findall(corrected)) > len(MARKUP.findall(original)):
         raise AppError("The correction introduced Markdown formatting.")
     if len(COMMENTARY.findall(corrected)) > len(COMMENTARY.findall(original)):
         raise AppError("The correction included explanatory text.")
@@ -313,6 +394,33 @@ def validate(original: str, corrected: str, expand_shorthand: bool = False, mode
         raise AppError("The correction changed numeric details.")
     if SYMBOLS.findall(original) != SYMBOLS.findall(corrected):
         raise AppError("The correction changed an emoji or symbol.")
+
+    if mode == "bulletize":
+        # Bulletize legitimately restructures the text: it introduces list
+        # markers, changes the line count, and shortens rambling input into
+        # punchy bullets. The generic line-layout / truncation / markup
+        # checks below would reject almost every valid bullet rewrite, so
+        # bullet mode gets its own checks: no empty lines, no dropped
+        # content beyond a summary floor, and no introduced Markdown
+        # other than the bullet markers themselves.
+        lines = [line for line in NEWLINES.split(corrected)]
+        if not lines or not any(line.strip() for line in lines):
+            raise AppError("The bullet rewrite was empty.")
+        if not any(re.match(r"\s*(?:[-*•]|\d+[.)])\s+", line) for line in lines):
+            raise AppError("The bullet rewrite contained no bullets.")
+        stripped = [
+            re.sub(r"^\s*(?:[-*•]|\d+[.)])\s+", "", line) for line in lines
+        ]
+        if any(not line.strip() for line in stripped):
+            raise AppError("The bullet rewrite contained an empty bullet.")
+        if len(MARKUP.findall("\n".join(stripped))) > len(MARKUP.findall(original)):
+            raise AppError("The correction introduced Markdown formatting.")
+        if len(corrected.strip()) < len(original.strip()) * 0.2 and len(original.strip()) >= 40:
+            raise AppError("The bullet rewrite dropped most of the content.")
+        orig_lines = NEWLINES.split(original)
+        if len(lines) > max(len(orig_lines) * 3 + 8, 24):
+            raise AppError("The bullet rewrite introduced too many lines.")
+        return corrected.strip("\n") if corrected.strip() else corrected
 
     original_lines = NEWLINES.split(original)
     corrected_lines = NEWLINES.split(corrected)
@@ -370,6 +478,28 @@ class GrammarEngine:
         self.expand_shorthand = getattr(settings, "expand_shorthand", True)
         self.cache_enabled = getattr(settings, "cache_enabled", True)
         self.fallback_models = getattr(settings, "fallback_models", None)
+        # Previously saved but never applied: the user's own instructions and
+        # temperature are now part of every request (see _execute_api_call).
+        self.custom_prompt = str(getattr(settings, "custom_prompt", "") or "").strip()
+        try:
+            self.temperature = float(getattr(settings, "temperature", 0.0))
+        except (TypeError, ValueError):
+            self.temperature = 0.0
+        self.temperature = min(2.0, max(0.0, self.temperature))
+
+    def cache_context(self, model: str | None = None) -> str:
+        """Cache key context: a cached rewrite is only reusable when the
+        model, shorthand setting, temperature and custom prompt match, so a
+        settings change can never serve a stale rewrite."""
+        import hashlib
+
+        prompt_hash = hashlib.sha256(self.custom_prompt.encode("utf-8")).hexdigest()[:16]
+        return "|".join([
+            model or self.model,
+            "shorthand" if self.expand_shorthand else "literal",
+            f"temp={self.temperature:g}",
+            f"prompt={prompt_hash}",
+        ])
 
     def clear_cache(self) -> None:
         """Purge all entries from the engine's cache."""
@@ -424,12 +554,23 @@ class GrammarEngine:
         with measure("api_preparation"):
             if mode not in MODES:
                 raise AppError("Unknown correction mode.")
-            options = {}
+            options: dict[str, Any] = {}
             if model == "gpt-6-luna" or model.startswith("gpt-6-luna-"):
+                # gpt-6-luna is a reasoning model: keep its fixed sampling.
                 options = {"reasoning": {"effort": "none"}, "temperature": 0}
+            elif model in ("gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"):
+                # Other supported chat models honour the user's temperature.
+                options = {"temperature": self.temperature}
+            # Unknown/custom models get neither option: sending an unsupported
+            # parameter would make the whole request fail.
             instructions = MODE_INSTRUCTIONS.get(mode)
             if instructions is None:
                 instructions = COMMON_INSTRUCTIONS + '\n' + MODES[mode].instructions
+            if getattr(self, "custom_prompt", ""):
+                instructions += (
+                    "\nAdditional user instructions (apply in addition to the "
+                    f"mode above): {self.custom_prompt}"
+                )
             if self.expand_shorthand:
                 words = dict.fromkeys(word.lower() for word in CHAT_WORDS.findall(selected))
                 if words:
@@ -442,7 +583,7 @@ class GrammarEngine:
                 instructions=instructions,
                 timeout=timeout,
                 store=False,
-                max_output_tokens=max(256, len(selected) * 3 + 128),
+                max_output_tokens=min(8192, max(256, len(selected) * 3 + 128)),
                 **options,
             )
 
@@ -458,11 +599,10 @@ class GrammarEngine:
                 response.usage.output_tokens,
             )
             diagnostics.record_tokens(response.usage.input_tokens, response.usage.output_tokens)
-            diagnostics.record_throughput(
-                chars=len(selected) + len(response.output_text or ""),
-                tokens=response.usage.input_tokens + response.usage.output_tokens,
-                duration_seconds=api_duration,
-            )
+            # Throughput records duration only here: tokens/chars are already
+            # counted by record_tokens/record_characters below, and passing
+            # them again used to double-count both.
+            diagnostics.record_throughput(duration_seconds=api_duration)
 
         if response.status != "completed":
             raise AppError("OpenAI did not complete the correction.", "Incomplete response", "api.invalid_response")
@@ -479,7 +619,11 @@ class GrammarEngine:
                 diagnostics.record_characters(len(selected), len(validated))
                 return validated
         except AppError as error:
-            raise AppError(str(error), "Invalid correction", "api.invalid_response") from None
+            # Keep the specific validation reason visible instead of
+            # collapsing every rejection to "Invalid correction": the pill
+            # shows this status, so "The correction changed a URL." tells
+            # the user far more than a generic label.
+            raise AppError(str(error), str(error)[:90], "api.validation_failed") from None
 
     def correct(
         self,
@@ -500,7 +644,7 @@ class GrammarEngine:
         # 1. Fast Cache Path (<15ms return without API call)
         t_cache_start = perf_counter_ns()
         if self.cache_enabled and self.cache is not None:
-            cached_result = self.cache.get(mode, selected)
+            cached_result = self.cache.get(mode, selected, context=self.cache_context(model))
             if cached_result is not None:
                 diagnostics.mark_cache_hit(True)
                 elapsed_ms = (perf_counter_ns() - t_cache_start) / 1_000_000
@@ -543,11 +687,12 @@ class GrammarEngine:
                 )
                 # Populate cache on successful refinement
                 if self.cache_enabled and self.cache is not None:
-                    self.cache.set(mode, selected, refined)
+                    self.cache.set(mode, selected, refined, context=self.cache_context(current_model))
                 return refined
             except AppError as err:
                 last_error = err
-                # Attempt fallback if more candidates remain
+                # Attempt fallback if more candidates remain; otherwise fall
+                # through to the post-loop handling (offline fallback, then raise).
                 if idx + 1 < len(candidates):
                     logging.warning(
                         "event=api.model_fallback from=%s to=%s error=%s",
@@ -556,9 +701,23 @@ class GrammarEngine:
                         err,
                     )
                     continue
-                raise
+                break
 
         if last_error is not None:
+            # Offline fallback: only when the API could not be reached at all
+            # (connection/timeout), only for plain grammar mode, and only if
+            # the deterministic fixer actually improves the text. The result
+            # is labelled offline so the UI never presents it as an AI edit.
+            if (
+                mode == "grammar"
+                and getattr(last_error, "code", None) in ("api.connection_failed", "api.timeout")
+            ):
+                fixed = local_fix(selected)
+                if fixed is not None:
+                    logging.info("event=api.offline_fallback mode=%s", mode)
+                    # Deliberately NOT cached: once the API is reachable
+                    # again, the same text must get a real AI correction.
+                    return OfflineResult(fixed)
             raise last_error
         raise AppError("OpenAI did not return a valid response.", "API failed", "api.request_failed")
 

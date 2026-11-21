@@ -7,7 +7,7 @@ from collections import defaultdict, deque
 from contextlib import contextmanager
 from contextvars import ContextVar
 from functools import wraps
-from pathlib import PureWindowsPath
+from pathlib import Path, PureWindowsPath
 from time import perf_counter_ns
 from traceback import walk_tb
 from typing import Any, Callable, TypeVar
@@ -16,6 +16,84 @@ F = TypeVar("F", bound=Callable[..., Any])
 
 operation: ContextVar[str] = ContextVar("luna_operation_id", default="-")
 cache_hit: ContextVar[bool] = ContextVar("luna_cache_hit", default=False)
+
+# --- Last-failure record ------------------------------------------------
+# The single most useful debugging aid for "Couldn't refine text": which
+# stage failed (capture / api / replace), the stable error code, the
+# application and the field type. Never stores selected or corrected text.
+# Persisted (best-effort) to last-failure.json next to the log so the
+# separate Settings process can display it in its Diagnostics tab.
+_last_failure_lock = threading.RLock()
+_last_failure: dict[str, Any] | None = None
+
+
+def stage_for_code(code: str | None) -> str:
+    """Map a stable AppError code to the pipeline stage that failed."""
+    code = code or ""
+    if code.startswith("capture.") or code in ("capture.no_fresh_text",):
+        return "capture"
+    if code.startswith("api."):
+        return "api"
+    if code.startswith(("clipboard.", "replace.", "selection.")):
+        return "replace"
+    if code.startswith("focus."):
+        return "capture"
+    if code.startswith("hotkey."):
+        return "shortcut"
+    return "correction"
+
+
+def record_failure(code: str | None, status: str, app: str | None = None,
+                   field: str | None = None, stage: str | None = None) -> dict[str, Any]:
+    """Record the latest failure (metadata only, no text) and persist it."""
+    import json as _json
+    import os as _os
+    from datetime import datetime as _datetime, timezone as _timezone
+
+    entry = {
+        "when": _datetime.now(_timezone.utc).isoformat(timespec="seconds"),
+        "stage": stage or stage_for_code(code),
+        "code": code or "correction.rejected",
+        "status": status,
+        "app": app or "-",
+        "field": field or "-",
+    }
+    with _last_failure_lock:
+        global _last_failure
+        _last_failure = dict(entry)
+    try:
+        folder = Path(_os.environ["LOCALAPPDATA"]) / "LunaGrammar"
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / "last-failure.json").write_text(_json.dumps(entry, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+    return entry
+
+
+def get_last_failure() -> dict[str, Any] | None:
+    """Return the latest recorded failure, or None if none was recorded."""
+    with _last_failure_lock:
+        return dict(_last_failure) if _last_failure is not None else None
+
+
+def read_last_failure_file() -> dict[str, Any] | None:
+    """Read the persisted last-failure record (used by the Settings process)."""
+    import json as _json
+    import os as _os
+
+    try:
+        path = Path(_os.environ["LOCALAPPDATA"]) / "LunaGrammar" / "last-failure.json"
+        data = _json.loads(path.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else None
+    except Exception:
+        return None
+
+
+def clear_last_failure() -> None:
+    """Clear the in-memory last-failure record (e.g. after a success)."""
+    with _last_failure_lock:
+        global _last_failure
+        _last_failure = None
 
 
 def _compute_percentiles(data: list[float]) -> dict[str, float]:

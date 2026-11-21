@@ -133,10 +133,12 @@ class EngineCacheIntegrationTests(unittest.TestCase):
 
         text = "this is an uncorrected line"
         expected = "This is an uncorrected line."
-        cache.set("grammar", text, expected)
 
         # Instantiate engine with dummy key and mock openai so network call would fail if attempted
         engine = GrammarEngine(Settings(), "dummy_key", cache=cache)
+        # Seed with the engine's cache context: a rewrite cached under a
+        # different model / shorthand / temperature / prompt must not be reused.
+        cache.set("grammar", text, expected, context=engine.cache_context())
         try:
             t0 = time.perf_counter()
             result = engine.correct(text, mode="grammar")

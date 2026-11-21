@@ -32,6 +32,23 @@ def logo(draw, x, y, scale, color=LIME):
     shape([(18.9, 11.2), (22, 11.2), (22, 19), (18.9, 19)])
 
 
+def bolt(draw, x, y, scale, color):
+    """Draw a small vector lightning bolt (11x16 box) — no emoji glyph, so
+    it renders identically on every machine (Poppins has no ⚡ glyph)."""
+    draw.polygon([(round(x + px * scale), round(y + py * scale)) for px, py in
+                  [(7, 0), (11, 0), (8, 7), (11, 7), (4, 16), (6, 9), (3, 9)]],
+                 fill=color)
+
+
+def ellipsize(text: str, font_obj, max_width: float) -> str:
+    """Shorten text with … so it fits max_width in the given font."""
+    if not text or font_obj.getlength(text) <= max_width:
+        return text
+    while text and font_obj.getlength(text + "…") > max_width:
+        text = text[:-1]
+    return (text + "…") if text else "…"
+
+
 def tray_image():
     image = Image.new("RGBA", (128, 128))
     draw = ImageDraw.Draw(image)
@@ -59,6 +76,7 @@ class Frame:
     diff_badge: str = ""
     cached: bool = False
     subtext: str = ""
+    review: bool = False
 
 
 @dataclass
@@ -100,6 +118,7 @@ class Motion:
             return None
         age = max(0.0, now - self.started)
         enter = 1 if reduced else ease(age / 0.16)
+        display_label = self.label
 
         # Base width calculation
         working_width = WORK_WIDTH
@@ -109,7 +128,9 @@ class Motion:
         width = working_width
         transition, leave = 0.0, 0.0
         if self.state != "working":
-            hold = 2.25 if self.state == "error" else 1.10
+            # Review stays up for the worker's 30s decision window, then
+            # falls through to apply — the pill must not vanish first.
+            hold = 30.0 if self.state == "review" else (2.25 if self.state == "error" else 1.10)
             elapsed = now - self.finished
             if elapsed >= hold + (0.0 if reduced else 0.20):
                 self.state = "hidden"
@@ -120,23 +141,34 @@ class Motion:
             if self.diff_badge:
                 extra_w += font(10, "Medium").getlength(self.diff_badge) + 22
             if self.cached and "cached" not in (self.diff_badge or "").lower():
-                extra_w += font(9.5, "Medium").getlength("⚡ Cached") + 20
+                extra_w += font(9.5, "Medium").getlength("Cached") + 30
             if self.mode_badge and not self.diff_badge:
                 extra_w += font(10, "Medium").getlength(self.mode_badge) + 20
             if self.subtext:
                 extra_w += font(10, "Regular").getlength(self.subtext) + 16
+            if self.state == "review":
+                # Room for the [Discard] [Apply] buttons before the close zone.
+                extra_w += 160
 
-            result_width = max(174, font(13, "Medium").getlength(self.label) + 122 + extra_w)
+            # Clamp the capsule so long error/validation messages cannot push
+            # the close button off the pill; the label is ellipsized to fit.
+            # Review pills get a wider cap: the corrected-text preview is the
+            # point, and the Apply/Discard buttons already reserve 160px.
+            max_width = 560 if self.state == "review" else 420
+            result_width = min(max_width, max(174, font(13, "Medium").getlength(self.label) + 122 + extra_w))
+            label_font = font(13, "Medium")
+            display_label = ellipsize(self.label, label_font, result_width - 122 - extra_w)
             width += (result_width - width) * transition
             leave = 0 if reduced else ease((elapsed - hold) / 0.20)
 
         scale = (0.96 + enter * 0.04) * (1 - leave * 0.08)
         return Frame(
-            self.state, self.label, width * scale, HEIGHT * scale,
+            self.state, display_label, width * scale, HEIGHT * scale,
             enter * (1 - leave), 5 * (1 - enter) + 6 * leave,
             0.42 if reduced else age, transition,
             mode_badge=self.mode_badge, diff_badge=self.diff_badge,
-            cached=self.cached, subtext=self.subtext
+            cached=self.cached, subtext=self.subtext,
+            review=self.state == "review",
         )
 
 
@@ -238,6 +270,8 @@ def render(frame: Frame, dpi: int, appearance: str) -> Image.Image:
         label_size = 12
         while label_size > 8 and font(round(label_size * s)).getlength(working_label) > (w - cur_x - 30 * s):
             label_size -= 1
+        working_label = ellipsize(working_label, font(max(8, round(label_size * s))),
+                                  w - cur_x - 30 * s)
         marks.text(
             (cur_x, center),
             working_label,
@@ -254,7 +288,7 @@ def render(frame: Frame, dpi: int, appearance: str) -> Image.Image:
         x = 66 * s
         stroke = max(1, round(2 * s))
 
-        if frame.state in ("success", "unchanged"):
+        if frame.state in ("success", "unchanged", "review"):
             mark = accent
         elif frame.state == "undo":
             mark = ice_blue
@@ -313,8 +347,9 @@ def render(frame: Frame, dpi: int, appearance: str) -> Image.Image:
 
         if frame.cached and "cached" not in (frame.diff_badge or "").lower():
             c_font = font(max(8, round(9.5 * s)), "Medium")
-            c_text = "⚡ Cached"
-            c_w = c_font.getlength(c_text) + 12 * s
+            c_text = "Cached"
+            bolt_w = 12 * s
+            c_w = bolt_w + c_font.getlength(c_text) + 14 * s
             c_h = 18 * s
             c_top = center - c_h / 2
             c_bg = (230, 183, 121, 35) if dark else (240, 220, 180, 160)
@@ -326,7 +361,8 @@ def render(frame: Frame, dpi: int, appearance: str) -> Image.Image:
                 outline=c_border,
                 width=max(1, round(s)),
             )
-            marks.text((cur_x + c_w / 2, center), c_text, font=c_font, fill=amber, anchor="mm")
+            bolt(marks, cur_x + 5 * s, center - 7 * s, 0.85 * s, amber)
+            marks.text((cur_x + bolt_w + 4 * s, center), c_text, font=c_font, fill=amber, anchor="lm")
             cur_x += c_w + 6 * s
 
         if frame.mode_badge and not frame.diff_badge:
@@ -350,6 +386,30 @@ def render(frame: Frame, dpi: int, appearance: str) -> Image.Image:
         if frame.subtext:
             sub_font = font(max(8, round(10 * s)), "Regular")
             marks.text((cur_x, center), frame.subtext, font=sub_font, fill=muted, anchor="lm")
+
+        if frame.review:
+            # [Discard] [Apply] sit right-aligned before the close zone; the
+            # overlay's click zones mirror these exact rectangles.
+            btn_font = font(max(8, round(10 * s)), "Medium")
+            btn_h = 22 * s
+            btn_top = center - btn_h / 2
+            d_x0 = w - 48 * s - 152 * s
+            a_x0 = w - 48 * s - 76 * s
+            marks.rounded_rectangle(
+                (d_x0, btn_top, d_x0 + 72 * s, btn_top + btn_h),
+                radius=11 * s,
+                fill=(255, 255, 255, 14) if dark else (0, 0, 0, 10),
+                outline=border,
+                width=max(1, round(s)),
+            )
+            marks.text((d_x0 + 36 * s, center), "Discard", font=btn_font, fill=muted, anchor="mm")
+            marks.rounded_rectangle(
+                (a_x0, btn_top, a_x0 + 72 * s, btn_top + btn_h),
+                radius=11 * s,
+                fill=(*tuple(int(accent[i:i + 2], 16) for i in (1, 3, 5)), 235),
+            )
+            marks.text((a_x0 + 36 * s, center), "Apply", font=btn_font,
+                       fill=(16, 29, 73), anchor="mm")
 
         result.putalpha(result.getchannel("A").point(lambda value: round(value * blend)))
         im = Image.alpha_composite(im, result)

@@ -166,8 +166,10 @@ class ResponsesTests(unittest.TestCase):
                 def handler(request):
                     raise kind("private data", request=request)
 
+                # "Hello." is already correct, so the offline fallback has
+                # nothing to fix and the API error must still surface.
                 with self.assertRaisesRegex(AppError, message):
-                    self.engine(handler).correct("hello")
+                    self.engine(handler).correct("Hello.")
 
     def test_incomplete_empty_and_refused(self):
         for payload, message in [
