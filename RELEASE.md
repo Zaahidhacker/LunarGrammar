@@ -1,1 +1,46 @@
-IyBHZXR0aW5nIEx1bmFHcmFtbWFyIOKAlCBpbnN0YWxsZXIKCiMjIEhvdyB0byBpbnN0YWxsICh0aGUgc3VwcG9ydGVkIHdheSkKCjEuIEdvIHRvIHRoZSAqKlJlbGVhc2VzKiogcGFnZSBvZiBgWmFhaGlkaGFja2VyL0x1bmFyR3JhbW1hcmAgb24gR2l0SHViLgoyLiBEb3dubG9hZCBgTHVuYUdyYW1tYXItU2V0dXAtPHZlcnNpb24+LmV4ZWAgZnJvbSB0aGUgbGF0ZXN0IHJlbGVhc2UuCjMuIFJ1biBpdC4gSXQgaW5zdGFsbHMgcGVyLXVzZXIgdG8gYCVMT0NBTEFQUERBVEElXEx1bmFHcmFtbWFyYCDigJQgKipubyBhZG1pbgogICBwcm9tcHQsIG5vIG1hbnVhbCBjb25maWd1cmF0aW9uKiouCjQuIE9uIGZpcnN0IHJ1biwgTHVuYUdyYW1tYXIgYXNrcyBmb3IgeW91ciBPcGVuQUkgQVBJIGtleSBvbmNlLCBpbiBTZXR0aW5ncwogICAob3IgaXQgcmVhZHMgYE9QRU5BSV9BUElfS0VZYCBpZiB0aGF0IGlzIGFscmVhZHkgc2V0KS4gVGhlIGtleSBpcyBzdG9yZWQKICAgd2l0aCBXaW5kb3dzIERQQVBJLCBuZXZlciBpbiB0aGUgaW5zdGFsbGVyIG9yIGluIHRoZSByZXBvLgo1LiBPcHRpb25hbDogdGljayAiU3RhcnQgTHVuYUdyYW1tYXIgd2hlbiBJIHNpZ24gaW4iIGR1cmluZyBpbnN0YWxsLCBvciB0dXJuCiAgIGl0IG9uIGxhdGVyIGluIFNldHRpbmdzLgoKIyMgU21hcnRTY3JlZW4KClRoZSBpbnN0YWxsZXIgaXMgY3VycmVudGx5IHVuc2lnbmVkLCBzbyBXaW5kb3dzIFNtYXJ0U2NyZWVuIG1heSBzaG93CiJXaW5kb3dzIHByb3RlY3RlZCB5b3VyIFBDIi4gVGhhdCBpcyBleHBlY3RlZCBmb3IgYSBuZXcsIHVuc2lnbmVkIHB1Ymxpc2hlcjoKY2xpY2sgKipNb3JlIGluZm8g4oaSIFJ1biBhbnl3YXkqKi4gQSBjb2RlLXNpZ25pbmcgY2VydGlmaWNhdGUgKGFuZCB0aGUKYHVpQWNjZXNzYCBwYWNrYWdpbmcgdGhhdCB3b3VsZCBhbHNvIG5lZWQgaXQpIGlzIGEgc2VwYXJhdGUsIGNvc3RlZCBkZWNpc2lvbi4KCiMjIEhvdyBhIHJlbGVhc2UgaXMgbWFkZSAoZm9yIHRoZSBtYWludGFpbmVyKQoKYGBgdGV4dAouXGJ1aWxkLnBzMSAgICAgICAgICAgICMgcnVucyB0ZXN0cyBmaXJzdCwgdGhlbiBidWlsZHMgZGlzdFxMdW5hR3JhbW1hci5leGUKZ2l0IHRhZyB2MS4xLjAKZ2l0IHB1c2ggb3JpZ2luIHYxLjEuMApgYGAKClRhZ2dpbmcgdHJpZ2dlcnMgdGhlIEdpdEh1YiBBY3Rpb25zIHdvcmtmbG93IChgLmdpdGh1Yi93b3JrZmxvd3MvYnVpbGQtd2luZG93cy55bWxgKToKYHdpbmRvd3MtbGF0ZXN0YCBydW5uZXIg4oaSIFB5dGhvbiAzLjEyIOKGkiBpbnN0YWxsIGByZXF1aXJlbWVudHMtYnVpbGQudHh0YCDihpIKcnVuIHRoZSB0ZXN0IHN1aXRlIOKGkiBQeUluc3RhbGxlciBidWlsZCDihpIgSW5ubyBTZXR1cCBjb21waWxlIOKGkiB0aGUgaW5zdGFsbGVyCmFuZCB0aGUgZXhlIGFyZSBhdHRhY2hlZCB0byB0aGUgR2l0SHViIFJlbGVhc2UgYXMgYXNzZXRzLCB3aXRoIFNIQS0yNTYgaGFzaGVzCmluIHRoZSB3b3JrZmxvdyBsb2cuCgojIyBXaGF0IGlzIE5PVCBpbiB0aGUgcmVwbwoKVGhlIGAuZXhlYCBhbmQgdGhlIGluc3RhbGxlciBhcmUgKipub3QqKiBjb21taXR0ZWQgdG8gZ2l0LiBUaGV5IGFyZSByZWxlYXNlCmFzc2V0cyBvbmx5LiBUaGUgdGV4dC1vbmx5IEdpdEh1YiBzbmFwc2hvdCBwdXNoIGNhbm5vdCBjYXJyeSBiaW5hcmllcywgYW5kCmJpbmFyaWVzIGluIGdpdCB3b3VsZCBibG9hdCB0aGUgcmVwbyBmb3IgZXZlcnkgY2xvbmUuCgojIyBJZiB0aGVyZSBpcyBubyBSZWxlYXNlIHlldAoKVGhlIGluc3RhbGxlciBmaWxlcyAoYGluc3RhbGxlci9pbnN0YWxsZXIuaXNzYCwgYC5naXRodWIvd29ya2Zsb3dzL2J1aWxkLXdpbmRvd3MueW1sYCwKYFZFUlNJT05gKSBhcmUgaW4gdGhlIHJlcG87IHVudGlsIGEgdGFnIGlzIHB1c2hlZCwgYnVpbGQgbG9jYWxseSBvbiBXaW5kb3dzCndpdGggYC5cYnVpbGQucHMxYCBhbmQgdGhlbiBgaXNjYyAvREFwcFZlcnNpb249PHZlcnNpb24+IGluc3RhbGxlclxpbnN0YWxsZXIuaXNzYC4K
+# Getting LunaGrammar — installer
+
+## How to install (the supported way)
+
+1. Go to the **Releases** page of `Zaahidhacker/LunarGrammar` on GitHub.
+2. Download `LunaGrammar-Setup-<version>.exe` from the latest release.
+3. Run it. It installs per-user to `%LOCALAPPDATA%\LunaGrammar` — **no admin
+   prompt, no manual configuration**.
+4. On first run, LunaGrammar asks for your OpenAI API key once, in Settings
+   (or it reads `OPENAI_API_KEY` if that is already set). The key is stored
+   with Windows DPAPI, never in the installer or in the repo.
+5. Optional: tick "Start LunaGrammar when I sign in" during install, or turn
+   it on later in Settings.
+
+## SmartScreen
+
+The installer is currently unsigned, so Windows SmartScreen may show
+"Windows protected your PC". That is expected for a new, unsigned publisher:
+click **More info → Run anyway**. A code-signing certificate (and the
+`uiAccess` packaging that would also need it) is a separate, costed decision.
+
+## How a release is made (for the maintainer)
+
+```text
+.\build.ps1            # runs tests first, then builds dist\LunaGrammar.exe
+git tag v1.1.0
+git push origin v1.1.0
+```
+
+Tagging triggers the GitHub Actions workflow (`.github/workflows/build-windows.yml`):
+`windows-latest` runner → Python 3.12 → install `requirements-build.txt` →
+run the test suite → PyInstaller build → Inno Setup compile → the installer
+and the exe are attached to the GitHub Release as assets, with SHA-256 hashes
+in the workflow log.
+
+## What is NOT in the repo
+
+The `.exe` and the installer are **not** committed to git. They are release
+assets only. The text-only GitHub snapshot push cannot carry binaries, and
+binaries in git would bloat the repo for every clone.
+
+## If there is no Release yet
+
+The installer files (`installer/installer.iss`, `.github/workflows/build-windows.yml`,
+`VERSION`) are in the repo; until a tag is pushed, build locally on Windows
+with `.\build.ps1` and then `iscc /DAppVersion=<version> installer\installer.iss`.
