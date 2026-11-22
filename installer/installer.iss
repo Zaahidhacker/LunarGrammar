@@ -1,1 +1,79 @@
-OyBMdW5hR3JhbW1hciDigJQgSW5ubyBTZXR1cCBpbnN0YWxsZXIKOyBQZXItdXNlciBpbnN0YWxsLCBubyBhZG1pbiAvIG5vIFVBQyBwcm9tcHQuCjsgSW5zdGFsbHMgdGhlIG9uZS1maWxlIFB5SW5zdGFsbGVyIGJ1aWxkIGRpc3RcTHVuYUdyYW1tYXIuZXhlIGludG8gJUxPQ0FMQVBQREFUQSVcTHVuYUdyYW1tYXIuCjsgVmVyc2lvbiBpcyBwYXNzZWQgaW4gYXMgL0RBcHBWZXJzaW9uPS4uLiBieSB0aGUgR2l0SHViIEFjdGlvbnMgd29ya2Zsb3cKOyAoaXQgcmVhZHMgdGhlIFZFUlNJT04gZmlsZSBhdCB0aGUgcmVwbyByb290KS4gQnVpbGQgYnkgaGFuZCBvbiBXaW5kb3dzOgo7ICAgMS4gLlxidWlsZC5wczEgICAgICAgICAgICAodGVzdHMgZmlyc3QsIHRoZW4gUHlJbnN0YWxsZXIgLT4gZGlzdFxMdW5hR3JhbW1hci5leGUpCjsgICAyLiBpc2NjIC9EQXBwVmVyc2lvbj0xLjEuMCBpbnN0YWxsZXJcaW5zdGFsbGVyLmlzcwo7ICAgICAgKElubm8gU2V0dXAgNjsgb24gR2l0SHViIEFjdGlvbnMgdGhlIHdvcmtmbG93IGluc3RhbGxzIGl0IHZpYSBDaG9jb2xhdGV5KQo7IE91dHB1dDogaW5zdGFsbGVyXE91dHB1dFxMdW5hR3JhbW1hci1TZXR1cC08dmVyc2lvbj4uZXhlCjsKOyBOb3RlczoKOyAtIFBlci11c2VyIGlzIHRoZSByaWdodCBkZWZhdWx0LiBQZXItbWFjaGluZSAoJVByb2dyYW1GaWxlcyUpIGlzIHJlcXVpcmVkCjsgICBPTkxZIGlmIHVpQWNjZXNzPSJ0cnVlIiBpcyBldmVyIHdhbnRlZCwgYW5kIHRoYXQgYWxzbyBuZWVkcyBhIHRydXN0ZWQKOyAgIGNvZGUtc2lnbmluZyBjZXJ0aWZpY2F0ZSDigJQgYSBzZXBhcmF0ZSwgY29zdGVkIGRlY2lzaW9uLCBub3QgdGhpcyBpbnN0YWxsZXIuCjsgLSBEbyBOT1QgcHV0IGFuIEFQSSBrZXkgaW4gdGhlIGluc3RhbGxlci4gRmlyc3QgcnVuIGFza3MgZm9yIGl0IGluIFNldHRpbmdzCjsgICAob3IgcmVhZHMgT1BFTkFJX0FQSV9LRVkpOyB0aGUga2V5IGlzIHN0b3JlZCB2aWEgRFBBUEksIG5vdCBwbGFpbnRleHQuCjsgLSBTaGlwIHVuc2lnbmVkIGZvciBub3c7IGRvY3VtZW50IHRoZSBTbWFydFNjcmVlbiAiTW9yZSBpbmZvIC0+IFJ1biBhbnl3YXkiCjsgICBzdGVwIGluIHRoZSBSRUFETUUuIEEgc2VsZi1zaWduZWQgY2VydCBiZWhhdmVzIGxpa2Ugbm8gc2lnbmF0dXJlLgo7IC0gVW5pbnN0YWxsIHJlbW92ZXMgcHJvZ3JhbSBmaWxlcyBidXQgTEVBVkVTIHVzZXIgc2V0dGluZ3MvZGF0YSBpbgo7ICAgJUxPQ0FMQVBQREFUQSVcTHVuYUdyYW1tYXIgdW5sZXNzIHRoZSB1c2VyIGRlbGV0ZXMgdGhlbSBtYW51YWxseS4KCiNkZWZpbmUgQXBwTmFtZSAiTHVuYUdyYW1tYXIiCiNpZm5kZWYgQXBwVmVyc2lvbgogICNkZWZpbmUgQXBwVmVyc2lvbiAiMS4xLjAiCiNlbmRpZgojZGVmaW5lIEFwcFB1Ymxpc2hlciAiWmFhaGlkIFphbWFuIgojZGVmaW5lIEFwcFVSTCAiaHR0cHM6Ly9naXRodWIuY29tL1phYWhpZGhhY2tlci9MdW5hckdyYW1tYXIiCiNkZWZpbmUgQXBwRXhlTmFtZSAiTHVuYUdyYW1tYXIuZXhlIgoKW1NldHVwXQpBcHBJZD17ezNGN0ExQzJFLTlCNEQtNEE2RS04QzFGLTVEMkU3QTlCMEM0RH0KQXBwTmFtZT17I0FwcE5hbWV9CkFwcFZlcnNpb249eyNBcHBWZXJzaW9ufQpBcHBQdWJsaXNoZXI9eyNBcHBQdWJsaXNoZXJ9CkFwcFB1Ymxpc2hlclVSTD17I0FwcFVSTH0KQXBwU3VwcG9ydFVSTD17I0FwcFVSTH0KQXBwVXBkYXRlc1VSTD17I0FwcFVSTH0vcmVsZWFzZXMKRGVmYXVsdERpck5hbWU9e2xvY2FsYXBwZGF0YX1ceyNBcHBOYW1lfQpEZWZhdWx0R3JvdXBOYW1lPXsjQXBwTmFtZX0KUHJpdmlsZWdlc1JlcXVpcmVkPWxvd2VzdApQcml2aWxlZ2VzUmVxdWlyZWRPdmVycmlkZXNBbGxvd2VkPWRpYWxvZwpPdXRwdXREaXI9T3V0cHV0Ck91dHB1dEJhc2VGaWxlbmFtZT1MdW5hR3JhbW1hci1TZXR1cC17I0FwcFZlcnNpb259ClNldHVwSWNvbkZpbGU9Li5cYXNzZXRzXGx1bmEuaWNvClVuaW5zdGFsbERpc3BsYXlJY29uPXthcHB9XHsjQXBwRXhlTmFtZX0KQ29tcHJlc3Npb249bHptYTIKU29saWRDb21wcmVzc2lvbj15ZXMKV2l6YXJkU3R5bGU9bW9kZXJuCkRpc2FibGVQcm9ncmFtR3JvdXBQYWdlPXllcwpBcmNoaXRlY3R1cmVzQWxsb3dlZD14NjRjb21wYXRpYmxlCkFyY2hpdGVjdHVyZXNJbnN0YWxsSW42NEJpdE1vZGU9eDY0Y29tcGF0aWJsZQpDbG9zZUFwcGxpY2F0aW9ucz15ZXMKUmVzdGFydEFwcGxpY2F0aW9ucz1ubwoKW0xhbmd1YWdlc10KTmFtZTogImVuZ2xpc2giOyBNZXNzYWdlc0ZpbGU6ICJjb21waWxlcjpEZWZhdWx0LmlzbCIKCltUYXNrc10KTmFtZTogImRlc2t0b3BpY29uIjsgRGVzY3JpcHRpb246ICJ7Y206Q3JlYXRlRGVza3RvcEljb259IjsgR3JvdXBEZXNjcmlwdGlvbjogIntjbTpBZGRpdGlvbmFsSWNvbnN9IjsgRmxhZ3M6IHVuY2hlY2tlZApOYW1lOiAic3RhcnR1cCI7IERlc2NyaXB0aW9uOiAiU3RhcnQgTHVuYUdyYW1tYXIgd2hlbiBJIHNpZ24gaW4gdG8gV2luZG93cyI7IEdyb3VwRGVzY3JpcHRpb246ICJTdGFydHVwOiI7IEZsYWdzOiB1bmNoZWNrZWQKCltGaWxlc10KU291cmNlOiAiLi5cZGlzdFx7I0FwcEV4ZU5hbWV9IjsgRGVzdERpcjogInthcHB9IjsgRmxhZ3M6IGlnbm9yZXZlcnNpb24KU291cmNlOiAiLi5cUkVBRE1FLm1kIjsgRGVzdERpcjogInthcHB9IjsgRmxhZ3M6IGlnbm9yZXZlcnNpb24KU291cmNlOiAiLi5cV0lORE9XU19URVNUX0NIRUNLTElTVC5tZCI7IERlc3REaXI6ICJ7YXBwfSI7IEZsYWdzOiBpZ25vcmV2ZXJzaW9uCgpbSWNvbnNdCk5hbWU6ICJ7Z3JvdXB9XHsjQXBwTmFtZX0iOyBGaWxlbmFtZTogInthcHB9XHsjQXBwRXhlTmFtZX0iCk5hbWU6ICJ7Z3JvdXB9XFVuaW5zdGFsbCB7I0FwcE5hbWV9IjsgRmlsZW5hbWU6ICJ7dW5pbnN0YWxsZXhlfSIKTmFtZTogInthdXRvZGVza3RvcH1ceyNBcHBOYW1lfSI7IEZpbGVuYW1lOiAie2FwcH1ceyNBcHBFeGVOYW1lfSI7IFRhc2tzOiBkZXNrdG9waWNvbgoKW1JlZ2lzdHJ5XQpSb290OiBIS0NVOyBTdWJrZXk6ICJTT0ZUV0FSRVxNaWNyb3NvZnRcV2luZG93c1xDdXJyZW50VmVyc2lvblxSdW4iOyBWYWx1ZVR5cGU6IHN0cmluZzsgVmFsdWVOYW1lOiAiTHVuYUdyYW1tYXIiOyBWYWx1ZURhdGE6ICIiInthcHB9XHsjQXBwRXhlTmFtZX0iIiI7IFRhc2tzOiBzdGFydHVwOyBGbGFnczogdW5pbnNkZWxldGV2YWx1ZQoKW1J1bl0KRmlsZW5hbWU6ICJ7YXBwfVx7I0FwcEV4ZU5hbWV9IjsgRGVzY3JpcHRpb246ICJ7Y206TGF1bmNoUHJvZ3JhbSx7I1N0cmluZ0NoYW5nZShBcHBOYW1lLCAnJicsICcmJicpfX0iOyBGbGFnczogbm93YWl0IHBvc3RpbnN0YWxsIHNraXBpZnNpbGVudCBydW5hc29yaWdpbmFsdXNlcgoKW1VuaW5zdGFsbERlbGV0ZV0KVHlwZTogZmlsZXM7IE5hbWU6ICJ7YXBwfVx7I0FwcEV4ZU5hbWV9Igo=
+; LunaGrammar — Inno Setup installer
+; Per-user install, no admin / no UAC prompt.
+; Installs the one-file PyInstaller build dist\LunaGrammar.exe into %LOCALAPPDATA%\LunaGrammar.
+; Version is passed in as /DAppVersion=... by the GitHub Actions workflow
+; (it reads the VERSION file at the repo root). Build by hand on Windows:
+;   1. .\build.ps1            (tests first, then PyInstaller -> dist\LunaGrammar.exe)
+;   2. iscc /DAppVersion=1.1.0 installer\installer.iss
+;      (Inno Setup 6; on GitHub Actions the workflow installs it via Chocolatey)
+; Output: installer\Output\LunaGrammar-Setup-<version>.exe
+;
+; Notes:
+; - Per-user is the right default. Per-machine (%ProgramFiles%) is required
+;   ONLY if uiAccess="true" is ever wanted, and that also needs a trusted
+;   code-signing certificate — a separate, costed decision, not this installer.
+; - Do NOT put an API key in the installer. First run asks for it in Settings
+;   (or reads OPENAI_API_KEY); the key is stored via DPAPI, not plaintext.
+; - Ship unsigned for now; document the SmartScreen "More info -> Run anyway"
+;   step in the README. A self-signed cert behaves like no signature.
+; - Uninstall removes program files but LEAVES user settings/data in
+;   %LOCALAPPDATA%\LunaGrammar unless the user deletes them manually.
+
+#define AppName "LunaGrammar"
+#ifndef AppVersion
+  #define AppVersion "1.1.0"
+#endif
+#define AppPublisher "Zaahid Zaman"
+#define AppURL "https://github.com/Zaahidhacker/LunarGrammar"
+#define AppExeName "LunaGrammar.exe"
+
+[Setup]
+AppId={{3F7A1C2E-9B4D-4A6E-8C1F-5D2E7A9B0C4D}
+AppName={#AppName}
+AppVersion={#AppVersion}
+AppPublisher={#AppPublisher}
+AppPublisherURL={#AppURL}
+AppSupportURL={#AppURL}
+AppUpdatesURL={#AppURL}/releases
+DefaultDirName={localappdata}\{#AppName}
+DefaultGroupName={#AppName}
+PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=dialog
+OutputDir=Output
+OutputBaseFilename=LunaGrammar-Setup-{#AppVersion}
+SetupIconFile=..\assets\luna.ico
+UninstallDisplayIcon={app}\{#AppExeName}
+Compression=lzma2
+SolidCompression=yes
+WizardStyle=modern
+DisableProgramGroupPage=yes
+ArchitecturesAllowed=x64compatible
+ArchitecturesInstallIn64BitMode=x64compatible
+CloseApplications=yes
+RestartApplications=no
+
+[Languages]
+Name: "english"; MessagesFile: "compiler:Default.isl"
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "startup"; Description: "Start LunaGrammar when I sign in to Windows"; GroupDescription: "Startup:"; Flags: unchecked
+
+[Files]
+Source: "..\dist\{#AppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\README.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\WINDOWS_TEST_CHECKLIST.md"; DestDir: "{app}"; Flags: ignoreversion
+
+[Icons]
+Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
+Name: "{group}\Uninstall {#AppName}"; Filename: "{uninstallexe}"
+Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desktopicon
+
+[Registry]
+Root: HKCU; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "LunaGrammar"; ValueData: """{app}\{#AppExeName}"""; Tasks: startup; Flags: uninsdeletevalue
+
+[Run]
+Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent runasoriginaluser
+
+[UninstallDelete]
+Type: files; Name: "{app}\{#AppExeName}"
