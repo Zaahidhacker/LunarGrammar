@@ -1,1 +1,63 @@
-IiIiUmVjZW50LWNvcnJlY3Rpb25zIGhpc3RvcnkgKHJvdW5kIDIpLgoKSW4tbWVtb3J5IG9ubHksIGJvdW5kZWQsIG5ldmVyIHdyaXR0ZW4gdG8gZGlzayBieSBkZWZhdWx0OiBlYWNoIGVudHJ5CmtlZXBzIHRoZSBvcmlnaW5hbCB0ZXh0LCB0aGUgY29ycmVjdGVkIHRleHQsIHRoZSBtb2RlLCB0aGUgYXBwIGFuZCBhCnRpbWVzdGFtcC4gUmUtYXBwbHlpbmcgYW4gZW50cnkgZ29lcyB0aHJvdWdoIHRoZSBzYW1lIHZlcmlmaWNhdGlvbiBhcwp1bmRvLCBzbyBhIHN0YWxlIGVudHJ5IGNhbiBuZXZlciBwYXN0ZSBpbnRvIHRoZSB3cm9uZyBwbGFjZS4KIiIiCgppbXBvcnQgdGhyZWFkaW5nCmltcG9ydCB0aW1lCmZyb20gZGF0YWNsYXNzZXMgaW1wb3J0IGRhdGFjbGFzcywgZmllbGQKCgpAZGF0YWNsYXNzKGZyb3plbj1UcnVlKQpjbGFzcyBDb3JyZWN0aW9uUmVjb3JkOgogICAgb3JpZ2luYWw6IHN0cgogICAgY29ycmVjdGVkOiBzdHIKICAgIG1vZGU6IHN0cgogICAgYXBwOiBzdHIKICAgIHRpbWVzdGFtcDogZmxvYXQgPSBmaWVsZChkZWZhdWx0X2ZhY3Rvcnk9dGltZS50aW1lKQoKCmNsYXNzIENvcnJlY3Rpb25IaXN0b3J5OgogICAgIiIiVGhyZWFkLXNhZmUgYm91bmRlZCBoaXN0b3J5IG9mIHN1Y2Nlc3NmdWwgY29ycmVjdGlvbnMuIiIiCgogICAgZGVmIF9faW5pdF9fKHNlbGYsIG1heF9pdGVtczogaW50ID0gMjApOgogICAgICAgIGlmIG1heF9pdGVtcyA8IDA6CiAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIm1heF9pdGVtcyBtdXN0IGJlID49IDAiKQogICAgICAgIHNlbGYuX21heF9pdGVtcyA9IG1heF9pdGVtcwogICAgICAgIHNlbGYuX2xvY2sgPSB0aHJlYWRpbmcuTG9jaygpCiAgICAgICAgc2VsZi5faXRlbXM6IGxpc3RbQ29ycmVjdGlvblJlY29yZF0gPSBbXQoKICAgIGRlZiByZWNvcmQoc2VsZiwgb3JpZ2luYWw6IHN0ciwgY29ycmVjdGVkOiBzdHIsIG1vZGU6IHN0ciwgYXBwOiBzdHIgPSAiIikgLT4gQ29ycmVjdGlvblJlY29yZCB8IE5vbmU6CiAgICAgICAgaWYgc2VsZi5fbWF4X2l0ZW1zID09IDAgb3Igbm90IG9yaWdpbmFsIG9yIG5vdCBjb3JyZWN0ZWQ6CiAgICAgICAgICAgIHJldHVybiBOb25lCiAgICAgICAgZW50cnkgPSBDb3JyZWN0aW9uUmVjb3JkKG9yaWdpbmFsLCBjb3JyZWN0ZWQsIG1vZGUsIGFwcCBvciAiIikKICAgICAgICB3aXRoIHNlbGYuX2xvY2s6CiAgICAgICAgICAgIHNlbGYuX2l0ZW1zLmFwcGVuZChlbnRyeSkKICAgICAgICAgICAgZGVsIHNlbGYuX2l0ZW1zWzogbWF4KDAsIGxlbihzZWxmLl9pdGVtcykgLSBzZWxmLl9tYXhfaXRlbXMpXQogICAgICAgIHJldHVybiBlbnRyeQoKICAgIGRlZiBsaXN0KHNlbGYpIC0+IGxpc3RbQ29ycmVjdGlvblJlY29yZF06CiAgICAgICAgd2l0aCBzZWxmLl9sb2NrOgogICAgICAgICAgICByZXR1cm4gbGlzdChyZXZlcnNlZChzZWxmLl9pdGVtcykpCgogICAgZGVmIGNsZWFyKHNlbGYpIC0+IE5vbmU6CiAgICAgICAgd2l0aCBzZWxmLl9sb2NrOgogICAgICAgICAgICBzZWxmLl9pdGVtcy5jbGVhcigpCgogICAgZGVmIHNldF9tYXhfaXRlbXMoc2VsZiwgbWF4X2l0ZW1zOiBpbnQpIC0+IE5vbmU6CiAgICAgICAgaWYgbWF4X2l0ZW1zIDwgMDoKICAgICAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigibWF4X2l0ZW1zIG11c3QgYmUgPj0gMCIpCiAgICAgICAgd2l0aCBzZWxmLl9sb2NrOgogICAgICAgICAgICBzZWxmLl9tYXhfaXRlbXMgPSBtYXhfaXRlbXMKICAgICAgICAgICAgZGVsIHNlbGYuX2l0ZW1zWzogbWF4KDAsIGxlbihzZWxmLl9pdGVtcykgLSBzZWxmLl9tYXhfaXRlbXMpXQoKICAgIGRlZiBfX2xlbl9fKHNlbGYpIC0+IGludDoKICAgICAgICB3aXRoIHNlbGYuX2xvY2s6CiAgICAgICAgICAgIHJldHVybiBsZW4oc2VsZi5faXRlbXMpCgoKIyBQcm9jZXNzLXdpZGUgaGlzdG9yeSB1c2VkIGJ5IHRoZSBsaXZlIGNvcnJlY3Rpb24gcGF0aC4KSElTVE9SWSA9IENvcnJlY3Rpb25IaXN0b3J5KCkK
+"""Recent-corrections history (round 2).
+
+In-memory only, bounded, never written to disk by default: each entry
+keeps the original text, the corrected text, the mode, the app and a
+timestamp. Re-applying an entry goes through the same verification as
+undo, so a stale entry can never paste into the wrong place.
+"""
+
+import threading
+import time
+from dataclasses import dataclass, field
+
+
+@dataclass(frozen=True)
+class CorrectionRecord:
+    original: str
+    corrected: str
+    mode: str
+    app: str
+    timestamp: float = field(default_factory=time.time)
+
+
+class CorrectionHistory:
+    """Thread-safe bounded history of successful corrections."""
+
+    def __init__(self, max_items: int = 20):
+        if max_items < 0:
+            raise ValueError("max_items must be >= 0")
+        self._max_items = max_items
+        self._lock = threading.Lock()
+        self._items: list[CorrectionRecord] = []
+
+    def record(self, original: str, corrected: str, mode: str, app: str = "") -> CorrectionRecord | None:
+        if self._max_items == 0 or not original or not corrected:
+            return None
+        entry = CorrectionRecord(original, corrected, mode, app or "")
+        with self._lock:
+            self._items.append(entry)
+            del self._items[: max(0, len(self._items) - self._max_items)]
+        return entry
+
+    def list(self) -> list[CorrectionRecord]:
+        with self._lock:
+            return list(reversed(self._items))
+
+    def clear(self) -> None:
+        with self._lock:
+            self._items.clear()
+
+    def set_max_items(self, max_items: int) -> None:
+        if max_items < 0:
+            raise ValueError("max_items must be >= 0")
+        with self._lock:
+            self._max_items = max_items
+            del self._items[: max(0, len(self._items) - self._max_items)]
+
+    def __len__(self) -> int:
+        with self._lock:
+            return len(self._items)
+
+
+# Process-wide history used by the live correction path.
+HISTORY = CorrectionHistory()
