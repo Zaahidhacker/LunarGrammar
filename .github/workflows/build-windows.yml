@@ -1,0 +1,101 @@
+# LunaGrammar — Windows build + release
+#
+# What it does:
+#   - On every push / pull request to main: build on windows-latest and run tests
+#     (a red build never ships).
+#   - On a version tag (v*.*.*, e.g. v1.1.0): build, compile the Inno Setup
+#     installer, and publish a GitHub Release with the installer as an asset.
+#
+# Why this is the route: a Windows .exe cannot be built on Linux — PyInstaller
+# does not cross-compile. It must be built on Windows, and GitHub Actions
+# windows-latest is the reproducible way to do that. Binaries do NOT belong
+# in git and cannot be pushed with the text-only snapshot push.
+#
+# How Zaahid gets the installer (also in RELEASE.md):
+#   git tag v1.1.0 && git push origin v1.1.0
+#   -> Actions builds -> Release "v1.1.0" appears with LunaGrammar-Setup-1.1.0.exe
+#   -> download it, run it, no admin prompt, enter the OpenAI API key once
+#      in Settings on first run (or set OPENAI_API_KEY).
+#
+# NOT validated by running it here — there is no Windows runner in this VM.
+# The YAML below was written by hand; run it once on a tag and fix any
+# step that fails before announcing the release.
+
+name: Build Windows
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          architecture: x64
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-build.txt
+
+      - name: Run tests
+        run: python -m unittest discover -s tests
+
+      - name: Build exe with PyInstaller
+        run: |
+          python -m PyInstaller --clean --noconfirm LunaGrammar.spec
+          dir dist
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Read version
+        id: version
+        shell: pwsh
+        run: |
+          $version = (Get-Content VERSION -Raw).Trim()
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Compile installer
+        run: |
+          iscc /DAppVersion=${{ steps.version.outputs.version }} installer\installer.iss
+          dir installer\Output
+
+      - name: Hash artifacts
+        shell: pwsh
+        run: |
+          Get-FileHash dist\LunaGrammar.exe -Algorithm SHA256 | Format-List
+          Get-FileHash installer\Output\LunaGrammar-Setup-${{ steps.version.outputs.version }}.exe -Algorithm SHA256 | Format-List
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: LunaGrammar-windows-${{ steps.version.outputs.version }}
+          path: |
+            dist/LunaGrammar.exe
+            installer/Output/LunaGrammar-Setup-${{ steps.version.outputs.version }}.exe
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: LunaGrammar ${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          files: |
+            dist/LunaGrammar.exe
+            installer/Output/LunaGrammar-Setup-${{ steps.version.outputs.version }}.exe
