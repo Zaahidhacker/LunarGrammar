@@ -48,14 +48,14 @@ class SelectionFlowTests(unittest.TestCase):
 
     def test_native_fallback_rechecks_and_replaces_only_after_response(self):
         self.run_flow()
-        self.engine.correct.assert_called_once_with(self.original)
+        self.engine.correct.assert_called_once_with(self.original, fallback_models=True)
         self.assertEqual(self.clipboard.copy_native.call_count, 2)
         self.replace.assert_called_once_with(20, "I went home.")
 
     def test_professional_mode_reuses_the_same_capture_and_replacement_path(self):
         self.trigger = Trigger(self.target, 0, mode='professional_3')
         self.run_flow()
-        self.engine.correct.assert_called_once_with(self.original, mode='professional_3')
+        self.engine.correct.assert_called_once_with(self.original, mode='professional_3', fallback_models=True)
         self.replace.assert_called_once_with(20, 'I went home.')
 
     def test_input_between_chord_commit_and_capture_cancels_before_api(self):
@@ -94,7 +94,7 @@ class SelectionFlowTests(unittest.TestCase):
         self.clipboard.copy_native.assert_not_called()
 
     def test_focus_and_input_changes_after_api_cancel(self):
-        def focus_change(_):
+        def focus_change(_, **kwargs):
             self.current.return_value = win.Target(11, 21, 31, 41)
             return "I went home."
 
@@ -103,7 +103,7 @@ class SelectionFlowTests(unittest.TestCase):
             self.run_flow()
         self.current.return_value = self.target
 
-        def new_input(_):
+        def new_input(_, **kwargs):
             self.tick.return_value += 1
             return "I went home."
 
@@ -156,7 +156,7 @@ class SelectionFlowTests(unittest.TestCase):
 
         self.clipboard.paste.side_effect = verify_before_dispatch
         self.run_flow(automation=automation)
-        self.engine.correct.assert_called_once_with(self.original)
+        self.engine.correct.assert_called_once_with(self.original, fallback_models=True)
         self.clipboard.paste.assert_called_once()
 
     def test_value_fallback_rejects_duplicate_copied_text(self):
@@ -186,7 +186,7 @@ class SelectionFlowTests(unittest.TestCase):
         self.clipboard.paste.side_effect = lambda _text, _target, verify, _guard: verify()
         self.run_flow(automation=automation)
         automation.client.ElementFromHandle.assert_called_once_with(self.target.window)
-        self.engine.correct.assert_called_once_with(self.original)
+        self.engine.correct.assert_called_once_with(self.original, fallback_models=True)
 
     def test_browser_without_accessibility_patterns_uses_copy_and_recopy(self):
         self.patch("native_edit", return_value=False)
@@ -195,7 +195,7 @@ class SelectionFlowTests(unittest.TestCase):
         self.clipboard.copy_keyboard.return_value = self.original
         self.clipboard.paste.side_effect = lambda _text, _target, verify, _guard: verify()
         self.run_flow()
-        self.engine.correct.assert_called_once_with(self.original)
+        self.engine.correct.assert_called_once_with(self.original, fallback_models=True)
         self.assertEqual(self.clipboard.copy_keyboard.call_count, 2)
         self.clipboard.paste.assert_called_once()
         self.replace.assert_not_called()
@@ -249,7 +249,7 @@ class SelectionFlowTests(unittest.TestCase):
 
         self.clipboard.copy_keyboard.side_effect = [self.original]
 
-        def change_target(_text):
+        def change_target(_text, **kwargs):
             self.current.return_value = win.Target(11, 21, 31, 41)
             return "I went home."
 
@@ -351,7 +351,7 @@ class SelectionFlowTests(unittest.TestCase):
         self.patch("classic_selection", return_value=text_with_objects)
         self.engine.correct.return_value = "Hello world this is a test."
         self.run_flow()
-        self.engine.correct.assert_called_once_with("hello\nworld   this is a test")
+        self.engine.correct.assert_called_once_with("hello\nworld   this is a test", fallback_models=True)
         self.replace.assert_called_once_with(20, "Hello world this is a test.")
 
     def test_word_and_office_document_target_can_use_keyboard_fallback(self):
@@ -361,7 +361,7 @@ class SelectionFlowTests(unittest.TestCase):
         self.clipboard.copy_keyboard.return_value = self.original
         self.clipboard.paste.side_effect = lambda _text, _target, verify, _guard: verify()
         self.run_flow()
-        self.engine.correct.assert_called_once_with(self.original)
+        self.engine.correct.assert_called_once_with(self.original, fallback_models=True)
         self.clipboard.paste.assert_called_once()
 
     def test_whatsapp_and_chat_editors_can_use_keyboard_fallback(self):
@@ -371,7 +371,7 @@ class SelectionFlowTests(unittest.TestCase):
         self.clipboard.copy_keyboard.return_value = self.original
         self.clipboard.paste.side_effect = lambda _text, _target, verify, _guard: verify()
         self.run_flow()
-        self.engine.correct.assert_called_once_with(self.original)
+        self.engine.correct.assert_called_once_with(self.original, fallback_models=True)
         self.clipboard.paste.assert_called_once()
 
     def test_vscode_and_code_editors_can_use_keyboard_fallback(self):
@@ -381,7 +381,7 @@ class SelectionFlowTests(unittest.TestCase):
         self.clipboard.copy_keyboard.return_value = self.original
         self.clipboard.paste.side_effect = lambda _text, _target, verify, _guard: verify()
         self.run_flow()
-        self.engine.correct.assert_called_once_with(self.original)
+        self.engine.correct.assert_called_once_with(self.original, fallback_models=True)
         self.clipboard.paste.assert_called_once()
 
     def test_telegram_and_qt_editors_can_use_keyboard_fallback(self):
@@ -391,7 +391,7 @@ class SelectionFlowTests(unittest.TestCase):
         self.clipboard.copy_keyboard.return_value = self.original
         self.clipboard.paste.side_effect = lambda _text, _target, verify, _guard: verify()
         self.run_flow()
-        self.engine.correct.assert_called_once_with(self.original)
+        self.engine.correct.assert_called_once_with(self.original, fallback_models=True)
         self.clipboard.paste.assert_called_once()
 
     def test_recopy_no_fresh_text_with_unchanged_input_succeeds(self):
@@ -404,7 +404,7 @@ class SelectionFlowTests(unittest.TestCase):
         ]
         self.clipboard.paste.side_effect = lambda _text, _target, verify, _guard: verify()
         self.run_flow()
-        self.engine.correct.assert_called_once_with(self.original)
+        self.engine.correct.assert_called_once_with(self.original, fallback_models=True)
         self.clipboard.paste.assert_called_once()
 
 
