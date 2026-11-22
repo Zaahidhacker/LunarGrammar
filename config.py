@@ -1,1 +1,402 @@
-IiIiVXNlciBzZXR0aW5ncy4gU2VjcmV0cyBjb21lIGV4Y2x1c2l2ZWx5IGZyb20gdGhlIHByb2Nlc3MgZW52aXJvbm1lbnQuIiIiCgppbXBvcnQganNvbgppbXBvcnQgbWF0aAppbXBvcnQgb3MKaW1wb3J0IHN5cwppbXBvcnQgdGVtcGZpbGUKaW1wb3J0IHRocmVhZGluZwpmcm9tIGRhdGFjbGFzc2VzIGltcG9ydCBkYXRhY2xhc3MsIGZpZWxkCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aCwgUHVyZVdpbmRvd3NQYXRoCgoKY2xhc3MgQXBwRXJyb3IoRXhjZXB0aW9uKToKICAgICIiIkFuIGVycm9yIHdpdGggYSBmaXhlZCwgc2FmZS10by1sb2cgbWVzc2FnZS4iIiIKCiAgICBkZWYgX19pbml0X18oc2VsZiwgbWVzc2FnZTogc3RyLCBzdGF0dXM6IHN0ciA9ICJDb3VsZG7igJl0IHJlZmluZSIsIGNvZGU6IHN0ciB8IE5vbmUgPSBOb25lKToKICAgICAgICBzdXBlcigpLl9faW5pdF9fKG1lc3NhZ2UpCiAgICAgICAgc2VsZi5zdGF0dXMgPSBzdGF0dXMKICAgICAgICBzZWxmLmNvZGUgPSBjb2RlCgoKU09VUkNFX0RJUiA9IFBhdGgoX19maWxlX18pLnJlc29sdmUoKS5wYXJlbnQKU0VUVElOR1NfUEFUSCA9ICgKICAgIFBhdGgob3MuZW52aXJvblsiTE9DQUxBUFBEQVRBIl0pIC8gIkx1bmFHcmFtbWFyIiAvICJzZXR0aW5ncy5qc29uIgogICAgaWYgZ2V0YXR0cihzeXMsICJmcm96ZW4iLCBGYWxzZSkgZWxzZSBTT1VSQ0VfRElSIC8gInNldHRpbmdzLmpzb24iCikKCl9DT05GSUdfTE9DSyA9IHRocmVhZGluZy5STG9jaygpCgoKZGVmIGFwcF9jb21tYW5kKCphcmdzOiBzdHIsIHdpbmRvd2xlc3M9RmFsc2UpIC0+IGxpc3Rbc3RyXToKICAgIGlmIGdldGF0dHIoc3lzLCAiZnJvemVuIiwgRmFsc2UpOgogICAgICAgIHJldHVybiBbc3lzLmV4ZWN1dGFibGUsICphcmdzXQogICAgcHl0aG9uID0gUGF0aChzeXMuZXhlY3V0YWJsZSkKICAgIGlmIHdpbmRvd2xlc3M6CiAgICAgICAgcHl0aG9uID0gcHl0aG9uLndpdGhfbmFtZSgicHl0aG9udy5leGUiKQogICAgcmV0dXJuIFtzdHIocHl0aG9uKSwgc3RyKFNPVVJDRV9ESVIgLyAibWFpbi5weSIpLCAqYXJnc10KCgpkZWYgaW5kZXBlbmRlbnRfcHJvY2Vzc19lbnZpcm9ubWVudCgpIC0+IGRpY3Rbc3RyLCBzdHJdIHwgTm9uZToKICAgIGlmIGdldGF0dHIoc3lzLCAiZnJvemVuIiwgRmFsc2UpOgogICAgICAgIHJldHVybiBkaWN0KG9zLmVudmlyb24sIFBZSU5TVEFMTEVSX1JFU0VUX0VOVklST05NRU5UPSIxIikKICAgIHJldHVybiBOb25lCgoKQGRhdGFjbGFzcyhmcm96ZW49VHJ1ZSkKY2xhc3MgU2V0dGluZ3M6CiAgICBtb2RlbDogc3RyID0gImdwdC02LWx1bmEiCiAgICB0aW1lb3V0X3NlY29uZHM6IGZsb2F0ID0gMTAKICAgIG1heF9zZWxlY3Rpb25fY2hhcnM6IGludCA9IDYwMDAKICAgIGV4Y2x1ZGVkX2FwcHM6IHR1cGxlW3N0ciwgLi4uXSA9ICgpCiAgICBlbmFibGVkOiBib29sID0gVHJ1ZQogICAgZmVlZGJhY2s6IGJvb2wgPSBUcnVlCiAgICBleHBhbmRfc2hvcnRoYW5kOiBib29sID0gVHJ1ZQogICAgYXBwZWFyYW5jZTogc3RyID0gImRhcmsiCiAgICBtb3Rpb246IHN0ciA9ICJzeXN0ZW0iCiAgICBhY3RpdmVfbW9kZWw6IHN0ciA9ICJncHQtNi1sdW5hIgogICAgY2FjaGVfZW5hYmxlZDogYm9vbCA9IFRydWUKICAgIGN1c3RvbV9wcm9tcHQ6IHN0ciA9ICIiCiAgICBkZWZhdWx0X21vZGU6IGludCA9IDAKICAgIHNob3dfZGlmZl9wcmV2aWV3OiBib29sID0gVHJ1ZQogICAgc291bmRfZW5hYmxlZDogYm9vbCA9IFRydWUKICAgIHRlbXBlcmF0dXJlOiBmbG9hdCA9IDAuMAogICAgIyBQZXItYXBwIGRlZmF1bHQgbW9kZSBmb3IgYSBiYXJlIEN0cmwrV2luK1ogKGV4cGxpY2l0IGRpZ2l0cyBhbHdheXMgd2luKS4KICAgICMgTWFwcyBsb3dlcmNhc2UgZXhlIG5hbWUgLT4gbW9kZSBsZXZlbCAwLTUsIGUuZy4geyJvdXRsb29rLmV4ZSI6IDJ9LgogICAgcGVyX2FwcF9tb2RlczogZGljdCA9IGZpZWxkKGRlZmF1bHRfZmFjdG9yeT1kaWN0KQogICAgIyBXaGVuIFRydWUsIGNvcnJlY3Rpb25zIGFyZSBzdGFnZWQgb24gdGhlIGNsaXBib2FyZCBmb3IgbWFudWFsIEN0cmwrVgogICAgIyBpbnN0ZWFkIG9mIGJlaW5nIHBhc3RlZCBhdXRvbWF0aWNhbGx5IChzYWZlIG1vZGUgZm9yIGZyYWdpbGUgZmllbGRzKS4KICAgIGNvcHlfb25seTogYm9vbCA9IEZhbHNlCiAgICAjIFdoZW4gVHJ1ZSAoZGVmYXVsdCksIGEgY29ycmVjdGlvbiBpcyByZWZ1c2VkIHJhdGhlciB0aGFuIHNpbGVudGx5CiAgICAjIGRlc3Ryb3lpbmcgY2xpcGJvYXJkIGZvcm1hdHMgTHVuYSBjYW5ub3QgYmFjayB1cCAoaW1hZ2VzL09MRSBkYXRhKS4KICAgICMgU2V0IEZhbHNlIHRvIGtlZXAgdGhlIG9sZCBiZWhhdmlvdXI6IGJhY2sgdXAgb25seSB0aGUgZm9ybWF0cyB0aGF0CiAgICAjIGNhbiBiZSBkdXBsaWNhdGVkIGFuZCBsb3NlIHRoZSByZXN0LgogICAgY2xpcGJvYXJkX3N0cmljdF9wcmVzZXJ2YXRpb246IGJvb2wgPSBUcnVlCiAgICAjIFdoZW4gVHJ1ZSwgdGhlIGNvcnJlY3Rpb24gaXMgaGVsZCBmb3IgcmV2aWV3IChBcHBseSAvIERpc2NhcmQgaW4gdGhlCiAgICAjIG92ZXJsYXkpIGluc3RlYWQgb2YgYmVpbmcgcGFzdGVkIGltbWVkaWF0ZWx5LiBEZWZhdWx0IG9mZjogY29ycmVjdGlvbnMKICAgICMgYXBwbHkgYXV0b21hdGljYWxseSwgYXMgYmVmb3JlLgogICAgcmV2aWV3X2JlZm9yZV9hcHBseTogYm9vbCA9IEZhbHNlCiAgICAjIFJlY2VudC1jb3JyZWN0aW9ucyBoaXN0b3J5IChpbi1tZW1vcnkgb25seSwgbmV2ZXIgd3JpdHRlbiB0byBkaXNrKS4KICAgIGhpc3RvcnlfZW5hYmxlZDogYm9vbCA9IFRydWUKICAgIG1heF9oaXN0b3J5X2l0ZW1zOiBpbnQgPSAyMAoKICAgIGRlZiBfX3Bvc3RfaW5pdF9fKHNlbGYpOgogICAgICAgICMgS2VlcCBtb2RlbCBhbmQgYWN0aXZlX21vZGVsIGluIHN5bmMuIFdoZW4gZXhhY3RseSBvbmUgaXMgdGhlCiAgICAgICAgIyBkZWZhdWx0LCB0aGUgb3RoZXIgd2luczsgd2hlbiBib3RoIGFyZSBzZXQgdG8gZGlmZmVyZW50CiAgICAgICAgIyBub24tZGVmYXVsdCB2YWx1ZXMsIGFjdGl2ZV9tb2RlbCB3aW5zIChpdCBpcyB3aGF0IHRoZSBlbmdpbmUgcmVhZHMpLgogICAgICAgIGlmIHNlbGYubW9kZWwgIT0gImdwdC02LWx1bmEiIGFuZCBzZWxmLmFjdGl2ZV9tb2RlbCA9PSAiZ3B0LTYtbHVuYSI6CiAgICAgICAgICAgIG9iamVjdC5fX3NldGF0dHJfXyhzZWxmLCAiYWN0aXZlX21vZGVsIiwgc2VsZi5tb2RlbCkKICAgICAgICBlbGlmIHNlbGYuYWN0aXZlX21vZGVsICE9ICJncHQtNi1sdW5hIiBhbmQgc2VsZi5tb2RlbCA9PSAiZ3B0LTYtbHVuYSI6CiAgICAgICAgICAgIG9iamVjdC5fX3NldGF0dHJfXyhzZWxmLCAibW9kZWwiLCBzZWxmLmFjdGl2ZV9tb2RlbCkKICAgICAgICBlbGlmIHNlbGYubW9kZWwgIT0gc2VsZi5hY3RpdmVfbW9kZWw6CiAgICAgICAgICAgIG9iamVjdC5fX3NldGF0dHJfXyhzZWxmLCAibW9kZWwiLCBzZWxmLmFjdGl2ZV9tb2RlbCkKCiAgICBkZWYgdG9fZGljdChzZWxmKSAtPiBkaWN0OgogICAgICAgIHJldHVybiB7CiAgICAgICAgICAgICJhY3RpdmVfbW9kZWwiOiBzZWxmLmFjdGl2ZV9tb2RlbCwKICAgICAgICAgICAgIm1vZGVsIjogc2VsZi5tb2RlbCwKICAgICAgICAgICAgInRpbWVvdXRfc2Vjb25kcyI6IHNlbGYudGltZW91dF9zZWNvbmRzLAogICAgICAgICAgICAibWF4X3NlbGVjdGlvbl9jaGFycyI6IHNlbGYubWF4X3NlbGVjdGlvbl9jaGFycywKICAgICAgICAgICAgImV4Y2x1ZGVkX2FwcHMiOiBsaXN0KHNlbGYuZXhjbHVkZWRfYXBwcyksCiAgICAgICAgICAgICJlbmFibGVkIjogc2VsZi5lbmFibGVkLAogICAgICAgICAgICAiZmVlZGJhY2siOiBzZWxmLmZlZWRiYWNrLAogICAgICAgICAgICAiZXhwYW5kX3Nob3J0aGFuZCI6IHNlbGYuZXhwYW5kX3Nob3J0aGFuZCwKICAgICAgICAgICAgImFwcGVhcmFuY2UiOiBzZWxmLmFwcGVhcmFuY2UsCiAgICAgICAgICAgICJtb3Rpb24iOiBzZWxmLm1vdGlvbiwKICAgICAgICAgICAgImNhY2hlX2VuYWJsZWQiOiBzZWxmLmNhY2hlX2VuYWJsZWQsCiAgICAgICAgICAgICJjdXN0b21fcHJvbXB0Ijogc2VsZi5jdXN0b21fcHJvbXB0LAogICAgICAgICAgICAiZGVmYXVsdF9tb2RlIjogc2VsZi5kZWZhdWx0X21vZGUsCiAgICAgICAgICAgICJzaG93X2RpZmZfcHJldmlldyI6IHNlbGYuc2hvd19kaWZmX3ByZXZpZXcsCiAgICAgICAgICAgICJzb3VuZF9lbmFibGVkIjogc2VsZi5zb3VuZF9lbmFibGVkLAogICAgICAgICAgICAidGVtcGVyYXR1cmUiOiBzZWxmLnRlbXBlcmF0dXJlLAogICAgICAgICAgICAicGVyX2FwcF9tb2RlcyI6IGRpY3Qoc2VsZi5wZXJfYXBwX21vZGVzKSwKICAgICAgICAgICAgImNvcHlfb25seSI6IHNlbGYuY29weV9vbmx5LAogICAgICAgICAgICAiY2xpcGJvYXJkX3N0cmljdF9wcmVzZXJ2YXRpb24iOiBzZWxmLmNsaXBib2FyZF9zdHJpY3RfcHJlc2VydmF0aW9uLAogICAgICAgICAgICAicmV2aWV3X2JlZm9yZV9hcHBseSI6IHNlbGYucmV2aWV3X2JlZm9yZV9hcHBseSwKICAgICAgICAgICAgImhpc3RvcnlfZW5hYmxlZCI6IHNlbGYuaGlzdG9yeV9lbmFibGVkLAogICAgICAgICAgICAibWF4X2hpc3RvcnlfaXRlbXMiOiBzZWxmLm1heF9oaXN0b3J5X2l0ZW1zLAogICAgICAgIH0KCgpkZWYgbWlncmF0ZV9zZXR0aW5nc19kaWN0KGRhdGE6IGRpY3QpIC0+IHR1cGxlW2RpY3QsIGJvb2xdOgogICAgIiIiTWlncmF0ZSBsZWdhY3kgc2V0dGluZ3MgZGljdGlvbmFyeSB0byBtb2Rlcm4gc2NoZW1hLiBSZXR1cm5zIChkYXRhLCB3YXNfbWlncmF0ZWQpLiIiIgogICAgaWYgbm90IGlzaW5zdGFuY2UoZGF0YSwgZGljdCk6CiAgICAgICAgcmV0dXJuIGRhdGEsIEZhbHNlCiAgICBtaWdyYXRlZCA9IGRpY3QoZGF0YSkKICAgIGNoYW5nZWQgPSBGYWxzZQoKICAgICMgS2V5IG1pZ3JhdGlvbnMKICAgIGlmICJtb2RlbCIgaW4gbWlncmF0ZWQgYW5kICJhY3RpdmVfbW9kZWwiIG5vdCBpbiBtaWdyYXRlZDoKICAgICAgICBtaWdyYXRlZFsiYWN0aXZlX21vZGVsIl0gPSBtaWdyYXRlZFsibW9kZWwiXQogICAgICAgIGNoYW5nZWQgPSBUcnVlCiAgICBlbGlmICJhY3RpdmVfbW9kZWwiIGluIG1pZ3JhdGVkIGFuZCAibW9kZWwiIG5vdCBpbiBtaWdyYXRlZDoKICAgICAgICBtaWdyYXRlZFsibW9kZWwiXSA9IG1pZ3JhdGVkWyJhY3RpdmVfbW9kZWwiXQogICAgICAgIGNoYW5nZWQgPSBUcnVlCgogICAgaWYgInRoZW1lIiBpbiBtaWdyYXRlZCBhbmQgImFwcGVhcmFuY2UiIG5vdCBpbiBtaWdyYXRlZDoKICAgICAgICBtaWdyYXRlZFsiYXBwZWFyYW5jZSJdID0gbWlncmF0ZWQucG9wKCJ0aGVtZSIpCiAgICAgICAgY2hhbmdlZCA9IFRydWUKCiAgICBpZiAic291bmQiIGluIG1pZ3JhdGVkIGFuZCAic291bmRfZW5hYmxlZCIgbm90IGluIG1pZ3JhdGVkOgogICAgICAgIG1pZ3JhdGVkWyJzb3VuZF9lbmFibGVkIl0gPSBtaWdyYXRlZC5wb3AoInNvdW5kIikKICAgICAgICBjaGFuZ2VkID0gVHJ1ZQoKICAgIHJldHVybiBtaWdyYXRlZCwgY2hhbmdlZAoKCmRlZiBhdXRvX21pZ3JhdGVfc2V0dGluZ3MocGF0aDogUGF0aCkgLT4gYm9vbDoKICAgICIiIk1pZ3JhdGUgc2V0dGluZ3MgZmlsZSBvbiBkaXNrIGlmIGl0IGNvbnRhaW5zIGxlZ2FjeSBmb3JtYXQuIFRocmVhZC1zYWZlLiIiIgogICAgd2l0aCBfQ09ORklHX0xPQ0s6CiAgICAgICAgaWYgbm90IHBhdGguZXhpc3RzKCk6CiAgICAgICAgICAgIHJldHVybiBGYWxzZQogICAgICAgIHRyeToKICAgICAgICAgICAgcmF3ID0gcGF0aC5yZWFkX3RleHQoZW5jb2Rpbmc9InV0Zi04LXNpZyIpCiAgICAgICAgICAgIGRhdGEgPSBqc29uLmxvYWRzKHJhdykgaWYgcmF3LnN0cmlwKCkgZWxzZSB7fQogICAgICAgIGV4Y2VwdCAoT1NFcnJvciwgVmFsdWVFcnJvcik6CiAgICAgICAgICAgIHJldHVybiBGYWxzZQogICAgICAgIGlmIG5vdCBpc2luc3RhbmNlKGRhdGEsIGRpY3QpOgogICAgICAgICAgICByZXR1cm4gRmFsc2UKICAgICAgICBtaWdyYXRlZCwgY2hhbmdlZCA9IG1pZ3JhdGVfc2V0dGluZ3NfZGljdChkYXRhKQogICAgICAgIGlmIGNoYW5nZWQ6CiAgICAgICAgICAgIHRlbXAgPSBOb25lCiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIHBhdGgucGFyZW50Lm1rZGlyKHBhcmVudHM9VHJ1ZSwgZXhpc3Rfb2s9VHJ1ZSkKICAgICAgICAgICAgICAgIHdpdGggdGVtcGZpbGUuTmFtZWRUZW1wb3JhcnlGaWxlKCJ3IiwgZGlyPXBhdGgucGFyZW50LCBlbmNvZGluZz0idXRmLTgiLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3VmZml4PSIudG1wIiwgZGVsZXRlPUZhbHNlKSBhcyBvdXRwdXQ6CiAgICAgICAgICAgICAgICAgICAgdGVtcCA9IFBhdGgob3V0cHV0Lm5hbWUpCiAgICAgICAgICAgICAgICAgICAganNvbi5kdW1wKG1pZ3JhdGVkLCBvdXRwdXQsIGluZGVudD0yKQogICAgICAgICAgICAgICAgICAgIG91dHB1dC53cml0ZSgiXG4iKQogICAgICAgICAgICAgICAgdGVtcC5yZXBsYWNlKHBhdGgpCiAgICAgICAgICAgICAgICByZXR1cm4gVHJ1ZQogICAgICAgICAgICBleGNlcHQgT1NFcnJvcjoKICAgICAgICAgICAgICAgIGlmIHRlbXA6CiAgICAgICAgICAgICAgICAgICAgdGVtcC51bmxpbmsobWlzc2luZ19vaz1UcnVlKQogICAgICAgICAgICAgICAgcmV0dXJuIEZhbHNlCiAgICAgICAgcmV0dXJuIEZhbHNlCgoKZGVmIGxvYWRfc2V0dGluZ3MocGF0aDogUGF0aCA9IFNFVFRJTkdTX1BBVEgpIC0+IFNldHRpbmdzOgogICAgd2l0aCBfQ09ORklHX0xPQ0s6CiAgICAgICAgaWYgcGF0aC5leGlzdHMoKToKICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgYXV0b19taWdyYXRlX3NldHRpbmdzKHBhdGgpCiAgICAgICAgICAgIGV4Y2VwdCBFeGNlcHRpb246CiAgICAgICAgICAgICAgICBwYXNzCiAgICAgICAgcmV0dXJuIHBhcnNlX3NldHRpbmdzKHJlYWRfc2V0dGluZ3MocGF0aCkpCgoKZGVmIHJlYWRfc2V0dGluZ3MocGF0aDogUGF0aCA9IFNFVFRJTkdTX1BBVEgpIC0+IGRpY3Q6CiAgICB3aXRoIF9DT05GSUdfTE9DSzoKICAgICAgICB0cnk6CiAgICAgICAgICAgIGRhdGEgPSBqc29uLmxvYWRzKHBhdGgucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOC1zaWciKSkgaWYgcGF0aC5leGlzdHMoKSBlbHNlIHt9CiAgICAgICAgZXhjZXB0IChPU0Vycm9yLCBWYWx1ZUVycm9yKToKICAgICAgICAgICAgcmFpc2UgQXBwRXJyb3IoIkNvdWxkIG5vdCByZWFkIHNldHRpbmdzLmpzb24uIENoZWNrIHRoYXQgaXQgY29udGFpbnMgdmFsaWQgSlNPTi4iKSBmcm9tIE5vbmUKICAgICAgICBpZiBub3QgaXNpbnN0YW5jZShkYXRhLCBkaWN0KToKICAgICAgICAgICAgcmFpc2UgQXBwRXJyb3IoInNldHRpbmdzLmpzb24gbXVzdCBjb250YWluIG9ubHkgdGhlIGRvY3VtZW50ZWQgc2V0dGluZ3MuIikKICAgICAgICBkYXRhLCBfID0gbWlncmF0ZV9zZXR0aW5nc19kaWN0KGRhdGEpCiAgICAgICAgaWYgZGF0YS5rZXlzKCkgLSBTZXR0aW5ncy5fX2RhdGFjbGFzc19maWVsZHNfXy5rZXlzKCk6CiAgICAgICAgICAgIHJhaXNlIEFwcEVycm9yKCJzZXR0aW5ncy5qc29uIG11c3QgY29udGFpbiBvbmx5IHRoZSBkb2N1bWVudGVkIHNldHRpbmdzLiIpCiAgICAgICAgcmV0dXJuIGRhdGEKCgpkZWYgcGFyc2Vfc2V0dGluZ3MoZGF0YTogZGljdCkgLT4gU2V0dGluZ3M6CiAgICBkZWZhdWx0cyA9IFNldHRpbmdzKCkKICAgIGFjdGl2ZV9tb2RlbCA9IG9zLmVudmlyb24uZ2V0KAogICAgICAgICJMVU5BX0dSQU1NQVJfTU9ERUwiLAogICAgICAgIGRhdGEuZ2V0KCJhY3RpdmVfbW9kZWwiLCBkYXRhLmdldCgibW9kZWwiLCBkZWZhdWx0cy5hY3RpdmVfbW9kZWwpKQogICAgKQogICAgdGltZW91dCA9IGRhdGEuZ2V0KCJ0aW1lb3V0X3NlY29uZHMiLCBkZWZhdWx0cy50aW1lb3V0X3NlY29uZHMpCiAgICBsaW1pdCA9IGRhdGEuZ2V0KCJtYXhfc2VsZWN0aW9uX2NoYXJzIiwgZGVmYXVsdHMubWF4X3NlbGVjdGlvbl9jaGFycykKICAgIGV4Y2x1ZGVkID0gZGF0YS5nZXQoImV4Y2x1ZGVkX2FwcHMiLCBsaXN0KGRlZmF1bHRzLmV4Y2x1ZGVkX2FwcHMpKQoKICAgIGlmIG5vdCBpc2luc3RhbmNlKGFjdGl2ZV9tb2RlbCwgc3RyKSBvciBub3QgYWN0aXZlX21vZGVsLnN0cmlwKCk6CiAgICAgICAgcmFpc2UgQXBwRXJyb3IoIlNldCBhIG5vbmVtcHR5IE9wZW5BSSBtb2RlbCBJRC4iKQogICAgYWN0aXZlX21vZGVsID0gYWN0aXZlX21vZGVsLnN0cmlwKCkKCiAgICBpZiB0eXBlKHRpbWVvdXQpIG5vdCBpbiAoaW50LCBmbG9hdCkgb3Igbm90ICgxIDw9IHRpbWVvdXQgPD0gNjApIG9yIG5vdCBtYXRoLmlzZmluaXRlKHRpbWVvdXQpOgogICAgICAgIHJhaXNlIEFwcEVycm9yKCJ0aW1lb3V0X3NlY29uZHMgbXVzdCBiZSBiZXR3ZWVuIDEgYW5kIDYwLiIpCgogICAgaWYgdHlwZShsaW1pdCkgaXMgbm90IGludCBvciBub3QgKDEgPD0gbGltaXQgPD0gMjAwMDApOgogICAgICAgIHJhaXNlIEFwcEVycm9yKCJtYXhfc2VsZWN0aW9uX2NoYXJzIG11c3QgYmUgYW4gaW50ZWdlciBiZXR3ZWVuIDEgYW5kIDIwMDAwLiIpCgogICAgaWYgbm90IGlzaW5zdGFuY2UoZXhjbHVkZWQsIChsaXN0LCB0dXBsZSkpIG9yIGFueSgKICAgICAgICBub3QgaXNpbnN0YW5jZShuYW1lLCBzdHIpCiAgICAgICAgb3IgUHVyZVdpbmRvd3NQYXRoKG5hbWUpLm5hbWUgIT0gbmFtZQogICAgICAgIG9yIG5vdCBuYW1lLmNhc2Vmb2xkKCkuZW5kc3dpdGgoIi5leGUiKQogICAgICAgIGZvciBuYW1lIGluIGV4Y2x1ZGVkCiAgICApOgogICAgICAgIHJhaXNlIEFwcEVycm9yKCJleGNsdWRlZF9hcHBzIG11c3QgYmUgYSBsaXN0IG9mIGV4ZWN1dGFibGUgbmFtZXMgc3VjaCBhcyBub3RlcGFkLmV4ZS4iKQoKICAgIHRvZ2dsZXMgPSB7fQogICAgZm9yIG5hbWUgaW4gKCJlbmFibGVkIiwgImZlZWRiYWNrIiwgImV4cGFuZF9zaG9ydGhhbmQiLCAiY2FjaGVfZW5hYmxlZCIsICJzaG93X2RpZmZfcHJldmlldyIsICJzb3VuZF9lbmFibGVkIiwKICAgICAgICAgICAgICAgICAiY29weV9vbmx5IiwgImNsaXBib2FyZF9zdHJpY3RfcHJlc2VydmF0aW9uIiwgInJldmlld19iZWZvcmVfYXBwbHkiLCAiaGlzdG9yeV9lbmFibGVkIik6CiAgICAgICAgdmFsdWUgPSBkYXRhLmdldChuYW1lLCBnZXRhdHRyKGRlZmF1bHRzLCBuYW1lKSkKICAgICAgICBpZiB0eXBlKHZhbHVlKSBpcyBub3QgYm9vbDoKICAgICAgICAgICAgcmFpc2UgQXBwRXJyb3IoZiJ7bmFtZX0gbXVzdCBiZSB0cnVlIG9yIGZhbHNlLiIpCiAgICAgICAgdG9nZ2xlc1tuYW1lXSA9IHZhbHVlCgogICAgbWF4X2hpc3RvcnkgPSBkYXRhLmdldCgibWF4X2hpc3RvcnlfaXRlbXMiLCBkZWZhdWx0cy5tYXhfaGlzdG9yeV9pdGVtcykKICAgIGlmIHR5cGUobWF4X2hpc3RvcnkpIGlzIG5vdCBpbnQgb3Igbm90ICgwIDw9IG1heF9oaXN0b3J5IDw9IDEwMCk6CiAgICAgICAgcmFpc2UgQXBwRXJyb3IoIm1heF9oaXN0b3J5X2l0ZW1zIG11c3QgYmUgYW4gaW50ZWdlciBiZXR3ZWVuIDAgYW5kIDEwMC4iKQoKICAgIHBlcl9hcHBfbW9kZXMgPSBkYXRhLmdldCgicGVyX2FwcF9tb2RlcyIsIHt9KQogICAgaWYgbm90IGlzaW5zdGFuY2UocGVyX2FwcF9tb2RlcywgZGljdCkgb3IgYW55KAogICAgICAgIG5vdCBpc2luc3RhbmNlKG5hbWUsIHN0cikKICAgICAgICBvciBQdXJlV2luZG93c1BhdGgobmFtZSkubmFtZSAhPSBuYW1lCiAgICAgICAgb3Igbm90IG5hbWUuY2FzZWZvbGQoKS5lbmRzd2l0aCgiLmV4ZSIpCiAgICAgICAgb3IgdHlwZShsZXZlbCkgaXMgbm90IGludCBvciBub3QgKDAgPD0gbGV2ZWwgPD0gNSkKICAgICAgICBmb3IgbmFtZSwgbGV2ZWwgaW4gcGVyX2FwcF9tb2Rlcy5pdGVtcygpCiAgICApOgogICAgICAgIHJhaXNlIEFwcEVycm9yKCdwZXJfYXBwX21vZGVzIG11c3QgbWFwIGV4ZWN1dGFibGUgbmFtZXMgdG8gYSBtb2RlIGxldmVsIDAtNSwgZS5nLiB7Im91dGxvb2suZXhlIjogMn0uJykKICAgIHBlcl9hcHBfbW9kZXMgPSB7bmFtZS5jYXNlZm9sZCgpOiBsZXZlbCBmb3IgbmFtZSwgbGV2ZWwgaW4gcGVyX2FwcF9tb2Rlcy5pdGVtcygpfQoKICAgIGFwcGVhcmFuY2UgPSBkYXRhLmdldCgiYXBwZWFyYW5jZSIsIGRlZmF1bHRzLmFwcGVhcmFuY2UpCiAgICBtb3Rpb24gPSBkYXRhLmdldCgibW90aW9uIiwgZGVmYXVsdHMubW90aW9uKQogICAgaWYgYXBwZWFyYW5jZSBub3QgaW4gKCJkYXJrIiwgImxpZ2h0IiwgInN5c3RlbSIpIG9yIG1vdGlvbiBub3QgaW4gKCJzeXN0ZW0iLCAicmVkdWNlZCIpOgogICAgICAgIHJhaXNlIEFwcEVycm9yKCJVc2UgZGFyaywgbGlnaHQgb3Igc3lzdGVtIGZvciBhcHBlYXJhbmNlLCBhbmQgc3lzdGVtIG9yIHJlZHVjZWQgZm9yIG1vdGlvbi4iKQoKICAgIGN1c3RvbV9wcm9tcHQgPSBkYXRhLmdldCgiY3VzdG9tX3Byb21wdCIsIGRlZmF1bHRzLmN1c3RvbV9wcm9tcHQpCiAgICBpZiBub3QgaXNpbnN0YW5jZShjdXN0b21fcHJvbXB0LCBzdHIpOgogICAgICAgIHJhaXNlIEFwcEVycm9yKCJjdXN0b21fcHJvbXB0IG11c3QgYmUgYSBzdHJpbmcuIikKCiAgICBkZWZhdWx0X21vZGUgPSBkYXRhLmdldCgiZGVmYXVsdF9tb2RlIiwgZGVmYXVsdHMuZGVmYXVsdF9tb2RlKQogICAgaWYgdHlwZShkZWZhdWx0X21vZGUpIGlzIG5vdCBpbnQgb3Igbm90ICgwIDw9IGRlZmF1bHRfbW9kZSA8PSA1KToKICAgICAgICByYWlzZSBBcHBFcnJvcigiZGVmYXVsdF9tb2RlIG11c3QgYmUgYW4gaW50ZWdlciBiZXR3ZWVuIDAgYW5kIDUuIikKCiAgICB0ZW1wZXJhdHVyZSA9IGRhdGEuZ2V0KCJ0ZW1wZXJhdHVyZSIsIGRlZmF1bHRzLnRlbXBlcmF0dXJlKQogICAgaWYgdHlwZSh0ZW1wZXJhdHVyZSkgbm90IGluIChpbnQsIGZsb2F0KSBvciBub3QgKDAuMCA8PSB0ZW1wZXJhdHVyZSA8PSAyLjApIG9yIG5vdCBtYXRoLmlzZmluaXRlKHRlbXBlcmF0dXJlKToKICAgICAgICByYWlzZSBBcHBFcnJvcigidGVtcGVyYXR1cmUgbXVzdCBiZSBhIG51bWJlciBiZXR3ZWVuIDAuMCBhbmQgMi4wLiIpCgogICAgcmV0dXJuIFNldHRpbmdzKAogICAgICAgIG1vZGVsPWFjdGl2ZV9tb2RlbCwKICAgICAgICB0aW1lb3V0X3NlY29uZHM9dGltZW91dCwKICAgICAgICBtYXhfc2VsZWN0aW9uX2NoYXJzPWxpbWl0LAogICAgICAgIGV4Y2x1ZGVkX2FwcHM9dHVwbGUobmFtZS5jYXNlZm9sZCgpIGZvciBuYW1lIGluIGV4Y2x1ZGVkKSwKICAgICAgICBlbmFibGVkPXRvZ2dsZXNbImVuYWJsZWQiXSwKICAgICAgICBmZWVkYmFjaz10b2dnbGVzWyJmZWVkYmFjayJdLAogICAgICAgIGV4cGFuZF9zaG9ydGhhbmQ9dG9nZ2xlc1siZXhwYW5kX3Nob3J0aGFuZCJdLAogICAgICAgIGFwcGVhcmFuY2U9YXBwZWFyYW5jZSwKICAgICAgICBtb3Rpb249bW90aW9uLAogICAgICAgIGFjdGl2ZV9tb2RlbD1hY3RpdmVfbW9kZWwsCiAgICAgICAgY2FjaGVfZW5hYmxlZD10b2dnbGVzWyJjYWNoZV9lbmFibGVkIl0sCiAgICAgICAgY3VzdG9tX3Byb21wdD1jdXN0b21fcHJvbXB0LAogICAgICAgIGRlZmF1bHRfbW9kZT1kZWZhdWx0X21vZGUsCiAgICAgICAgc2hvd19kaWZmX3ByZXZpZXc9dG9nZ2xlc1sic2hvd19kaWZmX3ByZXZpZXciXSwKICAgICAgICBzb3VuZF9lbmFibGVkPXRvZ2dsZXNbInNvdW5kX2VuYWJsZWQiXSwKICAgICAgICB0ZW1wZXJhdHVyZT1mbG9hdCh0ZW1wZXJhdHVyZSksCiAgICAgICAgcGVyX2FwcF9tb2Rlcz1wZXJfYXBwX21vZGVzLAogICAgICAgIGNvcHlfb25seT10b2dnbGVzWyJjb3B5X29ubHkiXSwKICAgICAgICBjbGlwYm9hcmRfc3RyaWN0X3ByZXNlcnZhdGlvbj10b2dnbGVzWyJjbGlwYm9hcmRfc3RyaWN0X3ByZXNlcnZhdGlvbiJdLAogICAgICAgIHJldmlld19iZWZvcmVfYXBwbHk9dG9nZ2xlc1sicmV2aWV3X2JlZm9yZV9hcHBseSJdLAogICAgICAgIGhpc3RvcnlfZW5hYmxlZD10b2dnbGVzWyJoaXN0b3J5X2VuYWJsZWQiXSwKICAgICAgICBtYXhfaGlzdG9yeV9pdGVtcz1tYXhfaGlzdG9yeSwKICAgICkKCgpkZWYgdXBkYXRlX3NldHRpbmdzKGNoYW5nZXM6IGRpY3QsIHBhdGg6IFBhdGggPSBTRVRUSU5HU19QQVRIKToKICAgIHdpdGggX0NPTkZJR19MT0NLOgogICAgICAgIGN1cnJlbnQgPSByZWFkX3NldHRpbmdzKHBhdGgpCiAgICAgICAgZGF0YSA9IGN1cnJlbnQgfCBjaGFuZ2VzCiAgICAgICAgIyBTeW5jaHJvbml6ZSBhY3RpdmVfbW9kZWwgYW5kIG1vZGVsCiAgICAgICAgaWYgImFjdGl2ZV9tb2RlbCIgaW4gY2hhbmdlcyBhbmQgIm1vZGVsIiBub3QgaW4gY2hhbmdlczoKICAgICAgICAgICAgZGF0YVsibW9kZWwiXSA9IGNoYW5nZXNbImFjdGl2ZV9tb2RlbCJdCiAgICAgICAgZWxpZiAibW9kZWwiIGluIGNoYW5nZXMgYW5kICJhY3RpdmVfbW9kZWwiIG5vdCBpbiBjaGFuZ2VzOgogICAgICAgICAgICBkYXRhWyJhY3RpdmVfbW9kZWwiXSA9IGNoYW5nZXNbIm1vZGVsIl0KICAgICAgICBlbGlmICJhY3RpdmVfbW9kZWwiIGluIGRhdGEgYW5kICJtb2RlbCIgbm90IGluIGRhdGE6CiAgICAgICAgICAgIGRhdGFbIm1vZGVsIl0gPSBkYXRhWyJhY3RpdmVfbW9kZWwiXQogICAgICAgIGVsaWYgIm1vZGVsIiBpbiBkYXRhIGFuZCAiYWN0aXZlX21vZGVsIiBub3QgaW4gZGF0YToKICAgICAgICAgICAgZGF0YVsiYWN0aXZlX21vZGVsIl0gPSBkYXRhWyJtb2RlbCJdCgogICAgICAgIHBhcnNlX3NldHRpbmdzKGRhdGEpCiAgICAgICAgdGVtcCA9IE5vbmUKICAgICAgICB0cnk6CiAgICAgICAgICAgIHBhdGgucGFyZW50Lm1rZGlyKHBhcmVudHM9VHJ1ZSwgZXhpc3Rfb2s9VHJ1ZSkKICAgICAgICAgICAgd2l0aCB0ZW1wZmlsZS5OYW1lZFRlbXBvcmFyeUZpbGUoInciLCBkaXI9cGF0aC5wYXJlbnQsIGVuY29kaW5nPSJ1dGYtOCIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN1ZmZpeD0iLnRtcCIsIGRlbGV0ZT1GYWxzZSkgYXMgb3V0cHV0OgogICAgICAgICAgICAgICAgdGVtcCA9IFBhdGgob3V0cHV0Lm5hbWUpCiAgICAgICAgICAgICAgICBqc29uLmR1bXAoZGF0YSwgb3V0cHV0LCBpbmRlbnQ9MikKICAgICAgICAgICAgICAgIG91dHB1dC53cml0ZSgiXG4iKQogICAgICAgICAgICB0ZW1wLnJlcGxhY2UocGF0aCkKICAgICAgICBleGNlcHQgT1NFcnJvcjoKICAgICAgICAgICAgcmFpc2UgQXBwRXJyb3IoIkNvdWxkIG5vdCBzYXZlIHNldHRpbmdzLmpzb24uIikgZnJvbSBOb25lCiAgICAgICAgZmluYWxseToKICAgICAgICAgICAgaWYgdGVtcDoKICAgICAgICAgICAgICAgIHRlbXAudW5saW5rKG1pc3Npbmdfb2s9VHJ1ZSkKCgpkZWYgX2RwYXBpX3BhdGgoKSAtPiBQYXRoOgogICAgcmV0dXJuIFNFVFRJTkdTX1BBVEgucGFyZW50IC8gImFwaV9rZXkuZHBhcGkiCgoKZGVmIHN0b3JlX2FwaV9rZXlfZHBhcGkoa2V5OiBzdHIpIC0+IE5vbmU6CiAgICAiIiJTdG9yZSB0aGUgT3BlbkFJIEFQSSBrZXkgd2l0aCBXaW5kb3dzIERQQVBJICh1c2VyIHNjb3BlLCBubyBuZXcKICAgIGRlcGVuZGVuY3kpLiBSYWlzZXMgQXBwRXJyb3Igb2ZmIFdpbmRvd3MuIFRoZSBrZXkgZmlsZSBpcyBuZXZlcgogICAgY29tbWl0dGVkIGFuZCBuZXZlciBsb2dnZWQuIiIiCiAgICBpZiBzeXMucGxhdGZvcm0gIT0gIndpbjMyIjoKICAgICAgICByYWlzZSBBcHBFcnJvcigiRFBBUEkga2V5IHN0b3JhZ2UgcmVxdWlyZXMgV2luZG93cy4iKQogICAgaW1wb3J0IGN0eXBlcyBhcyBfYwogICAgZnJvbSBjdHlwZXMgaW1wb3J0IHdpbnR5cGVzIGFzIF93CgogICAgY2xhc3MgX0Jsb2IoX2MuU3RydWN0dXJlKToKICAgICAgICBfZmllbGRzXyA9IFsoImNiX2RhdGEiLCBfdy5EV09SRCksICgicGJfZGF0YSIsIF9jLlBPSU5URVIoX2MuY19ieXRlKSldCgogICAgY3J5cHQzMiA9IF9jLldpbkRMTCgiY3J5cHQzMiIsIHVzZV9sYXN0X2Vycm9yPVRydWUpCiAgICBrZXJuZWwzMiA9IF9jLldpbkRMTCgia2VybmVsMzIiLCB1c2VfbGFzdF9lcnJvcj1UcnVlKQogICAgZGF0YSA9IGtleS5lbmNvZGUoInV0Zi04IikKICAgIGJsb2JfaW4gPSBfQmxvYihsZW4oZGF0YSksIF9jLmNhc3QoX2MuY3JlYXRlX3N0cmluZ19idWZmZXIoZGF0YSwgbGVuKGRhdGEpKSwgX2MuUE9JTlRFUihfYy5jX2J5dGUpKSkKICAgIGJsb2Jfb3V0ID0gX0Jsb2IoKQogICAgcHJvdGVjdCA9IGNyeXB0MzIuQ3J5cHRQcm90ZWN0RGF0YQogICAgcHJvdGVjdC5hcmd0eXBlcyA9IFtfYy5QT0lOVEVSKF9CbG9iKSwgX3cuTFBDV1NUUiwgX2MuY192b2lkX3AsIF9jLmNfdm9pZF9wLCBfYy5jX3ZvaWRfcCwgX3cuRFdPUkQsIF9jLlBPSU5URVIoX0Jsb2IpXQogICAgcHJvdGVjdC5yZXN0eXBlID0gX3cuQk9PTAogICAgaWYgbm90IHByb3RlY3QoX2MuYnlyZWYoYmxvYl9pbiksICJMdW5hR3JhbW1hciBBUEkga2V5IiwgTm9uZSwgTm9uZSwgTm9uZSwgMCwgX2MuYnlyZWYoYmxvYl9vdXQpKToKICAgICAgICByYWlzZSBBcHBFcnJvcigiV2luZG93cyBjb3VsZCBub3QgcHJvdGVjdCB0aGUgQVBJIGtleS4iKQogICAgdHJ5OgogICAgICAgIHByb3RlY3RlZCA9IF9jLnN0cmluZ19hdChibG9iX291dC5wYl9kYXRhLCBibG9iX291dC5jYl9kYXRhKQogICAgZmluYWxseToKICAgICAgICBrZXJuZWwzMi5Mb2NhbEZyZWUoYmxvYl9vdXQucGJfZGF0YSkKICAgIHBhdGggPSBfZHBhcGlfcGF0aCgpCiAgICBwYXRoLnBhcmVudC5ta2RpcihwYXJlbnRzPVRydWUsIGV4aXN0X29rPVRydWUpCiAgICBwYXRoLndyaXRlX2J5dGVzKHByb3RlY3RlZCkKCgpkZWYgbG9hZF9hcGlfa2V5X2RwYXBpKCkgLT4gc3RyIHwgTm9uZToKICAgICIiIlJldHVybiB0aGUgRFBBUEktc3RvcmVkIGtleSwgb3IgTm9uZSBpZiB0aGVyZSBpcyBub25lIC8gaXQgY2Fubm90CiAgICBiZSByZWFkLiBSZXR1cm5zIE5vbmUgKG5ldmVyIHJhaXNlcykgb2ZmIFdpbmRvd3MuIiIiCiAgICBpZiBzeXMucGxhdGZvcm0gIT0gIndpbjMyIjoKICAgICAgICByZXR1cm4gTm9uZQogICAgcGF0aCA9IF9kcGFwaV9wYXRoKCkKICAgIGlmIG5vdCBwYXRoLmV4aXN0cygpOgogICAgICAgIHJldHVybiBOb25lCiAgICB0cnk6CiAgICAgICAgaW1wb3J0IGN0eXBlcyBhcyBfYwogICAgICAgIGZyb20gY3R5cGVzIGltcG9ydCB3aW50eXBlcyBhcyBfdwoKICAgICAgICBjbGFzcyBfQmxvYihfYy5TdHJ1Y3R1cmUpOgogICAgICAgICAgICBfZmllbGRzXyA9IFsoImNiX2RhdGEiLCBfdy5EV09SRCksICgicGJfZGF0YSIsIF9jLlBPSU5URVIoX2MuY19ieXRlKSldCgogICAgICAgIGNyeXB0MzIgPSBfYy5XaW5ETEwoImNyeXB0MzIiLCB1c2VfbGFzdF9lcnJvcj1UcnVlKQogICAgICAgIGtlcm5lbDMyID0gX2MuV2luRExMKCJrZXJuZWwzMiIsIHVzZV9sYXN0X2Vycm9yPVRydWUpCiAgICAgICAgcHJvdGVjdGVkID0gcGF0aC5yZWFkX2J5dGVzKCkKICAgICAgICBibG9iX2luID0gX0Jsb2IobGVuKHByb3RlY3RlZCksIF9jLmNhc3QoX2MuY3JlYXRlX3N0cmluZ19idWZmZXIocHJvdGVjdGVkLCBsZW4ocHJvdGVjdGVkKSksIF9jLlBPSU5URVIoX2MuY19ieXRlKSkpCiAgICAgICAgYmxvYl9vdXQgPSBfQmxvYigpCiAgICAgICAgdW5wcm90ZWN0ID0gY3J5cHQzMi5DcnlwdFVucHJvdGVjdERhdGEKICAgICAgICB1bnByb3RlY3QuYXJndHlwZXMgPSBbX2MuUE9JTlRFUihfQmxvYiksIF9jLlBPSU5URVIoX3cuTFBXU1RSKSwgX2MuY192b2lkX3AsIF9jLmNfdm9pZF9wLCBfYy5jX3ZvaWRfcCwgX3cuRFdPUkQsIF9jLlBPSU5URVIoX0Jsb2IpXQogICAgICAgIHVucHJvdGVjdC5yZXN0eXBlID0gX3cuQk9PTAogICAgICAgIGlmIG5vdCB1bnByb3RlY3QoX2MuYnlyZWYoYmxvYl9pbiksIE5vbmUsIE5vbmUsIE5vbmUsIE5vbmUsIDAsIF9jLmJ5cmVmKGJsb2Jfb3V0KSk6CiAgICAgICAgICAgIHJldHVybiBOb25lCiAgICAgICAgdHJ5OgogICAgICAgICAgICByZXR1cm4gX2Muc3RyaW5nX2F0KGJsb2Jfb3V0LnBiX2RhdGEsIGJsb2Jfb3V0LmNiX2RhdGEpLmRlY29kZSgidXRmLTgiKQogICAgICAgIGZpbmFsbHk6CiAgICAgICAgICAgIGtlcm5lbDMyLkxvY2FsRnJlZShibG9iX291dC5wYl9kYXRhKQogICAgZXhjZXB0IEV4Y2VwdGlvbjoKICAgICAgICByZXR1cm4gTm9uZQoKCmRlZiBhcGlfa2V5KCkgLT4gc3RyOgogICAga2V5ID0gb3MuZW52aXJvbi5nZXQoIk9QRU5BSV9BUElfS0VZIiwgIiIpLnN0cmlwKCkKICAgIGlmIGtleToKICAgICAgICByZXR1cm4ga2V5CiAgICBzdG9yZWQgPSBsb2FkX2FwaV9rZXlfZHBhcGkoKQogICAgaWYgc3RvcmVkOgogICAgICAgIHJldHVybiBzdG9yZWQuc3RyaXAoKQogICAgcmFpc2UgQXBwRXJyb3IoIk9QRU5BSV9BUElfS0VZIGlzIG1pc3NpbmcuIFNldCBpdCBiZWZvcmUgc3RhcnRpbmcgTHVuYSBHcmFtbWFyLiIpCg==
+"""User settings. Secrets come exclusively from the process environment."""
+
+import json
+import math
+import os
+import sys
+import tempfile
+import threading
+from dataclasses import dataclass, field
+from pathlib import Path, PureWindowsPath
+
+
+class AppError(Exception):
+    """An error with a fixed, safe-to-log message."""
+
+    def __init__(self, message: str, status: str = "Couldn’t refine", code: str | None = None):
+        super().__init__(message)
+        self.status = status
+        self.code = code
+
+
+SOURCE_DIR = Path(__file__).resolve().parent
+SETTINGS_PATH = (
+    Path(os.environ["LOCALAPPDATA"]) / "LunaGrammar" / "settings.json"
+    if getattr(sys, "frozen", False) else SOURCE_DIR / "settings.json"
+)
+
+_CONFIG_LOCK = threading.RLock()
+
+
+def app_command(*args: str, windowless=False) -> list[str]:
+    if getattr(sys, "frozen", False):
+        return [sys.executable, *args]
+    python = Path(sys.executable)
+    if windowless:
+        python = python.with_name("pythonw.exe")
+    return [str(python), str(SOURCE_DIR / "main.py"), *args]
+
+
+def independent_process_environment() -> dict[str, str] | None:
+    if getattr(sys, "frozen", False):
+        return dict(os.environ, PYINSTALLER_RESET_ENVIRONMENT="1")
+    return None
+
+
+@dataclass(frozen=True)
+class Settings:
+    model: str = "gpt-6-luna"
+    timeout_seconds: float = 10
+    max_selection_chars: int = 6000
+    excluded_apps: tuple[str, ...] = ()
+    enabled: bool = True
+    feedback: bool = True
+    expand_shorthand: bool = True
+    appearance: str = "dark"
+    motion: str = "system"
+    active_model: str = "gpt-6-luna"
+    cache_enabled: bool = True
+    custom_prompt: str = ""
+    default_mode: int = 0
+    show_diff_preview: bool = True
+    sound_enabled: bool = True
+    temperature: float = 0.0
+    # Per-app default mode for a bare Ctrl+Win+Z (explicit digits always win).
+    # Maps lowercase exe name -> mode level 0-5, e.g. {"outlook.exe": 2}.
+    per_app_modes: dict = field(default_factory=dict)
+    # When True, corrections are staged on the clipboard for manual Ctrl+V
+    # instead of being pasted automatically (safe mode for fragile fields).
+    copy_only: bool = False
+    # When True (default), a correction is refused rather than silently
+    # destroying clipboard formats Luna cannot back up (images/OLE data).
+    # Set False to keep the old behaviour: back up only the formats that
+    # can be duplicated and lose the rest.
+    clipboard_strict_preservation: bool = True
+    # When True, the correction is held for review (Apply / Discard in the
+    # overlay) instead of being pasted immediately. Default off: corrections
+    # apply automatically, as before.
+    review_before_apply: bool = False
+    # Recent-corrections history (in-memory only, never written to disk).
+    history_enabled: bool = True
+    max_history_items: int = 20
+
+    def __post_init__(self):
+        # Keep model and active_model in sync. When exactly one is the
+        # default, the other wins; when both are set to different
+        # non-default values, active_model wins (it is what the engine reads).
+        if self.model != "gpt-6-luna" and self.active_model == "gpt-6-luna":
+            object.__setattr__(self, "active_model", self.model)
+        elif self.active_model != "gpt-6-luna" and self.model == "gpt-6-luna":
+            object.__setattr__(self, "model", self.active_model)
+        elif self.model != self.active_model:
+            object.__setattr__(self, "model", self.active_model)
+
+    def to_dict(self) -> dict:
+        return {
+            "active_model": self.active_model,
+            "model": self.model,
+            "timeout_seconds": self.timeout_seconds,
+            "max_selection_chars": self.max_selection_chars,
+            "excluded_apps": list(self.excluded_apps),
+            "enabled": self.enabled,
+            "feedback": self.feedback,
+            "expand_shorthand": self.expand_shorthand,
+            "appearance": self.appearance,
+            "motion": self.motion,
+            "cache_enabled": self.cache_enabled,
+            "custom_prompt": self.custom_prompt,
+            "default_mode": self.default_mode,
+            "show_diff_preview": self.show_diff_preview,
+            "sound_enabled": self.sound_enabled,
+            "temperature": self.temperature,
+            "per_app_modes": dict(self.per_app_modes),
+            "copy_only": self.copy_only,
+            "clipboard_strict_preservation": self.clipboard_strict_preservation,
+            "review_before_apply": self.review_before_apply,
+            "history_enabled": self.history_enabled,
+            "max_history_items": self.max_history_items,
+        }
+
+
+def migrate_settings_dict(data: dict) -> tuple[dict, bool]:
+    """Migrate legacy settings dictionary to modern schema. Returns (data, was_migrated)."""
+    if not isinstance(data, dict):
+        return data, False
+    migrated = dict(data)
+    changed = False
+
+    # Key migrations
+    if "model" in migrated and "active_model" not in migrated:
+        migrated["active_model"] = migrated["model"]
+        changed = True
+    elif "active_model" in migrated and "model" not in migrated:
+        migrated["model"] = migrated["active_model"]
+        changed = True
+
+    if "theme" in migrated and "appearance" not in migrated:
+        migrated["appearance"] = migrated.pop("theme")
+        changed = True
+
+    if "sound" in migrated and "sound_enabled" not in migrated:
+        migrated["sound_enabled"] = migrated.pop("sound")
+        changed = True
+
+    return migrated, changed
+
+
+def auto_migrate_settings(path: Path) -> bool:
+    """Migrate settings file on disk if it contains legacy format. Thread-safe."""
+    with _CONFIG_LOCK:
+        if not path.exists():
+            return False
+        try:
+            raw = path.read_text(encoding="utf-8-sig")
+            data = json.loads(raw) if raw.strip() else {}
+        except (OSError, ValueError):
+            return False
+        if not isinstance(data, dict):
+            return False
+        migrated, changed = migrate_settings_dict(data)
+        if changed:
+            temp = None
+            try:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                with tempfile.NamedTemporaryFile("w", dir=path.parent, encoding="utf-8",
+                                                 suffix=".tmp", delete=False) as output:
+                    temp = Path(output.name)
+                    json.dump(migrated, output, indent=2)
+                    output.write("\n")
+                temp.replace(path)
+                return True
+            except OSError:
+                if temp:
+                    temp.unlink(missing_ok=True)
+                return False
+        return False
+
+
+def load_settings(path: Path = SETTINGS_PATH) -> Settings:
+    with _CONFIG_LOCK:
+        if path.exists():
+            try:
+                auto_migrate_settings(path)
+            except Exception:
+                pass
+        return parse_settings(read_settings(path))
+
+
+def read_settings(path: Path = SETTINGS_PATH) -> dict:
+    with _CONFIG_LOCK:
+        try:
+            data = json.loads(path.read_text(encoding="utf-8-sig")) if path.exists() else {}
+        except (OSError, ValueError):
+            raise AppError("Could not read settings.json. Check that it contains valid JSON.") from None
+        if not isinstance(data, dict):
+            raise AppError("settings.json must contain only the documented settings.")
+        data, _ = migrate_settings_dict(data)
+        if data.keys() - Settings.__dataclass_fields__.keys():
+            raise AppError("settings.json must contain only the documented settings.")
+        return data
+
+
+def parse_settings(data: dict) -> Settings:
+    defaults = Settings()
+    active_model = os.environ.get(
+        "LUNA_GRAMMAR_MODEL",
+        data.get("active_model", data.get("model", defaults.active_model))
+    )
+    timeout = data.get("timeout_seconds", defaults.timeout_seconds)
+    limit = data.get("max_selection_chars", defaults.max_selection_chars)
+    excluded = data.get("excluded_apps", list(defaults.excluded_apps))
+
+    if not isinstance(active_model, str) or not active_model.strip():
+        raise AppError("Set a nonempty OpenAI model ID.")
+    active_model = active_model.strip()
+
+    if type(timeout) not in (int, float) or not (1 <= timeout <= 60) or not math.isfinite(timeout):
+        raise AppError("timeout_seconds must be between 1 and 60.")
+
+    if type(limit) is not int or not (1 <= limit <= 20000):
+        raise AppError("max_selection_chars must be an integer between 1 and 20000.")
+
+    if not isinstance(excluded, (list, tuple)) or any(
+        not isinstance(name, str)
+        or PureWindowsPath(name).name != name
+        or not name.casefold().endswith(".exe")
+        for name in excluded
+    ):
+        raise AppError("excluded_apps must be a list of executable names such as notepad.exe.")
+
+    toggles = {}
+    for name in ("enabled", "feedback", "expand_shorthand", "cache_enabled", "show_diff_preview", "sound_enabled",
+                 "copy_only", "clipboard_strict_preservation", "review_before_apply", "history_enabled"):
+        value = data.get(name, getattr(defaults, name))
+        if type(value) is not bool:
+            raise AppError(f"{name} must be true or false.")
+        toggles[name] = value
+
+    max_history = data.get("max_history_items", defaults.max_history_items)
+    if type(max_history) is not int or not (0 <= max_history <= 100):
+        raise AppError("max_history_items must be an integer between 0 and 100.")
+
+    per_app_modes = data.get("per_app_modes", {})
+    if not isinstance(per_app_modes, dict) or any(
+        not isinstance(name, str)
+        or PureWindowsPath(name).name != name
+        or not name.casefold().endswith(".exe")
+        or type(level) is not int or not (0 <= level <= 5)
+        for name, level in per_app_modes.items()
+    ):
+        raise AppError('per_app_modes must map executable names to a mode level 0-5, e.g. {"outlook.exe": 2}.')
+    per_app_modes = {name.casefold(): level for name, level in per_app_modes.items()}
+
+    appearance = data.get("appearance", defaults.appearance)
+    motion = data.get("motion", defaults.motion)
+    if appearance not in ("dark", "light", "system") or motion not in ("system", "reduced"):
+        raise AppError("Use dark, light or system for appearance, and system or reduced for motion.")
+
+    custom_prompt = data.get("custom_prompt", defaults.custom_prompt)
+    if not isinstance(custom_prompt, str):
+        raise AppError("custom_prompt must be a string.")
+
+    default_mode = data.get("default_mode", defaults.default_mode)
+    if type(default_mode) is not int or not (0 <= default_mode <= 5):
+        raise AppError("default_mode must be an integer between 0 and 5.")
+
+    temperature = data.get("temperature", defaults.temperature)
+    if type(temperature) not in (int, float) or not (0.0 <= temperature <= 2.0) or not math.isfinite(temperature):
+        raise AppError("temperature must be a number between 0.0 and 2.0.")
+
+    return Settings(
+        model=active_model,
+        timeout_seconds=timeout,
+        max_selection_chars=limit,
+        excluded_apps=tuple(name.casefold() for name in excluded),
+        enabled=toggles["enabled"],
+        feedback=toggles["feedback"],
+        expand_shorthand=toggles["expand_shorthand"],
+        appearance=appearance,
+        motion=motion,
+        active_model=active_model,
+        cache_enabled=toggles["cache_enabled"],
+        custom_prompt=custom_prompt,
+        default_mode=default_mode,
+        show_diff_preview=toggles["show_diff_preview"],
+        sound_enabled=toggles["sound_enabled"],
+        temperature=float(temperature),
+        per_app_modes=per_app_modes,
+        copy_only=toggles["copy_only"],
+        clipboard_strict_preservation=toggles["clipboard_strict_preservation"],
+        review_before_apply=toggles["review_before_apply"],
+        history_enabled=toggles["history_enabled"],
+        max_history_items=max_history,
+    )
+
+
+def update_settings(changes: dict, path: Path = SETTINGS_PATH):
+    with _CONFIG_LOCK:
+        current = read_settings(path)
+        data = current | changes
+        # Synchronize active_model and model
+        if "active_model" in changes and "model" not in changes:
+            data["model"] = changes["active_model"]
+        elif "model" in changes and "active_model" not in changes:
+            data["active_model"] = changes["model"]
+        elif "active_model" in data and "model" not in data:
+            data["model"] = data["active_model"]
+        elif "model" in data and "active_model" not in data:
+            data["active_model"] = data["model"]
+
+        parse_settings(data)
+        temp = None
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with tempfile.NamedTemporaryFile("w", dir=path.parent, encoding="utf-8",
+                                             suffix=".tmp", delete=False) as output:
+                temp = Path(output.name)
+                json.dump(data, output, indent=2)
+                output.write("\n")
+            temp.replace(path)
+        except OSError:
+            raise AppError("Could not save settings.json.") from None
+        finally:
+            if temp:
+                temp.unlink(missing_ok=True)
+
+
+def _dpapi_path() -> Path:
+    return SETTINGS_PATH.parent / "api_key.dpapi"
+
+
+def store_api_key_dpapi(key: str) -> None:
+    """Store the OpenAI API key with Windows DPAPI (user scope, no new
+    dependency). Raises AppError off Windows. The key file is never
+    committed and never logged."""
+    if sys.platform != "win32":
+        raise AppError("DPAPI key storage requires Windows.")
+    import ctypes as _c
+    from ctypes import wintypes as _w
+
+    class _Blob(_c.Structure):
+        _fields_ = [("cb_data", _w.DWORD), ("pb_data", _c.POINTER(_c.c_byte))]
+
+    crypt32 = _c.WinDLL("crypt32", use_last_error=True)
+    kernel32 = _c.WinDLL("kernel32", use_last_error=True)
+    data = key.encode("utf-8")
+    blob_in = _Blob(len(data), _c.cast(_c.create_string_buffer(data, len(data)), _c.POINTER(_c.c_byte)))
+    blob_out = _Blob()
+    protect = crypt32.CryptProtectData
+    protect.argtypes = [_c.POINTER(_Blob), _w.LPCWSTR, _c.c_void_p, _c.c_void_p, _c.c_void_p, _w.DWORD, _c.POINTER(_Blob)]
+    protect.restype = _w.BOOL
+    if not protect(_c.byref(blob_in), "LunaGrammar API key", None, None, None, 0, _c.byref(blob_out)):
+        raise AppError("Windows could not protect the API key.")
+    try:
+        protected = _c.string_at(blob_out.pb_data, blob_out.cb_data)
+    finally:
+        kernel32.LocalFree(blob_out.pb_data)
+    path = _dpapi_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(protected)
+
+
+def load_api_key_dpapi() -> str | None:
+    """Return the DPAPI-stored key, or None if there is none / it cannot
+    be read. Returns None (never raises) off Windows."""
+    if sys.platform != "win32":
+        return None
+    path = _dpapi_path()
+    if not path.exists():
+        return None
+    try:
+        import ctypes as _c
+        from ctypes import wintypes as _w
+
+        class _Blob(_c.Structure):
+            _fields_ = [("cb_data", _w.DWORD), ("pb_data", _c.POINTER(_c.c_byte))]
+
+        crypt32 = _c.WinDLL("crypt32", use_last_error=True)
+        kernel32 = _c.WinDLL("kernel32", use_last_error=True)
+        protected = path.read_bytes()
+        blob_in = _Blob(len(protected), _c.cast(_c.create_string_buffer(protected, len(protected)), _c.POINTER(_c.c_byte)))
+        blob_out = _Blob()
+        unprotect = crypt32.CryptUnprotectData
+        unprotect.argtypes = [_c.POINTER(_Blob), _c.POINTER(_w.LPWSTR), _c.c_void_p, _c.c_void_p, _c.c_void_p, _w.DWORD, _c.POINTER(_Blob)]
+        unprotect.restype = _w.BOOL
+        if not unprotect(_c.byref(blob_in), None, None, None, None, 0, _c.byref(blob_out)):
+            return None
+        try:
+            return _c.string_at(blob_out.pb_data, blob_out.cb_data).decode("utf-8")
+        finally:
+            kernel32.LocalFree(blob_out.pb_data)
+    except Exception:
+        return None
+
+
+def api_key() -> str:
+    key = os.environ.get("OPENAI_API_KEY", "").strip()
+    if key:
+        return key
+    stored = load_api_key_dpapi()
+    if stored:
+        return stored.strip()
+    raise AppError("OPENAI_API_KEY is missing. Set it before starting Luna Grammar.")
