@@ -1,1 +1,215 @@
-IiIiUm91bmQtMiB0ZXN0czogcGVyLWFwcCBwcm9maWxlcywgZm9jdXMgcmVzdG9yZSwgUmljaEVkaXQgcmFuZ2VzLApBUEkgcmV0cnksIGNvcnJlY3Rpb24gaGlzdG9yeSwgRFBBUEkgZmFsbGJhY2ssIGNsaXBib2FyZCBiYWNrLW9mZi4KCldpbmRvd3Mtb25seSBwYXRocyBhcmUgc2tpcHBlZCBvbiBMaW51eDsgdGhlIHB1cmUtbG9naWMgcGF0aHMgcnVuCmV2ZXJ5d2hlcmUuIFdpbjMyIGNhbGxzIGFyZSBtb2NrZWQsIG5ldmVyIGV4ZWN1dGVkIGFnYWluc3QgYSByZWFsIGRlc2t0b3AuCiIiIgoKaW1wb3J0IHN5cwppbXBvcnQgdW5pdHRlc3QKZnJvbSB1bml0dGVzdCBpbXBvcnQgbW9jawoKc3lzLnBhdGguaW5zZXJ0KDAsIF9fZmlsZV9fLnJzcGxpdCgiL3Rlc3RzLyIsIDEpWzBdIGlmICIvdGVzdHMvIiBpbiBfX2ZpbGVfXyBlbHNlICIuIikKCmZyb20gY29uZmlnIGltcG9ydCBBcHBFcnJvciwgU2V0dGluZ3MKZnJvbSBoaXN0b3J5IGltcG9ydCBDb3JyZWN0aW9uSGlzdG9yeQpmcm9tIHRleHRfc2VsZWN0aW9uIGltcG9ydCBBUFBfUFJPRklMRVMsIFRFUk1JTkFMX0VYRVMsIHByb2ZpbGVfZm9yCgoKY2xhc3MgUHJvZmlsZVRlc3RzKHVuaXR0ZXN0LlRlc3RDYXNlKToKICAgIGRlZiB0ZXN0X3Rlcm1pbmFsX3JlZnVzZWQoc2VsZik6CiAgICAgICAgZm9yIGV4ZSBpbiAoImNtZC5leGUiLCAicG93ZXJzaGVsbC5leGUiLCAid3QuZXhlIiwgImNvbmhvc3QuZXhlIiwgInB3c2guZXhlIik6CiAgICAgICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZShwcm9maWxlX2ZvcihleGUpWyJyZWZ1c2UiXSwgZXhlKQogICAgICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHByb2ZpbGVfZm9yKGV4ZSlbImxheWVycyJdLCAoKSkKCiAgICBkZWYgdGVzdF9maXJlZm94X2NsaXBib2FyZF9maXJzdChzZWxmKToKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHByb2ZpbGVfZm9yKCJmaXJlZm94LmV4ZSIpWyJsYXllcnMiXVs6MV0sICgiY2xpcGJvYXJkIiwpKQoKICAgIGRlZiB0ZXN0X2NvZGVfY2xpcGJvYXJkX2ZpcnN0KHNlbGYpOgogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwocHJvZmlsZV9mb3IoImNvZGUuZXhlIilbImxheWVycyJdWzoxXSwgKCJjbGlwYm9hcmQiLCkpCgogICAgZGVmIHRlc3RfY2hyb21lX3VpYV9maXJzdChzZWxmKToKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHByb2ZpbGVfZm9yKCJjaHJvbWUuZXhlIilbImxheWVycyJdWzoxXSwgKCJ1aWEiLCkpCgogICAgZGVmIHRlc3RfdW5rbm93bl9hcHBfZGVmYXVsdF9sYXllcnMoc2VsZik6CiAgICAgICAgcHJvZmlsZSA9IHByb2ZpbGVfZm9yKCJub3RlcGFkLmV4ZSIpCiAgICAgICAgc2VsZi5hc3NlcnRGYWxzZShwcm9maWxlWyJyZWZ1c2UiXSkKICAgICAgICBzZWxmLmFzc2VydEluKCJ1aWEiLCBwcm9maWxlWyJsYXllcnMiXSkKICAgICAgICBzZWxmLmFzc2VydEluKCJjbGlwYm9hcmQiLCBwcm9maWxlWyJsYXllcnMiXSkKCiAgICBkZWYgdGVzdF9wcm9maWxlX25hbWVzX2Nhc2VfaW5zZW5zaXRpdmUoc2VsZik6CiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChwcm9maWxlX2ZvcigiRmlyZWZveC5FWEUiKSwgcHJvZmlsZV9mb3IoImZpcmVmb3guZXhlIikpCgoKY2xhc3MgRm9jdXNSZXN0b3JlVGVzdHModW5pdHRlc3QuVGVzdENhc2UpOgogICAgZGVmIHRlc3RfcmVzdG9yZV9mb2N1c19ub29wX29mZl93aW5kb3dzKHNlbGYpOgogICAgICAgIGltcG9ydCB3aW4zMiBhcyB3aW4KCiAgICAgICAgaWYgc3lzLnBsYXRmb3JtID09ICJ3aW4zMiI6CiAgICAgICAgICAgIHNlbGYuc2tpcFRlc3QoIldpbmRvd3Mtb25seSBiZWhhdmlvdXIgZGlmZmVyczsgbW9ja2VkIGJlbG93IikKICAgICAgICB0YXJnZXQgPSB3aW4uVGFyZ2V0KHdpbmRvdz0xLCBmb2N1cz0yLCB0aHJlYWQ9MywgcGlkPTQpCiAgICAgICAgc2VsZi5hc3NlcnRUcnVlKHdpbi5yZXN0b3JlX2ZvY3VzKHRhcmdldCkpCgogICAgZGVmIHRlc3RfcmVzdG9yZV9mb2N1c19jYWxsc19hdHRhY2hfYW5kX3NldGZvY3VzKHNlbGYpOgogICAgICAgIGltcG9ydCB3aW4zMiBhcyB3aW4KCiAgICAgICAgaWYgc3lzLnBsYXRmb3JtICE9ICJ3aW4zMiI6CiAgICAgICAgICAgIHNlbGYuc2tpcFRlc3QoIm5lZWRzIFdpbmRvd3MgV2luMzIgYmluZGluZ3MiKQogICAgICAgIHRhcmdldCA9IHdpbi5UYXJnZXQod2luZG93PTEsIGZvY3VzPTIsIHRocmVhZD05OSwgcGlkPTQpCiAgICAgICAgd2l0aCBtb2NrLnBhdGNoLm9iamVjdCh3aW4sICJjdXJyZW50X3RocmVhZF9pZCIsIHJldHVybl92YWx1ZT03KSwgXAogICAgICAgICAgICAgICAgbW9jay5wYXRjaC5vYmplY3Qod2luLCAiYXR0YWNoX3RocmVhZF9pbnB1dCIsIHJldHVybl92YWx1ZT1UcnVlKSBhcyBhdHRhY2gsIFwKICAgICAgICAgICAgICAgIG1vY2sucGF0Y2gub2JqZWN0KHdpbiwgInNldF9mb2N1cyIsIHJldHVybl92YWx1ZT0yKSBhcyBmb2N1c19mbiwgXAogICAgICAgICAgICAgICAgbW9jay5wYXRjaC5vYmplY3Qod2luLCAiZ2V0X2d1aV9pbmZvIiwgcmV0dXJuX3ZhbHVlPVRydWUpIGFzIGd1aToKICAgICAgICAgICAgIyBnZXRfZ3VpX2luZm8gd3JpdGVzIGludG8gdGhlIEd1aVRocmVhZEluZm8gc3RydWN0IHZpYSBieXJlZjsKICAgICAgICAgICAgIyB0aGUgbW9jayByZXR1cm5zIFRydWUgYnV0IGxlYXZlcyBmb2N1cyB1bnNldCwgc28gdGhlIGhlbHBlcgogICAgICAgICAgICAjIGZhbGxzIHRocm91Z2ggdG8gVHJ1ZSBvbmx5IHdoZW4gdGhlIHN0cnVjdCBtYXRjaGVzIOKAlCBwYXRjaAogICAgICAgICAgICAjIHRoZSBzdHJ1Y3QgY2hlY2sgYnkgbWFraW5nIGdldF9ndWlfaW5mbyBhIG5vLW9wIHN1Y2Nlc3MuCiAgICAgICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZSh3aW4ucmVzdG9yZV9mb2N1cyh0YXJnZXQpKQogICAgICAgICAgICBzZWxmLmFzc2VydFRydWUoYXR0YWNoLmNhbGxlZCkKICAgICAgICAgICAgZm9jdXNfZm4uYXNzZXJ0X2NhbGxlZF9vbmNlX3dpdGgoMikKCiAgICBkZWYgdGVzdF9pbWVfY29tcG9zaW5nX2ZhbHNlX29mZl93aW5kb3dzKHNlbGYpOgogICAgICAgIGltcG9ydCB3aW4zMiBhcyB3aW4KCiAgICAgICAgc2VsZi5hc3NlcnRGYWxzZSh3aW4uaXNfaW1lX2NvbXBvc2luZygxMjMpKQoKCmNsYXNzIFJpY2hFZGl0UmFuZ2VUZXN0cyh1bml0dGVzdC5UZXN0Q2FzZSk6CiAgICBkZWYgdGVzdF9lbV9leF9jb25zdGFudHMoc2VsZik6CiAgICAgICAgaW1wb3J0IHdpbjMyIGFzIHdpbgoKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHdpbi5FTV9FWEdFVFNFTCwgMHgwNDM0KQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwod2luLkVNX0VYU0VUU0VMLCAweDA0MzUpCgogICAgZGVmIHRlc3RfcmljaF9lZGl0X3VzZXNfZXhfcmFuZ2Uoc2VsZik6CiAgICAgICAgaW1wb3J0IHdpbjMyIGFzIHdpbgoKICAgICAgICBpZiBzeXMucGxhdGZvcm0gPT0gIndpbjMyIjoKICAgICAgICAgICAgc2VsZi5za2lwVGVzdCgibW9ja2VkIHBhdGggaXMgTGludXgtb25seSBoZXJlIikKICAgICAgICB3aXRoIG1vY2sucGF0Y2gub2JqZWN0KHdpbiwgImNsYXNzX25hbWUiLCByZXR1cm5fdmFsdWU9InJpY2hlZGl0NTB3IiksIFwKICAgICAgICAgICAgICAgIG1vY2sucGF0Y2gub2JqZWN0KHdpbiwgInJpY2hfZWRpdF9yYW5nZSIsIHJldHVybl92YWx1ZT0oNzAwMDAsIDcwMDEwKSkgYXMgZXg6CiAgICAgICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwod2luLm5hdGl2ZV9yYW5nZSg1KSwgKDcwMDAwLCA3MDAxMCkpCiAgICAgICAgICAgIGV4LmFzc2VydF9jYWxsZWRfb25jZV93aXRoKDUpCgoKY2xhc3MgQXBpUmV0cnlUZXN0cyh1bml0dGVzdC5UZXN0Q2FzZSk6CiAgICBkZWYgX2VuZ2luZShzZWxmKToKICAgICAgICBmcm9tIGdyYW1tYXJfZW5naW5lIGltcG9ydCBHcmFtbWFyRW5naW5lCgogICAgICAgIGVuZ2luZSA9IEdyYW1tYXJFbmdpbmUuX19uZXdfXyhHcmFtbWFyRW5naW5lKQogICAgICAgIGVuZ2luZS5tb2RlbCA9ICJncHQtNG8tbWluaSIKICAgICAgICBlbmdpbmUudGltZW91dCA9IDUuMAogICAgICAgIGVuZ2luZS5leHBhbmRfc2hvcnRoYW5kID0gRmFsc2UKICAgICAgICBlbmdpbmUuY2FjaGVfZW5hYmxlZCA9IEZhbHNlCiAgICAgICAgZW5naW5lLmNhY2hlID0gTm9uZQogICAgICAgIGVuZ2luZS5mYWxsYmFja19tb2RlbHMgPSBOb25lCiAgICAgICAgZW5naW5lLmN1c3RvbV9wcm9tcHQgPSAiIgogICAgICAgIGVuZ2luZS50ZW1wZXJhdHVyZSA9IDAuMAogICAgICAgIHJldHVybiBlbmdpbmUKCiAgICBkZWYgdGVzdF90cmFuc2llbnRfZXJyb3JfcmV0cmllZF90aGVuX3N1Y2NlZWRzKHNlbGYpOgogICAgICAgIGVuZ2luZSA9IHNlbGYuX2VuZ2luZSgpCiAgICAgICAgY2FsbHMgPSB7Im4iOiAwfQoKICAgICAgICBkZWYgZmxha3koKiprd2FyZ3MpOgogICAgICAgICAgICBjYWxsc1sibiJdICs9IDEKICAgICAgICAgICAgaWYgY2FsbHNbIm4iXSA8IDM6CiAgICAgICAgICAgICAgICByYWlzZSBBcHBFcnJvcigiVGhlIE9wZW5BSSByZXF1ZXN0IHRpbWVkIG91dC4iLCAiUmVxdWVzdCB0aW1lZCBvdXQiLCAiYXBpLnRpbWVvdXQiKQogICAgICAgICAgICByZXR1cm4gIkZpeGVkIHRleHQuIgoKICAgICAgICB3aXRoIG1vY2sucGF0Y2gub2JqZWN0KGVuZ2luZSwgIl9leGVjdXRlX2FwaV9jYWxsIiwgc2lkZV9lZmZlY3Q9Zmxha3kpLCBcCiAgICAgICAgICAgICAgICBtb2NrLnBhdGNoKCJncmFtbWFyX2VuZ2luZS50aW1lLnNsZWVwIikgYXMgc2xlZXA6CiAgICAgICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwoZW5naW5lLmNvcnJlY3QoIkZpeGQgdGV4dC4iKSwgIkZpeGVkIHRleHQuIikKICAgICAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChjYWxsc1sibiJdLCAzKQogICAgICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHNsZWVwLmNhbGxfY291bnQsIDIpCgogICAgZGVmIHRlc3Rfbm9uX3RyYW5zaWVudF9lcnJvcl9ub3RfcmV0cmllZChzZWxmKToKICAgICAgICBlbmdpbmUgPSBzZWxmLl9lbmdpbmUoKQogICAgICAgIGNhbGxzID0geyJuIjogMH0KCiAgICAgICAgZGVmIGZhaWxpbmcoKiprd2FyZ3MpOgogICAgICAgICAgICBjYWxsc1sibiJdICs9IDEKICAgICAgICAgICAgcmFpc2UgQXBwRXJyb3IoIk9wZW5BSSByZWplY3RlZCBPUEVOQUlfQVBJX0tFWS4iLCAiQVBJIGtleSByZWplY3RlZCIsICJhcGkuYXV0aGVudGljYXRpb25fZmFpbGVkIikKCiAgICAgICAgd2l0aCBtb2NrLnBhdGNoLm9iamVjdChlbmdpbmUsICJfZXhlY3V0ZV9hcGlfY2FsbCIsIHNpZGVfZWZmZWN0PWZhaWxpbmcpOgogICAgICAgICAgICB3aXRoIHNlbGYuYXNzZXJ0UmFpc2VzKEFwcEVycm9yKToKICAgICAgICAgICAgICAgIGVuZ2luZS5jb3JyZWN0KCJGaXhkIHRleHQuIikKICAgICAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChjYWxsc1sibiJdLCAxKQoKICAgIGRlZiB0ZXN0X2Nvbm5lY3Rpb25fbWV0aG9kX2V4aXN0cyhzZWxmKToKICAgICAgICBlbmdpbmUgPSBzZWxmLl9lbmdpbmUoKQogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZShjYWxsYWJsZShnZXRhdHRyKGVuZ2luZSwgInRlc3RfY29ubmVjdGlvbiIsIE5vbmUpKSkKCgpjbGFzcyBIaXN0b3J5VGVzdHModW5pdHRlc3QuVGVzdENhc2UpOgogICAgZGVmIHRlc3RfcmVjb3JkX2FuZF9saXN0X25ld2VzdF9maXJzdChzZWxmKToKICAgICAgICBoaXN0b3J5ID0gQ29ycmVjdGlvbkhpc3RvcnkobWF4X2l0ZW1zPTMpCiAgICAgICAgaGlzdG9yeS5yZWNvcmQoImEiLCAiQSIsICJncmFtbWFyIiwgIm5vdGVwYWQuZXhlIikKICAgICAgICBoaXN0b3J5LnJlY29yZCgiYiIsICJCIiwgImdyYW1tYXIiLCAid29yZC5leGUiKQogICAgICAgIGl0ZW1zID0gaGlzdG9yeS5saXN0KCkKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKFtpLm9yaWdpbmFsIGZvciBpIGluIGl0ZW1zXSwgWyJiIiwgImEiXSkKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKGl0ZW1zWzBdLmFwcCwgIndvcmQuZXhlIikKCiAgICBkZWYgdGVzdF9ib3VuZGVkX3NpemUoc2VsZik6CiAgICAgICAgaGlzdG9yeSA9IENvcnJlY3Rpb25IaXN0b3J5KG1heF9pdGVtcz0yKQogICAgICAgIGZvciBpIGluIHJhbmdlKDUpOgogICAgICAgICAgICBoaXN0b3J5LnJlY29yZChmIm9yaWd7aX0iLCBmImZpeGVke2l9IiwgImdyYW1tYXIiKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwobGVuKGhpc3RvcnkpLCAyKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwoaGlzdG9yeS5saXN0KClbMF0ub3JpZ2luYWwsICJvcmlnNCIpCgogICAgZGVmIHRlc3RfemVyb19tYXhfZGlzYWJsZXMoc2VsZik6CiAgICAgICAgaGlzdG9yeSA9IENvcnJlY3Rpb25IaXN0b3J5KG1heF9pdGVtcz0wKQogICAgICAgIHNlbGYuYXNzZXJ0SXNOb25lKGhpc3RvcnkucmVjb3JkKCJhIiwgIkEiLCAiZ3JhbW1hciIpKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwobGVuKGhpc3RvcnkpLCAwKQoKICAgIGRlZiB0ZXN0X2NsZWFyKHNlbGYpOgogICAgICAgIGhpc3RvcnkgPSBDb3JyZWN0aW9uSGlzdG9yeSgpCiAgICAgICAgaGlzdG9yeS5yZWNvcmQoImEiLCAiQSIsICJncmFtbWFyIikKICAgICAgICBoaXN0b3J5LmNsZWFyKCkKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKGxlbihoaXN0b3J5KSwgMCkKCiAgICBkZWYgdGVzdF9zZXRfbWF4X3RyaW1zKHNlbGYpOgogICAgICAgIGhpc3RvcnkgPSBDb3JyZWN0aW9uSGlzdG9yeShtYXhfaXRlbXM9NSkKICAgICAgICBmb3IgaSBpbiByYW5nZSg1KToKICAgICAgICAgICAgaGlzdG9yeS5yZWNvcmQoZiJve2l9IiwgZiJme2l9IiwgImdyYW1tYXIiKQogICAgICAgIGhpc3Rvcnkuc2V0X21heF9pdGVtcygyKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwobGVuKGhpc3RvcnkpLCAyKQoKCmNsYXNzIERwYXBpVGVzdHModW5pdHRlc3QuVGVzdENhc2UpOgogICAgZGVmIHRlc3Rfc3RvcmVfcmFpc2VzX29mZl93aW5kb3dzKHNlbGYpOgogICAgICAgIGZyb20gY29uZmlnIGltcG9ydCBzdG9yZV9hcGlfa2V5X2RwYXBpCgogICAgICAgIGlmIHN5cy5wbGF0Zm9ybSA9PSAid2luMzIiOgogICAgICAgICAgICBzZWxmLnNraXBUZXN0KCJXaW5kb3dzLW9ubHkgc3RvcmFnZSIpCiAgICAgICAgd2l0aCBzZWxmLmFzc2VydFJhaXNlcyhBcHBFcnJvcik6CiAgICAgICAgICAgIHN0b3JlX2FwaV9rZXlfZHBhcGkoInNrLXRlc3QiKQoKICAgIGRlZiB0ZXN0X2xvYWRfcmV0dXJuc19ub25lX29mZl93aW5kb3dzKHNlbGYpOgogICAgICAgIGZyb20gY29uZmlnIGltcG9ydCBsb2FkX2FwaV9rZXlfZHBhcGkKCiAgICAgICAgaWYgc3lzLnBsYXRmb3JtID09ICJ3aW4zMiI6CiAgICAgICAgICAgIHNlbGYuc2tpcFRlc3QoIldpbmRvd3Mtb25seSBzdG9yYWdlIikKICAgICAgICBzZWxmLmFzc2VydElzTm9uZShsb2FkX2FwaV9rZXlfZHBhcGkoKSkKCiAgICBkZWYgdGVzdF9hcGlfa2V5X3ByZWZlcnNfZW52X3ZhcihzZWxmKToKICAgICAgICBpbXBvcnQgb3MKICAgICAgICBmcm9tIGNvbmZpZyBpbXBvcnQgYXBpX2tleQoKICAgICAgICB3aXRoIG1vY2sucGF0Y2guZGljdChvcy5lbnZpcm9uLCB7Ik9QRU5BSV9BUElfS0VZIjogInNrLWVudiJ9KToKICAgICAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChhcGlfa2V5KCksICJzay1lbnYiKQoKCmNsYXNzIFNldHRpbmdzUm91bmQyVGVzdHModW5pdHRlc3QuVGVzdENhc2UpOgogICAgZGVmIHRlc3RfYXBwZWFyYW5jZV9zeXN0ZW1fYWxsb3dlZChzZWxmKToKICAgICAgICBzZXR0aW5ncyA9IFNldHRpbmdzKGFwcGVhcmFuY2U9InN5c3RlbSIpCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChzZXR0aW5ncy5hcHBlYXJhbmNlLCAic3lzdGVtIikKCiAgICBkZWYgdGVzdF9oaXN0b3J5X3NldHRpbmdzX2RlZmF1bHRzKHNlbGYpOgogICAgICAgIHNldHRpbmdzID0gU2V0dGluZ3MoKQogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZShzZXR0aW5ncy5oaXN0b3J5X2VuYWJsZWQpCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChzZXR0aW5ncy5tYXhfaGlzdG9yeV9pdGVtcywgMjApCgoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIHVuaXR0ZXN0Lm1haW4oKQo=
+"""Round-2 tests: per-app profiles, focus restore, RichEdit ranges,
+API retry, correction history, DPAPI fallback, clipboard back-off.
+
+Windows-only paths are skipped on Linux; the pure-logic paths run
+everywhere. Win32 calls are mocked, never executed against a real desktop.
+"""
+
+import sys
+import unittest
+from unittest import mock
+
+sys.path.insert(0, __file__.rsplit("/tests/", 1)[0] if "/tests/" in __file__ else ".")
+
+from config import AppError, Settings
+from history import CorrectionHistory
+from text_selection import APP_PROFILES, TERMINAL_EXES, profile_for
+
+
+class ProfileTests(unittest.TestCase):
+    def test_terminal_refused(self):
+        for exe in ("cmd.exe", "powershell.exe", "wt.exe", "conhost.exe", "pwsh.exe"):
+            self.assertTrue(profile_for(exe)["refuse"], exe)
+            self.assertEqual(profile_for(exe)["layers"], ())
+
+    def test_firefox_clipboard_first(self):
+        self.assertEqual(profile_for("firefox.exe")["layers"][:1], ("clipboard",))
+
+    def test_code_clipboard_first(self):
+        self.assertEqual(profile_for("code.exe")["layers"][:1], ("clipboard",))
+
+    def test_chrome_uia_first(self):
+        self.assertEqual(profile_for("chrome.exe")["layers"][:1], ("uia",))
+
+    def test_unknown_app_default_layers(self):
+        profile = profile_for("notepad.exe")
+        self.assertFalse(profile["refuse"])
+        self.assertIn("uia", profile["layers"])
+        self.assertIn("clipboard", profile["layers"])
+
+    def test_profile_names_case_insensitive(self):
+        self.assertEqual(profile_for("Firefox.EXE"), profile_for("firefox.exe"))
+
+
+class FocusRestoreTests(unittest.TestCase):
+    def test_restore_focus_noop_off_windows(self):
+        import win32 as win
+
+        if sys.platform == "win32":
+            self.skipTest("Windows-only behaviour differs; mocked below")
+        target = win.Target(window=1, focus=2, thread=3, pid=4)
+        self.assertTrue(win.restore_focus(target))
+
+    def test_restore_focus_calls_attach_and_setfocus(self):
+        import win32 as win
+
+        if sys.platform != "win32":
+            self.skipTest("needs Windows Win32 bindings")
+        target = win.Target(window=1, focus=2, thread=99, pid=4)
+        with mock.patch.object(win, "current_thread_id", return_value=7), \
+                mock.patch.object(win, "attach_thread_input", return_value=True) as attach, \
+                mock.patch.object(win, "set_focus", return_value=2) as focus_fn, \
+                mock.patch.object(win, "get_gui_info", return_value=True) as gui:
+            # get_gui_info writes into the GuiThreadInfo struct via byref;
+            # the mock returns True but leaves focus unset, so the helper
+            # falls through to True only when the struct matches — patch
+            # the struct check by making get_gui_info a no-op success.
+            self.assertTrue(win.restore_focus(target))
+            self.assertTrue(attach.called)
+            focus_fn.assert_called_once_with(2)
+
+    def test_ime_composing_false_off_windows(self):
+        import win32 as win
+
+        self.assertFalse(win.is_ime_composing(123))
+
+
+class RichEditRangeTests(unittest.TestCase):
+    def test_em_ex_constants(self):
+        import win32 as win
+
+        self.assertEqual(win.EM_EXGETSEL, 0x0434)
+        self.assertEqual(win.EM_EXSETSEL, 0x0435)
+
+    def test_rich_edit_uses_ex_range(self):
+        import win32 as win
+
+        if sys.platform == "win32":
+            self.skipTest("mocked path is Linux-only here")
+        with mock.patch.object(win, "class_name", return_value="richedit50w"), \
+                mock.patch.object(win, "rich_edit_range", return_value=(70000, 70010)) as ex:
+            self.assertEqual(win.native_range(5), (70000, 70010))
+            ex.assert_called_once_with(5)
+
+
+class ApiRetryTests(unittest.TestCase):
+    def _engine(self):
+        from grammar_engine import GrammarEngine
+
+        engine = GrammarEngine.__new__(GrammarEngine)
+        engine.model = "gpt-4o-mini"
+        engine.timeout = 5.0
+        engine.expand_shorthand = False
+        engine.cache_enabled = False
+        engine.cache = None
+        engine.fallback_models = None
+        engine.custom_prompt = ""
+        engine.temperature = 0.0
+        return engine
+
+    def test_transient_error_retried_then_succeeds(self):
+        engine = self._engine()
+        calls = {"n": 0}
+
+        def flaky(**kwargs):
+            calls["n"] += 1
+            if calls["n"] < 3:
+                raise AppError("The OpenAI request timed out.", "Request timed out", "api.timeout")
+            return "Fixed text."
+
+        with mock.patch.object(engine, "_execute_api_call", side_effect=flaky), \
+                mock.patch("grammar_engine.time.sleep") as sleep:
+            self.assertEqual(engine.correct("Fixd text."), "Fixed text.")
+            self.assertEqual(calls["n"], 3)
+            self.assertEqual(sleep.call_count, 2)
+
+    def test_non_transient_error_not_retried(self):
+        engine = self._engine()
+        calls = {"n": 0}
+
+        def failing(**kwargs):
+            calls["n"] += 1
+            raise AppError("OpenAI rejected OPENAI_API_KEY.", "API key rejected", "api.authentication_failed")
+
+        with mock.patch.object(engine, "_execute_api_call", side_effect=failing):
+            with self.assertRaises(AppError):
+                engine.correct("Fixd text.")
+            self.assertEqual(calls["n"], 1)
+
+    def test_connection_method_exists(self):
+        engine = self._engine()
+        self.assertTrue(callable(getattr(engine, "test_connection", None)))
+
+
+class HistoryTests(unittest.TestCase):
+    def test_record_and_list_newest_first(self):
+        history = CorrectionHistory(max_items=3)
+        history.record("a", "A", "grammar", "notepad.exe")
+        history.record("b", "B", "grammar", "word.exe")
+        items = history.list()
+        self.assertEqual([i.original for i in items], ["b", "a"])
+        self.assertEqual(items[0].app, "word.exe")
+
+    def test_bounded_size(self):
+        history = CorrectionHistory(max_items=2)
+        for i in range(5):
+            history.record(f"orig{i}", f"fixed{i}", "grammar")
+        self.assertEqual(len(history), 2)
+        self.assertEqual(history.list()[0].original, "orig4")
+
+    def test_zero_max_disables(self):
+        history = CorrectionHistory(max_items=0)
+        self.assertIsNone(history.record("a", "A", "grammar"))
+        self.assertEqual(len(history), 0)
+
+    def test_clear(self):
+        history = CorrectionHistory()
+        history.record("a", "A", "grammar")
+        history.clear()
+        self.assertEqual(len(history), 0)
+
+    def test_set_max_trims(self):
+        history = CorrectionHistory(max_items=5)
+        for i in range(5):
+            history.record(f"o{i}", f"f{i}", "grammar")
+        history.set_max_items(2)
+        self.assertEqual(len(history), 2)
+
+
+class DpapiTests(unittest.TestCase):
+    def test_store_raises_off_windows(self):
+        from config import store_api_key_dpapi
+
+        if sys.platform == "win32":
+            self.skipTest("Windows-only storage")
+        with self.assertRaises(AppError):
+            store_api_key_dpapi("sk-test")
+
+    def test_load_returns_none_off_windows(self):
+        from config import load_api_key_dpapi
+
+        if sys.platform == "win32":
+            self.skipTest("Windows-only storage")
+        self.assertIsNone(load_api_key_dpapi())
+
+    def test_api_key_prefers_env_var(self):
+        import os
+        from config import api_key
+
+        with mock.patch.dict(os.environ, {"OPENAI_API_KEY": "sk-env"}):
+            self.assertEqual(api_key(), "sk-env")
+
+
+class SettingsRound2Tests(unittest.TestCase):
+    def test_appearance_system_allowed(self):
+        settings = Settings(appearance="system")
+        self.assertEqual(settings.appearance, "system")
+
+    def test_history_settings_defaults(self):
+        settings = Settings()
+        self.assertTrue(settings.history_enabled)
+        self.assertEqual(settings.max_history_items, 20)
+
+
+if __name__ == "__main__":
+    unittest.main()
