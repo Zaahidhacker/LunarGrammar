@@ -1,1 +1,72 @@
-IiIiV2luZG93cyBzbW9rZSBoYXJuZXNzIOKAlCBydW4gb24gWmFhaGlkJ3MgbGFwdG9wIGFmdGVyIGluc3RhbGxpbmcgTHVuYUdyYW1tYXIuCgogICAgcHl0aG9uIHRlc3RzXFx3aW5kb3dzX3Ntb2tlLnB5CgpSdW5zIHRoZSB1bml0IHN1aXRlLCBwcmludHMgdGhlIGxhc3QtZmFpbHVyZSBkaWFnbm9zdGljcyAoaWYgYW55KSwgYW5kCnRoZW4gd2Fsa3MgdGhlIHJlYWwtd29ybGQgY2hlY2tsaXN0IHByb21wdHM6IGZvciBlYWNoIGFwcC9maWVsZCwgc2VsZWN0CnNvbWUgdGV4dCwgcHJlc3MgQ3RybCtXaW4rWiwgYW5kIHJlcG9ydCB3aGF0IHRoZSBwaWxsIHNob3dlZC4gQW5zd2VycyBhcmUKc2F2ZWQgdG8gJUxPQ0FMQVBQREFUQSVcXEx1bmFHcmFtbWFyXFxzbW9rZS1yZXN1bHRzLnR4dCDigJQgc2VuZCB0aGF0IGZpbGUKYmFjayB3aXRoIGFueSBmYWlsdXJlIHJlcG9ydCAoYXBwLCBmaWVsZCwgZXhhY3QgcGlsbCBtZXNzYWdlLCBsb2cgbGluZXMpLgpUaGlzIHNjcmlwdCBuZWVkcyBXaW5kb3dzICsgdGhlIHJlcG8gY2hlY2tvdXQ7IG9uIExpbnV4IGl0IG9ubHkgcmVwb3J0cwp0aGF0IGl0IGNhbm5vdCBydW4uCiIiIgoKaW1wb3J0IGpzb24KaW1wb3J0IG9zCmltcG9ydCBzdWJwcm9jZXNzCmltcG9ydCBzeXMKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgpST09UID0gUGF0aChfX2ZpbGVfXykucmVzb2x2ZSgpLnBhcmVudC5wYXJlbnQKRklFTERTID0gWwogICAgKCJOb3RlcGFkIChXaW4xMSkiLCAiU2VsZWN0IGEgc2VudGVuY2UgaW4gTm90ZXBhZCwgQ3RybCtXaW4rWiIpLAogICAgKCJXb3JkIOKAlCBib2R5IHRleHQiLCAiU2VsZWN0IGEgcGFyYWdyYXBoIGluIFdvcmQsIEN0cmwrV2luK1oiKSwKICAgICgiT3V0bG9vayDigJQgY29tcG9zZSIsICJTZWxlY3QgdGV4dCBpbiBhIG5ldyBtYWlsLCBDdHJsK1dpbitaIiksCiAgICAoIkNocm9tZSDigJQgdGV4dGFyZWEiLCAiU2VsZWN0IHRleHQgaW4gYSB3ZWIgdGV4dGFyZWEsIEN0cmwrV2luK1oiKSwKICAgICgiQ2hyb21lIOKAlCBHb29nbGUgRG9jcyIsICJTZWxlY3QgdGV4dCBpbiBEb2NzIChjbGlwYm9hcmQtb25seSBleHBlY3RlZCksIEN0cmwrV2luK1oiKSwKICAgICgiRmlyZWZveCDigJQgdGV4dGFyZWEiLCAiU2VsZWN0IHRleHQgaW4gRmlyZWZveCwgQ3RybCtXaW4rWiAoY2xpcGJvYXJkLWZpcnN0KSIpLAogICAgKCJWUyBDb2RlIiwgIlNlbGVjdCB0ZXh0IGluIFZTIENvZGUsIEN0cmwrV2luK1oiKSwKICAgICgiTm90ZXBhZCsrIiwgIlNlbGVjdCB0ZXh0IGluIE5vdGVwYWQrKywgQ3RybCtXaW4rWiIpLAogICAgKCJXaGF0c0FwcCBEZXNrdG9wIiwgIlNlbGVjdCB0ZXh0IGluIGEgV2hhdHNBcHAgbWVzc2FnZSBib3gsIEN0cmwrV2luK1oiKSwKICAgICgiVGVybWluYWwgKHJlZnVzYWwgZXhwZWN0ZWQpIiwgIlNlbGVjdCB0ZXh0IGluIFdpbmRvd3MgVGVybWluYWwg4oCUIGV4cGVjdCBhIGNsZWFyIHJlZnVzYWwsIG5vIHBhc3RlIiksCiAgICAoIlBhc3N3b3JkIGZpZWxkIChyZWZ1c2FsIGV4cGVjdGVkKSIsICJUcnkgaW4gYSBwYXNzd29yZCBmaWVsZCDigJQgZXhwZWN0IGEgY2xlYXIgcmVmdXNhbCIpLAogICAgKCJFbGV2YXRlZCBOb3RlcGFkIChyZWZ1c2FsIGV4cGVjdGVkKSIsICJSdW4gTm90ZXBhZCBhcyBhZG1pbiwgdHJ5IOKAlCBleHBlY3QgdGhlIGVsZXZhdGVkLXRhcmdldCBtZXNzYWdlIiksCl0KCgpkZWYgbWFpbigpIC0+IGludDoKICAgIGlmIHN5cy5wbGF0Zm9ybSAhPSAid2luMzIiOgogICAgICAgIHByaW50KCJ3aW5kb3dzX3Ntb2tlLnB5IG5lZWRzIFdpbmRvd3MuIE9uIHRoaXMgbWFjaGluZSBpdCBjYW5ub3QgcnVuLiIpCiAgICAgICAgcmV0dXJuIDIKICAgIHByaW50KCI9PSBMdW5hR3JhbW1hciBXaW5kb3dzIHNtb2tlID09IikKICAgIHJlc3VsdCA9IHN1YnByb2Nlc3MucnVuKAogICAgICAgIFtzeXMuZXhlY3V0YWJsZSwgIi1tIiwgInVuaXR0ZXN0IiwgImRpc2NvdmVyIiwgIi1zIiwgInRlc3RzIl0sCiAgICAgICAgY3dkPVJPT1QsIGNhcHR1cmVfb3V0cHV0PVRydWUsIHRleHQ9VHJ1ZSwKICAgICkKICAgIHByaW50KHJlc3VsdC5zdGRvdXRbLTIwMDA6XSkKICAgIHByaW50KHJlc3VsdC5zdGRlcnJbLTIwMDA6XSkKICAgIGRpYWcgPSBQYXRoKG9zLmVudmlyb25bIkxPQ0FMQVBQREFUQSJdKSAvICJMdW5hR3JhbW1hciIgLyAibGFzdC1mYWlsdXJlLmpzb24iCiAgICBpZiBkaWFnLmV4aXN0cygpOgogICAgICAgIHByaW50KCJcbkxhc3QgZmFpbHVyZSBkaWFnbm9zdGljczoiKQogICAgICAgIHByaW50KGRpYWcucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIsIGVycm9ycz0icmVwbGFjZSIpWzoyMDAwXSkKICAgIGVsc2U6CiAgICAgICAgcHJpbnQoIlxuTm8gbGFzdC1mYWlsdXJlIGRpYWdub3N0aWNzIGZpbGUg4oCUIG5vIGZhaWx1cmUgcmVjb3JkZWQgeWV0LiIpCiAgICBwcmludCgiXG5Ob3cgd2FsayB0aGUgY2hlY2tsaXN0LiBGb3IgZWFjaCBmaWVsZCwgZG8gdGhlIHN0ZXAsIHRoZW4gdHlwZSIpCiAgICBwcmludCgid2hhdCB0aGUgcGlsbCBzaG93ZWQgKG9yICdvaycgLyAnZmFpbDogPHBpbGwgbWVzc2FnZT4nKS4iKQogICAgYW5zd2VycyA9IFtdCiAgICB0cnk6CiAgICAgICAgZm9yIG5hbWUsIHN0ZXAgaW4gRklFTERTOgogICAgICAgICAgICBwcmludChmIlxuW3tuYW1lfV0ge3N0ZXB9IikKICAgICAgICAgICAgYW5zd2VyID0gaW5wdXQoIlJlc3VsdDogIikuc3RyaXAoKQogICAgICAgICAgICBhbnN3ZXJzLmFwcGVuZCh7ImZpZWxkIjogbmFtZSwgInN0ZXAiOiBzdGVwLCAicmVzdWx0IjogYW5zd2VyfSkKICAgIGV4Y2VwdCBLZXlib2FyZEludGVycnVwdDoKICAgICAgICBwcmludCgiXG5TdG9wcGVkIGVhcmx5IOKAlCBzYXZpbmcgd2hhdCB3YXMgYW5zd2VyZWQgc28gZmFyLiIpCiAgICBvdXQgPSBQYXRoKG9zLmVudmlyb25bIkxPQ0FMQVBQREFUQSJdKSAvICJMdW5hR3JhbW1hciIgLyAic21va2UtcmVzdWx0cy50eHQiCiAgICBvdXQucGFyZW50Lm1rZGlyKHBhcmVudHM9VHJ1ZSwgZXhpc3Rfb2s9VHJ1ZSkKICAgIG91dC53cml0ZV90ZXh0KGpzb24uZHVtcHMoYW5zd2VycywgaW5kZW50PTIpLCBlbmNvZGluZz0idXRmLTgiKQogICAgcHJpbnQoZiJcblNhdmVkIHRvIHtvdXR9IikKICAgIHJldHVybiAwCgoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIHJhaXNlIFN5c3RlbUV4aXQobWFpbigpKQo=
+"""Windows smoke harness — run on Zaahid's laptop after installing LunaGrammar.
+
+    python tests\\windows_smoke.py
+
+Runs the unit suite, prints the last-failure diagnostics (if any), and
+then walks the real-world checklist prompts: for each app/field, select
+some text, press Ctrl+Win+Z, and report what the pill showed. Answers are
+saved to %LOCALAPPDATA%\\LunaGrammar\\smoke-results.txt — send that file
+back with any failure report (app, field, exact pill message, log lines).
+This script needs Windows + the repo checkout; on Linux it only reports
+that it cannot run.
+"""
+
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+FIELDS = [
+    ("Notepad (Win11)", "Select a sentence in Notepad, Ctrl+Win+Z"),
+    ("Word — body text", "Select a paragraph in Word, Ctrl+Win+Z"),
+    ("Outlook — compose", "Select text in a new mail, Ctrl+Win+Z"),
+    ("Chrome — textarea", "Select text in a web textarea, Ctrl+Win+Z"),
+    ("Chrome — Google Docs", "Select text in Docs (clipboard-only expected), Ctrl+Win+Z"),
+    ("Firefox — textarea", "Select text in Firefox, Ctrl+Win+Z (clipboard-first)"),
+    ("VS Code", "Select text in VS Code, Ctrl+Win+Z"),
+    ("Notepad++", "Select text in Notepad++, Ctrl+Win+Z"),
+    ("WhatsApp Desktop", "Select text in a WhatsApp message box, Ctrl+Win+Z"),
+    ("Terminal (refusal expected)", "Select text in Windows Terminal — expect a clear refusal, no paste"),
+    ("Password field (refusal expected)", "Try in a password field — expect a clear refusal"),
+    ("Elevated Notepad (refusal expected)", "Run Notepad as admin, try — expect the elevated-target message"),
+]
+
+
+def main() -> int:
+    if sys.platform != "win32":
+        print("windows_smoke.py needs Windows. On this machine it cannot run.")
+        return 2
+    print("== LunaGrammar Windows smoke ==")
+    result = subprocess.run(
+        [sys.executable, "-m", "unittest", "discover", "-s", "tests"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    print(result.stdout[-2000:])
+    print(result.stderr[-2000:])
+    diag = Path(os.environ["LOCALAPPDATA"]) / "LunaGrammar" / "last-failure.json"
+    if diag.exists():
+        print("\nLast failure diagnostics:")
+        print(diag.read_text(encoding="utf-8", errors="replace")[:2000])
+    else:
+        print("\nNo last-failure diagnostics file — no failure recorded yet.")
+    print("\nNow walk the checklist. For each field, do the step, then type")
+    print("what the pill showed (or 'ok' / 'fail: <pill message>').")
+    answers = []
+    try:
+        for name, step in FIELDS:
+            print(f"\n[{name}] {step}")
+            answer = input("Result: ").strip()
+            answers.append({"field": name, "step": step, "result": answer})
+    except KeyboardInterrupt:
+        print("\nStopped early — saving what was answered so far.")
+    out = Path(os.environ["LOCALAPPDATA"]) / "LunaGrammar" / "smoke-results.txt"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(answers, indent=2), encoding="utf-8")
+    print(f"\nSaved to {out}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
