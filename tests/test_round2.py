@@ -51,19 +51,23 @@ class FocusRestoreTests(unittest.TestCase):
         self.assertTrue(win.restore_focus(target))
 
     def test_restore_focus_calls_attach_and_setfocus(self):
+        import ctypes as c
         import win32 as win
 
         if sys.platform != "win32":
             self.skipTest("needs Windows Win32 bindings")
         target = win.Target(window=1, focus=2, thread=99, pid=4)
+
+        def _gui_info_ok(thread, info_ref):
+            # The real GetGUIThreadInfo fills the struct; the fake must
+            # too, or restore_focus correctly reports focus did not land.
+            c.cast(info_ref, c.POINTER(win.GuiThreadInfo)).contents.focus = target.focus
+            return True
+
         with mock.patch.object(win, "current_thread_id", return_value=7), \
                 mock.patch.object(win, "attach_thread_input", return_value=True) as attach, \
                 mock.patch.object(win, "set_focus", return_value=2) as focus_fn, \
-                mock.patch.object(win, "get_gui_info", return_value=True) as gui:
-            # get_gui_info writes into the GuiThreadInfo struct via byref;
-            # the mock returns True but leaves focus unset, so the helper
-            # falls through to True only when the struct matches — patch
-            # the struct check by making get_gui_info a no-op success.
+                mock.patch.object(win, "get_gui_info", side_effect=_gui_info_ok) as gui:
             self.assertTrue(win.restore_focus(target))
             self.assertTrue(attach.called)
             focus_fn.assert_called_once_with(2)
