@@ -152,6 +152,9 @@ class ClipboardTests(unittest.TestCase):
         self.restore.assert_not_called()
 
     def test_copy_preserves_safe_formats_when_unsupported_format_present(self):
+        # This test exercises the best-effort fallback (safe_snapshot); the
+        # clipboard fails closed by default, so opt out of strict mode here.
+        self.clipboard.strict_preservation = False
         with patch.object(cm, "snapshot", side_effect=AppError("unsupported", code="clipboard.preservation_limited")):
             safe_backup = [Mock()]
             with patch.object(cm, "safe_snapshot", return_value=safe_backup):
