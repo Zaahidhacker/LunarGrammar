@@ -61,7 +61,7 @@ See [COMPATIBILITY.md](COMPATIBILITY.md) for the full layered engine, the failur
 
 Keep [LunaGrammar.exe](dist/LunaGrammar.exe) in a permanent folder and double-click it. It runs without a console. Use the notification-area icon to open Settings, pause the shortcut, or quit. Quit the Python listener before launching the executable.
 
-The executable reads `OPENAI_API_KEY` from its environment. For Explorer launches, set a user environment variable as described under **Start at Windows sign-in**, then sign out and back in. The key is never bundled. You can launch from a PowerShell session that already has the key while setting up.
+On first launch without a key, the executable opens Settings. Open **AI Engine**, enter your OpenAI API key, and click **Save** to start the tray app. Luna protects saved keys with Windows DPAPI. An existing `OPENAI_API_KEY` environment variable takes precedence. If you change a saved key while Luna is running, quit and relaunch the app to use it.
 
 Packaged preferences are stored in `%LOCALAPPDATA%\LunaGrammar\settings.json`. To carry over preferences from the Python version, copy the project’s `settings.json` there before your first packaged launch. Keep your existing profile file if you already use the packaged version.
 
@@ -116,7 +116,7 @@ Get-Content "$env:LOCALAPPDATA\LunaGrammar\luna-grammar.log" -Tail 30
 
 ## Start at Windows sign-in
 
-This is optional. After setting the key in PowerShell as shown above, save it as a user environment variable. Windows stores that variable in your user profile, where processes running as you can access it. Then turn on **Run at Windows sign-in** in Settings and save.
+Turn on **Run at Windows sign-in** in Settings and save. Windows startup can use a key saved in Settings or a user-level `OPENAI_API_KEY` environment variable. If you prefer the environment variable, set it after entering the key in PowerShell as shown above.
 
 ```powershell
 [Environment]::SetEnvironmentVariable('OPENAI_API_KEY', $env:OPENAI_API_KEY, 'User')

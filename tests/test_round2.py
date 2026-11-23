@@ -7,6 +7,8 @@ everywhere. Win32 calls are mocked, never executed against a real desktop.
 
 import sys
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest import mock
 
 sys.path.insert(0, __file__.rsplit("/tests/", 1)[0] if "/tests/" in __file__ else ".")
@@ -181,6 +183,21 @@ class HistoryTests(unittest.TestCase):
 
 
 class DpapiTests(unittest.TestCase):
+    @unittest.skipUnless(sys.platform == "win32", "requires Windows DPAPI")
+    def test_saved_key_is_encrypted_and_available_after_setup(self):
+        from config import api_key, store_api_key_dpapi
+
+        with TemporaryDirectory() as directory:
+            key_path = Path(directory) / "api_key.dpapi"
+            with mock.patch("config._dpapi_path", return_value=key_path), \
+                    mock.patch.dict("os.environ", {"OPENAI_API_KEY": ""}):
+                with self.assertRaises(AppError) as missing:
+                    api_key()
+                self.assertEqual(missing.exception.code, "api.key_missing")
+                store_api_key_dpapi("sk-test-placeholder")
+                self.assertNotIn(b"sk-test-placeholder", key_path.read_bytes())
+                self.assertEqual(api_key(), "sk-test-placeholder")
+
     def test_store_raises_off_windows(self):
         from config import store_api_key_dpapi
 

@@ -182,8 +182,10 @@ class ResponsesTests(unittest.TestCase):
 
 
 class ConfigTests(unittest.TestCase):
-    def test_requires_environment_key(self):
-        with patch.dict(os.environ, {"OPENAI_API_KEY": " "}), self.assertRaisesRegex(AppError, "missing"):
+    def test_requires_a_configured_key(self):
+        with patch.dict(os.environ, {"OPENAI_API_KEY": " "}), \
+                patch("config.load_api_key_dpapi", return_value=None), \
+                self.assertRaisesRegex(AppError, "missing"):
             api_key()
 
     def test_configuration_and_model_override(self):

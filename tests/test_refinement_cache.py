@@ -1,7 +1,6 @@
 """Comprehensive unit tests for Luna's thread-safe RefinementCache and cache diagnostics."""
 
 import threading
-import time
 import unittest
 from unittest.mock import patch
 
@@ -10,7 +9,6 @@ import diagnostics
 from grammar_engine import (
     GrammarEngine,
     RefinementCache,
-    get_default_cache,
 )
 
 
@@ -101,7 +99,7 @@ class RefinementCacheCoreTests(unittest.TestCase):
 
 class RefinementCacheConcurrencyTests(unittest.TestCase):
     def test_multithreaded_access(self):
-        cache = RefinementCache(max_size=50)
+        cache = RefinementCache(max_size=80)
         errors = []
 
         def worker(thread_id):
@@ -110,7 +108,7 @@ class RefinementCacheConcurrencyTests(unittest.TestCase):
                     key = f"thread_{thread_id}_text_{i % 10}"
                     cache.set(0, key, f"Refined {key}")
                     val = cache.get(0, key)
-                    self.assertIsNotNone(val)
+                    self.assertEqual(val, f"Refined {key}")
                     cache.stats()
             except Exception as e:
                 errors.append(e)
@@ -122,30 +120,27 @@ class RefinementCacheConcurrencyTests(unittest.TestCase):
             t.join()
 
         self.assertEqual(len(errors), 0, f"Thread errors: {errors}")
-        self.assertLessEqual(cache.size, 50)
+        self.assertEqual(cache.size, 80)
 
 
 class EngineCacheIntegrationTests(unittest.TestCase):
     def test_engine_instant_cache_hit_without_network(self):
-        cache = get_default_cache()
-        cache.clear()
+        cache = RefinementCache(max_size=5)
         diagnostics.reset_diagnostics()
 
         text = "this is an uncorrected line"
         expected = "This is an uncorrected line."
 
-        # Instantiate engine with dummy key and mock openai so network call would fail if attempted
         engine = GrammarEngine(Settings(), "dummy_key", cache=cache)
         # Seed with the engine's cache context: a rewrite cached under a
         # different model / shorthand / temperature / prompt must not be reused.
         cache.set("grammar", text, expected, context=engine.cache_context())
         try:
-            t0 = time.perf_counter()
-            result = engine.correct(text, mode="grammar")
-            latency_ms = (time.perf_counter() - t0) * 1000.0
+            with patch.object(engine.client.responses, "create") as request:
+                result = engine.correct(text, mode="grammar")
+            request.assert_not_called()
 
             self.assertEqual(result, expected)
-            self.assertLess(latency_ms, 15.0, f"Cache lookup took too long: {latency_ms:.2f} ms")
             self.assertTrue(diagnostics.is_cache_hit())
 
             # Check cache stats

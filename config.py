@@ -1,4 +1,4 @@
-"""User settings. Secrets come exclusively from the process environment."""
+"""User settings and API credentials from the environment or Windows DPAPI."""
 
 import json
 import math
@@ -356,7 +356,16 @@ def store_api_key_dpapi(key: str) -> None:
         kernel32.LocalFree(blob_out.pb_data)
     path = _dpapi_path()
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(protected)
+    with _CONFIG_LOCK:
+        temp_path = None
+        try:
+            with tempfile.NamedTemporaryFile("wb", dir=path.parent, delete=False) as output:
+                temp_path = Path(output.name)
+                output.write(protected)
+            temp_path.replace(path)
+        finally:
+            if temp_path is not None:
+                temp_path.unlink(missing_ok=True)
 
 
 def load_api_key_dpapi() -> str | None:
@@ -399,4 +408,4 @@ def api_key() -> str:
     stored = load_api_key_dpapi()
     if stored:
         return stored.strip()
-    raise AppError("OPENAI_API_KEY is missing. Set it before starting Luna Grammar.")
+    raise AppError("The OpenAI API key is missing. Save it in Luna Grammar Settings.", code="api.key_missing")

@@ -26,7 +26,9 @@ from config import (
     SETTINGS_PATH,
     api_key,
     app_command,
+    load_api_key_dpapi,
     load_settings,
+    store_api_key_dpapi,
     update_settings,
 )
 from pill_art import ASSETS, FONT_DIR, LIME
@@ -57,6 +59,8 @@ def save_startup(enabled: bool):
 
 
 def user_has_startup_key() -> bool:
+    if load_api_key_dpapi():
+        return True
     import winreg
 
     try:
@@ -238,12 +242,17 @@ class SettingsDialog:
 
         # API Key
         env_key = os.environ.get("OPENAI_API_KEY", "").strip()
-        self.api_key_var = tk.StringVar(value=env_key)
+        stored_key = load_api_key_dpapi()
+        self.api_key_var = tk.StringVar()
         self.key_masked = tk.BooleanVar(value=True)
-        self.connection_status_var = tk.StringVar(
-            value="API key detected in environment" if env_key else "No API key configured"
-        )
-        self.connection_color_var = tk.StringVar(value=self.accent if env_key else self.secondary)
+        if env_key:
+            connection_status = "API key detected in environment"
+        elif stored_key:
+            connection_status = "API key saved for this Windows user"
+        else:
+            connection_status = "No API key configured"
+        self.connection_status_var = tk.StringVar(value=connection_status)
+        self.connection_color_var = tk.StringVar(value=self.accent if env_key or stored_key else self.secondary)
 
         # Diagnostics variables
         self.diag_hits_var = tk.StringVar(value="0")
@@ -1081,7 +1090,9 @@ class SettingsDialog:
         if not chosen_model:
             self.connection_status_var.set("Please enter or select a model ID.")
             return
-        if not entered_key:
+        try:
+            entered_key = entered_key or api_key()
+        except AppError:
             self.connection_status_var.set("Enter an OpenAI API key to test connection.")
             return
 
@@ -1222,20 +1233,12 @@ class SettingsDialog:
             changes["active_model"] = model_name
             changes["model"] = model_name
 
-        # 6. API Key Persistence
-        entered_key = self.api_key_var.get().strip()
-        if entered_key:
-            os.environ["OPENAI_API_KEY"] = entered_key
-            try:
-                import winreg
-                with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment", 0, winreg.KEY_SET_VALUE) as env:
-                    winreg.SetValueEx(env, "OPENAI_API_KEY", 0, winreg.REG_SZ, entered_key)
-            except Exception:
-                pass
-
         try:
+            entered_key = self.api_key_var.get().strip()
+            if entered_key:
+                store_api_key_dpapi(entered_key)
             if self.startup_var.get() and not startup_link().exists() and not user_has_startup_key():
-                raise AppError("Save your key as a user environment variable before enabling startup.")
+                raise AppError("Save an API key before enabling startup.")
             # Save the settings FIRST: the old order ran the startup gate
             # before update_settings(), so a startup problem discarded every
             # other change as well. Now a startup failure only affects startup.
@@ -1248,6 +1251,9 @@ class SettingsDialog:
                 return
         except AppError as error:
             self.status_var.set(str(error))
+            return
+        except OSError:
+            self.status_var.set("Windows could not save the API key or settings.")
             return
         except Exception:
             self.status_var.set("Settings saved, but Windows startup could not be changed.")

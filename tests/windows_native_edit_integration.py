@@ -36,7 +36,8 @@ def main():
         selected = "i met Zoë 😀\r\nshe has a luna test"
         corrected = "I met Zoë 😀.\r\nShe has a Luna test."
         original = prefix + selected + suffix
-        target = win.Target(root, editor, 0, os.getpid())
+        target = win.Target(root, editor, win.current_thread_id(), os.getpid())
+        win.set_focus(editor)
         clipboard = Mock()
         engine = Mock()
         engine.correct.return_value = corrected

@@ -84,10 +84,11 @@ def check():
     except AppError as error:
         failed = True
         logging.error("event=command.failed category=%s detail=%s", error.code or "command.rejected", error)
-    if os.environ.get("OPENAI_API_KEY", "").strip():
-        logging.info("OPENAI_API_KEY is present. No API request was made.")
-    else:
-        logging.info("OPENAI_API_KEY is missing. Set it before starting the listener.")
+    try:
+        api_key()
+        logging.info("An API key is available. No API request was made.")
+    except AppError:
+        logging.info("Open Luna Grammar Settings to save an OpenAI API key.")
     return int(failed)
 
 
@@ -146,8 +147,23 @@ def main():
         # diagnostic for a broken install, so it runs before settings load.
         if args.check:
             return check()
+        try:
+            key = api_key()
+        except AppError as error:
+            if args.check_api or error.code != "api.key_missing":
+                raise
+            from settings_window import show_settings
+
+            result = show_settings()
+            if result:
+                return result
+            try:
+                key = api_key()
+            except AppError as error:
+                if error.code != "api.key_missing":
+                    raise
+                return 0
         settings = load_settings(SETTINGS_PATH)
-        key = api_key()
         if args.check_api:
             from grammar_engine import GrammarEngine
 
