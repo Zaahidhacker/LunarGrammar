@@ -1,5 +1,7 @@
 import sys
 import unittest
+from ctypes import POINTER
+from ctypes.wintypes import POINT
 from unittest.mock import Mock, patch
 
 if sys.platform == 'win32':
@@ -9,6 +11,9 @@ if sys.platform == 'win32':
 
 @unittest.skipUnless(sys.platform == 'win32', 'Windows only')
 class OverlayWindowTests(unittest.TestCase):
+    def test_client_to_screen_accepts_a_pointer_to_the_caret_point(self):
+        self.assertIs(overlay.client_to_screen.argtypes[1], POINTER(POINT))
+
     def pill(self):
         pill=object.__new__(overlay.Overlay)
         pill.window=123
